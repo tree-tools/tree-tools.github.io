@@ -1,0 +1,65 @@
+body {
+    font-family: "Segoe UI", sans-serif;
+    max-width: 800px;
+    margin: auto;
+    padding: 1.5rem;
+    line-height: 1.8;
+    background-color: #fff;
+    color: #333;
+  }
+  header, footer {
+    padding: 1rem 0;
+    border-bottom: 1px solid #ccc;
+  }
+  header {
+    margin-bottom: 2rem;
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .site-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  h1, h2, h3 {
+    color: #2c3e50;
+    margin-top: 1.5rem;
+  }
+  .toc ul {
+    padding-left: 1.2rem;
+  }
+  .toc a {
+    color: #1976D2;
+    text-decoration: none;
+  }
+  .step, .faq {
+    margin: 0;
+    padding: 1rem 0;
+  }
+  .step {
+    border-bottom: 1px solid #ddd;
+  }
+  .guide-img-content{
+      max-width: 600px;
+      margin: 0 auto;
+  }
+  img.guide-img {
+    width: 100%;
+    border: 1px solid #ccc;
+    margin-top: 0.5rem;
+  }
+  .faq {
+    background: #fff8e1;
+    border-left: 5px solid #ffb300;
+    padding-left: 1rem;
+  }
+  footer {
+    margin-top: 3rem;
+    font-size: 0.9rem;
+    color: #666;
+    border-top: 1px solid #ccc;
+    padding-top: 1rem;
+  }

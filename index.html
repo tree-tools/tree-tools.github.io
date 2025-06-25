@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Google Apps Scriptの認証手順ガイド｜初心者向け</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Google Apps Script（GAS）の認証手順を初心者にもわかりやすく解説。スプレッドシートや自動化ツールを使用する際の認証エラー対処方法。">
+  <meta name="keywords" content="Google Apps Script, GAS, 認証, 初心者, 確認されていません, ツール, スプレッドシート">
+  <link rel="canonical" href="https://yourdomain.example.com/gas-auth-guide.html">
+  <!-- 広告コードはここに挿入 -->
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="site-title">GAS認証ガイド</div>
+    </div>
+  </header>
+
+  <main>
+    <h1>Google Apps Script 認証手順ガイド</h1>
+    <p>
+      Googleスプレッドシートなどを使って自動化ツールを使用する際、最初に「認証の確認」が求められることがあります。
+      このページでは、その操作手順と注意点を初心者向けにわかりやすくまとめています。
+    </p>
+
+    <h2 id="toc">目次</h2>
+    <nav class="toc">
+      <ul>
+        <li><a href="#why-auth">なぜ認証が必要か</a></li>
+        <li><a href="#auth-steps">認証確認の操作</a></li>
+        <li><a href="#faq">よくある質問</a></li>
+      </ul>
+    </nav>
+
+    <section id="why-auth">
+      <h2>なぜ認証が必要か</h2>
+      <div class="step">
+        <p>
+          Google Apps Script（GAS）は、スプレッドシートやカレンダーなどのGoogleサービスに自動でアクセスする仕組みを提供します。
+          そのため初回使用時に、スクリプトが信頼できるものであるかをユーザー自身が確認し、許可を与える必要があります。
+        </p>
+      </div>
+    </section>
+
+    <section id="auth-steps">
+      <h2>認証確認の操作</h2>
+      <div class="step">
+        <h3>STEP 1：「認証が必要です」と表示される</h3>
+        <p>GASツールを開いた際に、下記のような警告が表示されることがあります。</p>
+        <div class="guide-img-content">
+          <img src="img/auth-required01.png" alt="認証が必要です画面" class="guide-img">
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>STEP 2：「アカウントを選択」します</h3>
+        <p>GASツールを利用するアカウントをクリックしてください。</p>
+        <div class="guide-img-content">
+          <img src="img/accoun-select02.png" alt="アカウントを選択画面" class="guide-img">
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>STEP 3：「詳細」をクリックする</h3>
+        <p>警告画面の下部にある「詳細」をクリックしてください。</p>
+        <div class="guide-img-content">
+          <img src="img/safety-confirm03.png" alt="詳細リンクをクリックする画面" class="guide-img">
+        </div>
+      </div>
+
+      <div class="step">
+        <h3>STEP 4：「プロジェクト名（安全でないページ）に移動」をクリックする</h3>
+        <p>表示されたリンク「プロジェクト名（安全でないページ）に移動」をクリックします。</p>
+        <div class="guide-img-content">
+          <img src="img/safety-confirm-datile02.png" alt="プロジェクトに移動リンクを押す画面" class="guide-img">
+        </div>
+      </div>
+
+      <div class="faq">
+        <strong>Q. 危険なサイトではないですか？</strong><br>
+        A. これはGoogleが企業としてこのツールを審査していないというだけで、開発者を信頼できる場合は問題ありません。
+      </div>
+
+      <div class="step">
+        <h3>STEP 5：チェックをして「続行」をクリックして進む</h3>
+        <p>権限リストの「すべて選択」をクリックし、「続行」をクリックすることでスクリプトが使用可能になります。</p>
+        <div class="guide-img-content">
+          <img src="img/account-access02.png" alt="続行をクリックする画面" class="guide-img">
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <h2>よくある質問</h2>
+      <div class="faq">
+        <strong>Q. パスワードや個人情報が開発者に見られることはありますか？</strong><br>
+        A. ありません。GASの認証は、特定の操作（例：スプレッドシートの編集など）に限定されており、パスワードや個人情報は開発者には一切届きません。
+      </div>
+      <div class="faq">
+        <strong>Q. 一度認証すれば再度表示されないのはなぜですか？</strong><br>
+        A. Googleは、一度信頼を与えたアプリについては、再び許可を求めることはありません（ただし手動で削除した場合を除きます）。
+      </div>
+      <div class="faq">
+        <strong>Q. 間違って画面を閉じてしまいました。どうすればよいですか？</strong><br>
+        A. もう一度ツールを開けば認証画面が再表示されるので、同様の手順で進めてください。
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>
+      <p>
+        このページは、Google Apps Scriptを利用する際の認証手順を一般的に解説する目的で作成されています。<br>
+        一部に広告が表示されることがあります。内容に影響はありません。<br>
+        ご不明な点がある場合は、ツール提供者またはGoogleの公式サポートをご確認ください。
+      </p>
+      <p>&copy; 2025 GAS認証ガイド</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

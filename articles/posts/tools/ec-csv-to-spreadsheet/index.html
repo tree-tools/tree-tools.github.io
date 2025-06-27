@@ -3,13 +3,14 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>ECサイトのCSVをスプレッドシートに自動転記するツール | GASで作業をもっとラクに</title>
+  <title>【GASで簡単自動化】ECサイトのCSVをスプレッドシートに自動転記するGASツール | GASで作業をもっとラクに</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="●●を自動化するGASツールを作成した背景や開発ポイント、効果について詳しく解説します。">
+  <meta name="description" content="ECサイトのCSVデータをGoogleスプレッドシートに自動転記するツールを紹介。転記ミスを防ぎ、作業時間を大幅短縮。Apps Scriptで簡単実装できます。">
+
   <!-- 広告コードはここに挿入 -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
     crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="../../../style.css">
+  <link rel="stylesheet" href="../../../../style.css">
 </head>
 
 <body>
@@ -20,19 +21,20 @@
         <input type="checkbox" id="menu-toggle">
         <label for="menu-toggle" class="menu-icon">&#9776;</label>
         <ul class="menu">
-          <li><a href="../../../index.html">トップ</a></li>
-          <li><a href="../../../gas-about.html">GASとは</a></li>
-          <li><a href="../../../gas-auth-guide.html">GAS認証ガイド</a></li>
-          <li><a href="../../../gas-use.html">GASでできること</a></li>
-          <li><a href="../../../privacy.html">プライバシーポリシー</a></li>
-          <li><a href="../../../contact.html">お問い合わせ</a></li>
+          <li><a href="../../../../index.html">トップ</a></li>
+          <li><a href="../../../../gas-about.html">GASとは</a></li>
+          <li><a href="../../../../gas-auth-guide.html">GAS認証ガイド</a></li>
+          <li><a href="../../../../gas-use.html">GASでできること</a></li>
+          <li><a href="../../../blog/index.html">記事一覧</a></li>
+          <li><a href="../../../../privacy.html">プライバシーポリシー</a></li>
+          <li><a href="../../../../contact.html">お問い合わせ</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main>
-    <h1>ECサイトのCSVをスプレッドシートに自動転記するツール</h1>
+    <h1>【GASで簡単自動化】ECサイトのCSVをスプレッドシートに自動転記するGASツール</h1>
 
     <div class="article-meta">
       2025-06-28 | カテゴリ: 技術
@@ -43,7 +45,7 @@
       </div>
     </div>
     <div class="guide-img-content">
-      <img src="../../../img/create01.jpg" alt="作成しているイメージ" class="guide-img">
+      <img src="../../../../img/create01.jpg" alt="作成しているイメージ" class="guide-img">
     </div>
 
     <div class="section section-summary">
@@ -65,9 +67,9 @@
     <nav id="toc" class="toc">
       <h2>目次</h2>
       <ul>
-        <li><a href="#background">ツールを作った背景</a></li>
-        <li><a href="#overview">ツールの概要と自動化の流れ</a></li>
-        <li><a href="#devnote">開発時の工夫ポイント</a></li>
+        <li><a href="#background">ECサイトCSVデータ転記ツールを作った背景</a></li>
+        <li><a href="#overview">CSV転記ツールの概要とGASでの自動化手順</a></li>
+        <li><a href="#devnote">GAS開発時の工夫ポイントとミス防止策</a></li>
         <li><a href="#result">導入効果</a></li>
         <li><a href="#application">応用アイデア</a></li>
         <li><a href="#conclusion">おわりに</a></li>
@@ -75,7 +77,7 @@
     </nav>
 
     <div class="section section-background">
-      <h2>1. ツールを作った背景</h2>
+      <h2>1. ECサイトCSVデータ転記ツールを作った背景</h2>
       <p>
         ECサイトで注文データを確認し、それをスプレッドシートに手作業で転記する業務がありました。<br>
         しかしこの作業には、いくつかの課題がありました。毎回コピペ作業が発生するため手間がかかり、コピーや貼り付けの際にミスが起きやすい上、行の並び替えも頻繁に発生します。<br>
@@ -85,20 +87,21 @@
     </div>
 
     <div class="section section-overview">
-      <h2>2. ツールの概要と自動化の流れ</h2>
+      <h2>2. CSV転記ツールの概要とGASでの自動化手順</h2>
       <div class="highlight">
-        <strong>このツールの処理フロー</strong><br>
+        <h3>ツールの処理フロー</h3>
         1. 指定のシートにCSVの内容を貼り付ける<br>
         2. 「転記」ボタンをクリック<br>
         3. CSVの列を入れ替えて、既存リストの最下部に転記<br>
         4. 転記したデータに「更新日時」「更新者名」を自動で追記<br>
       </div>
+      <h3>自動転記の動きと使い方</h3>
       <p>
-        このツールは、ECサイトからダウンロードしたCSVデータを、スプレッドシート内の指定エリアに貼り付けてボタンを押すだけで、購入リストの最下部にデータを自動で転記します。加えて、更新日時と更新者情報も自動で付加されます。<br>
+        ECサイトから取得したCSVデータを、Googleスプレッドシートの指定エリアに貼り付けてボタンを押すだけ。これだけで、購入リストの末尾に自動転記され、更新者名や日付も自動で追加されます。加えて、更新日時と更新者情報も自動で付加されます。<br>
         このようにすることで、単純作業を減らしつつ、ヒューマンエラーを防ぐことができます。手順は非常にシンプルなので、初めての人でも迷うことがありません。
       </p>
       <div class="highlight">
-        <strong>主要な関数</strong><br>
+        <h3>使用している主要なGAS関数</h3>
         <ul>
           <li>SpreadsheetApp.getActiveSpreadsheet()<br>
             実行中のスプレッドシートを取得</li>
@@ -112,10 +115,11 @@
             データの入った最後の行番号</li>
         </ul>
       </div>
+      <p>Google Apps Script の基本については<a href="../../../../gas-about.html">こちらの記事</a>でも解説しています。</p>
     </div>
 
     <div class="section section-devnote">
-      <h2>3. 開発時の工夫ポイント</h2>
+      <h2>3. GAS開発時の工夫ポイントとミス防止策</h2>
       <ul>
         <li>CSVを貼る場所さえ間違えなければOK</li>
         <li>複雑な操作を排除し、転記の手間を最小化</li>
@@ -158,8 +162,9 @@
         似たような作業にお悩みの方は、ぜひ一度、自社業務にあてはめてみてください。
       </p>
       <p>
-        ご要望があれば、他のツールや応用例も記事化して紹介予定です。
-        カスタマイズや導入相談などもお気軽にお問い合わせください。
+        ご要望があれば、他のツールや応用例も記事化して紹介予定です。<br>
+        同様の悩みを抱えている方は、ぜひ本記事の内容を参考にして、まずは小さな自動化から始めてみてください。<br>
+        「社内で導入したい」「自分の業務にも応用したい」など、具体的なご相談もお待ちしています！
       </p>
     </div>
 
@@ -177,7 +182,7 @@
       (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
-    <p><a href="../../blog/">← 記事一覧に戻る</a></p>
+    <p><a href="../../../blog/index.html">← 記事一覧に戻る</a></p>
   </main>
 
   <footer>

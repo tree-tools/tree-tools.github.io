@@ -87,7 +87,7 @@
     <div class="section section-overview">
       <h2>2. ツールの概要と自動化の流れ</h2>
       <div class="highlight">
-        <strong>このツールの処理フロー：</strong><br>
+        <strong>このツールの処理フロー</strong><br>
         1. ●●が入力される<br>
         2. 自動で●●を実行<br>
         3. 結果が●●として出力される
@@ -96,6 +96,21 @@
         特別な操作は不要で、ユーザーは通常のスプレッドシート操作だけで完結します。
         GASがバックグラウンドで処理を担うため、現場の手間は実質ゼロです。
       </p>
+      <div class="highlight">
+        <strong>主要な関数</strong><br>
+        <ul>
+          <li>SpreadsheetApp.getActiveSpreadsheet()<br>
+            実行中のスプレッドシートを取得</li>
+          <li>getRange(row, column, numRows, numColumns)<br>
+            行列の番号で範囲を指定</li>
+          <li>setValues(array)<br>
+            2次元配列を範囲に書き込む</li>
+          <li>setValue(value)<br>
+            単一セルに値を設定</li>
+          <li>getLastRow()<br>
+            データの入った最後の行番号</li>
+        </ul>
+      </div>
     </div>
 
     <div class="section section-devnote">

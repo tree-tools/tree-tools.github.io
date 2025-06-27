@@ -87,7 +87,7 @@
     <div class="section section-overview">
       <h2>2. ツールの概要と自動化の流れ</h2>
       <div class="highlight">
-        <strong>このツールの処理フロー：</strong><br>
+        <strong>このツールの処理フロー</strong><br>
         1. 指定のシートにCSVの内容を貼り付ける<br>
         2. 「転記」ボタンをクリック<br>
         3. CSVの列を入れ替えて、既存リストの最下部に転記<br>
@@ -97,6 +97,21 @@
         このツールは、ECサイトからダウンロードしたCSVデータを、スプレッドシート内の指定エリアに貼り付けてボタンを押すだけで、購入リストの最下部にデータを自動で転記します。加えて、更新日時と更新者情報も自動で付加されます。<br>
         このようにすることで、単純作業を減らしつつ、ヒューマンエラーを防ぐことができます。手順は非常にシンプルなので、初めての人でも迷うことがありません。
       </p>
+      <div class="highlight">
+        <strong>主要な関数</strong><br>
+        <ul>
+          <li>SpreadsheetApp.getActiveSpreadsheet()<br>
+            実行中のスプレッドシートを取得</li>
+          <li>getRange(row, column, numRows, numColumns)<br>
+            行列の番号で範囲を指定</li>
+          <li>setValues(array)<br>
+            2次元配列を範囲に書き込む</li>
+          <li>setValue(value)<br>
+            単一セルに値を設定</li>
+          <li>getLastRow()<br>
+            データの入った最後の行番号</li>
+        </ul>
+      </div>
     </div>
 
     <div class="section section-devnote">

@@ -10,21 +10,21 @@ const articlesData = [
     },
     {
       id: "002",
-      title: "コードまとめ",
-      date: "2025-06-24",
+      title: "コードスプレッドシートからGmail下書きを自動作成する業務効率化ツールまとめ",
+      date: "2025-06-28",
       category: "技術",
-      tags: ["JS", "備忘録"],
-      link: "",
-      thumbnail: "../images/sample2.jpg"
+      tags: ["GAS", "業務効率化", "スプレッドシート", "メール"],
+      link: "../posts/tools/mail-draft/index.html",
+      thumbnail: "../../img/mail-pc.jpg"
     },
     {
       id: "003",
-      title: "新しい記事のタイトル",
+      title: "スプレッドシートから請求書PDFを自動作成し各ドライブへ保存するツール",
       date: "2025-07-01",
       category: "技術",
-      tags: ["JS", "Tips"],
-      link: "",
-      thumbnail: "../images/sample3.jpg"
+      tags:["GAS", "業務効率化", "スプレッドシート", "請求書", "PDF"],
+      link: "../posts/tools/invoice-pdf/index.html",
+      thumbnail: "../../img/invoice-craft.jpg"
     }
   ];
   

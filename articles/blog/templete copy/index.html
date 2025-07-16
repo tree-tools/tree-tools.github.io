@@ -4,14 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法 | GASで作業をもっとラクに</title>
-  <meta name="description" content="Google Apps Script（GAS）を使い、スプレッドシートの担当者リストからGoogleドライブのフォルダを自動作成し、URLを記録する方法を初心者向けに詳しく解説。実際のコード例や反省も掲載。">
-  <meta property="og:title" content="GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法" />
-  <meta property="og:description" content="GASを使い、スプレッドシートの担当者リストからGoogleドライブフォルダを自動作成し、URLを記録する方法を初心者向けに解説します。" />
-  <meta property="og:type" content="article" />
-  <meta property="og:url" content="https://tree-tools.github.io/articles/blog/gas-foldercreate/" />
-  <!-- <meta property="og:image" content="https://tree-tools.github.io/assets/images/ogp.jpg" /> -->
-  
+  <title>【記事タイトル】 | GASで作業をもっとラクに</title>
+  <meta name="description" content="【記事概要やSEO向け要約】" />
+
+
   <!-- 広告コードはここに挿入 -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
     crossorigin="anonymous"></script>
@@ -37,23 +33,23 @@
 
     <article class="article-content">
 
-      <h1 class="page-title">GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法</h1>
+      <h1 class="page-title">【記事タイトル】</h1>
 
       <div class="article-meta">
-        <span class="date">投稿日：2025-07-15</span> |
+        <span class="date">投稿日：2025-XX-XX</span> |
         <span class="category">カテゴリ：技術</span> |
         <span class="tags">
           <span>GAS</span>
           <span>業務効率化</span>
-          <span>スプレッドシート</span>
-          <span>Googleドライブ</span>
+          <!-- 必要に応じてタグを追加 -->
         </span>
       </div>
 
       <section class="section summary">
-        <p>毎回手動で行っていた「担当者ごとのドライブフォルダ作成＆URL記録」の作業をGASで自動化。初心者なりに書いたコードとその過程を、実体験ベースで記録しておきます。</p>
+        <p>【この記事の概要や導入文を書いてください】</p>
       </section>
 
+      <!-- 共通のセッション -->
       <section class="section intro">
         <p>
           このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
@@ -82,31 +78,35 @@
 
       <section id="purpose" class="section">
         <h2>やりたかったこと</h2>
-        <p>イベントやプロジェクトのたびに、スプレッドシートの担当者リストをもとにGoogleドライブにフォルダを作っていました。その手間を省きたくて、GASで自動化することにしました。</p>
+        <p>【やりたかったことをここに書く】</p>
       </section>
 
       <section id="logic" class="section">
         <h2>使ったロジック・ポイント</h2>
         <p>
-          今回のフォルダ作成ツールでは、GASの基本的なDrive・SpreadsheetAPIを組み合わせて実装しています。以下に、処理のポイントを整理します。
+          今回の〇〇ツールでは、GASの複数の機能を組み合わせて以下の流れを実現しています。<br>
+          処理のポイントを、目的ごとに分けて紹介します。
         </p>
 
-        <h3>① 名前の取得</h3>
+        <h3>① 処理１</h3>
         <ul>
-          <li>スプレッドシートのA列にある担当者名を読み込む</li>
-          <li>空欄や重複の処理は今回は未対応（今後対応したい）</li>
+          <li></li>
+          <li></li>
+          <li></li>
         </ul>
 
-        <h3>② フォルダの作成</h3>
+        <h3>② 処理２</h3>
         <ul>
-          <li>親フォルダIDをあらかじめ指定</li>
-          <li>名前をフォルダ名として使って新しいフォルダを作成</li>
+          <li></li>
+          <li></li>
+          <li></li>
         </ul>
 
-        <h3>③ URLの書き込み</h3>
+        <h3>③ 処理３</h3>
         <ul>
-          <li>作成したフォルダのURLをB列に記録</li>
-          <li>位置をズラさないよう注意</li>
+          <li></li>
+          <li></li>
+          <li></li>
         </ul>
       </section>
 
@@ -121,42 +121,29 @@
       <section id="code" class="section">
         <h2>コード例</h2>
 
-        <p>以下が実際に使ったコードの一例です。フォルダを作ってURLを記録するシンプルな流れです。</p>
+        <p>【コードに関する説明や解説をここに書く】</p>
 
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">function createFoldersFromSheet() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
-  const parentFolderId = 'ここに親フォルダのIDを入れる';
-  const parentFolder = DriveApp.getFolderById(parentFolderId);
-
-  for (let i = 0; i < data.length; i++) {
-    const name = data[i][0];
-    if (!name) continue;
-
-    const newFolder = parentFolder.createFolder(name);
-    sheet.getRange(i + 2, 2).setValue(newFolder.getUrl());
-  }
-}</code></pre>
+          <pre><code class="language-javascript">
+// ここに実際のコードを記載する例
+function myFunction() {
+  console.log("Hello, GAS!");
+}
+          </code></pre>
         </div>
       </section>
 
       <section id="memo" class="section">
         <h2>メモ・反省・次回やりたいこと</h2>
-        <p>
-          ・禁止文字（例：「/」）が入ってるとエラーになる。今後は自動除去か変換を入れたい。<br>
-          ・この処理の後にPDF保存も自動でやるようにしたら、かなりスムーズになった。<br>
-          ・フォルダとスプシ自体もテンプレからコピーして作れたら、もっとラクになりそう。<br>
-          ・通知メールも追加できたら完璧。次回チャレンジ予定。
-        </p>
+        <p>【作業の反省や今後の改善案などを書く】</p>
       </section>
 
       <section id="links" class="section">
         <h2>関連リンク</h2>
         <ul>
-          <li><a href="/articles/blog/ec-csv-to-spreadsheet/">【GASで簡単自動化】ECサイトのCSVをスプレッドシートに自動転記するGASツール</a></li>
-          <li><a href="/articles/blog/invoice-pdf-tool/">GASでスプレッドシートから請求書PDFを自動作成し各ドライブへ保存するツール</a></li>
+          <li><a href="#">自サイトの関連ページ</a></li>
+          <li><a href="#">外部サイトの参考リンク</a></li>
         </ul>
       </section>
 

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>スプレッドシートからGmail下書きを自動作成する業務効率化ツール | GASで作業をもっとラクに</title><meta name="description" content="Google Apps Script（GAS）を使い、スプレッドシートのデータからGmail下書きを一括自動作成する方法を解説。大量メール対応を効率化し誤送信も防ぐ手順を紹介します。">
+  <meta property="og:title" content="GASでGmail下書きをスプレッドシートから自動作成する方法" />
+  <meta property="og:description" content="GASを使い、スプレッドシートのデータからGmail下書きを一括自動作成する方法を詳しく解説。大量メール作成を効率化し誤送信を防ぐ手順を紹介します。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://tree-tools.github.io/articles/blog/gmail-draft-tool/" />
+  <!-- <meta property="og:image" content="https://tree-tools.github.io/assets/images/ogp.jpg" /> -->
+  
+
+  <!-- 広告コードはここに挿入 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+</head>
+
+<body>
+  <!-- ヘッダー読込 -->
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+
+    <article class="article-content">
+
+      <h1 class="page-title">スプレッドシートからGmail下書きを自動作成する業務効率化ツール</h1>
+
+      <div class="article-meta">
+        <span class="date">投稿日：2025-06-01</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+          <span>GAS</span>
+          <span>業務効率化</span>
+          <span>スプレッドシート</span>
+          <span>メール</span>
+        </span>
+      </div>
+
+      <section class="section summary">
+        <p>
+          300人規模のイベント対応で大量のメールを一件ずつ手作業で作成するのは非効率でミスも多発していました。<br>
+          そこで、スプレッドシートのデータをもとに、GASを使ってGmailの下書きを一括作成できるツールを作成した事例を紹介します。
+        </p>
+      </section>
+
+      <section class="section intro">
+        <p>
+          このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
+          丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
+        </p>
+      </section>
+
+      <!-- body内に広告表示位置 -->
+      <!-- 横長ノーマル -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#purpose">やりたかったこと</a></li>
+          <li><a href="#logic">使ったロジック・ポイント</a></li>
+          <li><a href="#code">コード例</a></li>
+          <li><a href="#memo">メモ・反省・次回やりたいこと</a></li>
+          <li><a href="#links">関連リンク</a></li>
+        </ul>
+      </nav>
+
+      <section id="purpose" class="section">
+        <h2>やりたかったこと</h2>
+        <p>
+          300人規模のイベント対応をしている中で、1件ずつ手作業でメールを作成するのは非効率でミスも多発していました。<br>
+          作業を誰でも簡単に引き継げるようにするためにも、スプレッドシートに入力した情報を元に、Gmailの下書きを自動作成するツールを作りたかったです。
+        </p>
+      </section>
+
+      <section id="logic" class="section">
+        <h2>使ったロジック・ポイント</h2>
+        <p>
+          今回のツールで工夫したポイントを、目的ごとに整理しました。<br>
+          「なぜその処理を入れたのか」が分かるようにまとめています。
+        </p>
+
+        <h3>① スプレッドシートからデータを取得</h3>
+        <ul>
+          <li>
+            宛先や本文の元データを <code>SpreadsheetApp.getActiveSpreadsheet()</code> で開いたシートから取得
+          </li>
+          <li>
+            <code>getRange()</code> と <code>getValues()</code> で、必要な行・列を一括で読み込むことで作業効率をアップ
+          </li>
+        </ul>
+
+        <h3>② Gmail の下書きを作成する</h3>
+        <ul>
+          <li>
+            <code>GmailApp.createDraft()</code> を使い、メールを自動で作成<br>
+            → ただし<code>sendEmail</code>（送信関数）は使用せず、必ず下書き作成で止めることで誤送信を防止
+          </li>
+        </ul>
+
+        <h3>③ 誤操作を防ぐ仕組み</h3>
+        <ul>
+          <li>
+            <code>Browser.msgBox()</code> を使い、処理前に確認ダイアログを表示
+          </li>
+          <li>
+            OKを押さない限り実行しない仕組みにして、意図しない動作を防止
+          </li>
+          <li>
+            処理後には完了メッセージを表示し、ユーザーに安心感を持たせる
+          </li>
+        </ul>
+
+        <h3>④ 開発の進め方</h3>
+        <ul>
+          <li>
+            最初はテキストメールだけ作り、慣れてからHTMLメール対応や添付機能を追加するなど、徐々に機能を拡張
+          </li>
+        </ul>
+      </section>
+
+      <!-- body内に広告表示位置 -->
+      <!-- 横長ノーマル -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <section id="code" class="section">
+        <h2>コード例</h2>
+
+        <p>以下は、スプレッドシートに入力されたメール情報から下書きを一括作成するGASの例です。処理前に確認ダイアログを表示し、OKを押した場合のみ実行します。実行後は完了メッセージを表示します。</p>
+
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">
+function createGmailDrafts() {
+  // 確認ダイアログを表示
+  const response = Browser.msgBox(
+    '確認',
+    'スプレッドシートのデータをもとにGmail下書きを作成してもよろしいですか？',
+    Browser.Buttons.OK_CANCEL
+  );
+
+  if (response === 'ok') {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName("メールデータ"); // シート名は適宜変更
+    const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 3).getValues();
+    
+    data.forEach(row => {
+      const name = row[0];
+      const email = row[1];
+      const message = row[2];
+      
+      const subject = `【ご連絡】${name}様へのご案内`;
+      const body = `○○様\n\n${message}\n\nよろしくお願いします。`;
+      
+      GmailApp.createDraft(email, subject, body);
+    });
+
+    Browser.msgBox('下書き作成が完了しました！');
+  } else {
+    Browser.msgBox('処理はキャンセルされました。');
+  }
+}
+          </code></pre>
+        </div>
+      </section>
+
+      <section id="memo" class="section">
+        <h2>メモ・反省・次回やりたいこと</h2>
+        <ul>
+          <li>メールの自動送信は、よっぽどのことがない限り使いません。<br>
+            間違えて実行したり、リストに誤りがあると即誤送信になるので、必ず下書き作成で止めて内容を確認してから送るフローにしています。</li>
+          <li>最初はプレーンテキストのメールを作っていましたが、GASに慣れてからHTMLメールを作成したり、GoogleドライブのPDFを添付する機能も追加しました。</li>
+          <li>リストに絵文字が入っていると、文字化けしたままメールを作ってしまうことがあり、それを防ぐ機能を今後作りたいです。</li>
+        </ul>
+      </section>
+
+      <p class="back-link">
+        <a href="/articles/blog/index.html">← 記事一覧に戻る</a>
+      </p>
+
+      <!-- body内に広告表示位置 -->
+      <!-- 横長ノーマル -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+    </article>
+  </main>
+
+  <!-- フッター読み込み -->
+  <div data-include="/includes/footer.html"></div>
+
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+
+</body>
+
+</html>

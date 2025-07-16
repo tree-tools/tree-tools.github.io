@@ -1,0 +1,50 @@
+[
+  {
+    "title": "GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法",
+    "url": "./gas-foldercreate/index.html",
+    "summary": "Googleスプレッドシートの担当者リストから、自動でGoogleドライブフォルダを作成してURLを記録するGASツールを実装。",
+    "date": "2025-07-16",
+    "tags": [
+      "GAS",
+      "業務効率化",
+      "スプレッドシート",
+      "Googleドライブ"
+    ]
+  },
+  {
+    "title": "GASでスプレッドシートからGmail下書きを自動作成するツール",
+    "url": "./gmail-draft-tool/index.html",
+    "summary": "GASでスプレッドシートのデータを元にGmail下書きを一括作成する仕組みを紹介。確認フローも実装。",
+    "date": "2025-07-02",
+    "tags": [
+      "GAS",
+      "業務効率化",
+      "スプレッドシート",
+      "メール"
+    ]
+  },
+  {
+    "title": "スプレッドシートから請求書PDFを自動作成するツール",
+    "url": "./invoice-pdf-tool/index.html",
+    "summary": "スプレッドシート情報を元にPDF請求書を自動生成し、Googleドライブへ保存するGASツールを解説。",
+    "date": "2025-07-01",
+    "tags": [
+      "GAS",
+      "業務効率化",
+      "スプレッドシート",
+      "PDF"
+    ]
+  },
+  {
+    "title": "【GASで簡単自動化】ECサイトのCSVをスプレッドシートに自動転記するGASツール",
+    "url": "./ec-csv-to-spreadsheet/index.html",
+    "summary": "ECサイトから出力されたCSVデータをGoogleスプレッドシートの購入リストに自動転記するツールを解説。",
+    "date": "2025-06-29",
+    "tags": [
+      "GAS",
+      "スプレッドシート",
+      "業務効率化",
+      "CSV"
+    ]
+  }
+]

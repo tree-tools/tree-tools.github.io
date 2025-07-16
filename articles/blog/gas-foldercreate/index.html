@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法 | GASで作業をもっとラクに</title>
+  <meta name="description" content="Google Apps Script（GAS）を使い、スプレッドシートの担当者リストからGoogleドライブのフォルダを自動作成し、URLを記録する方法を初心者向けに詳しく解説。実際のコード例や反省も掲載。">
+  <meta property="og:title" content="GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法" />
+  <meta property="og:description" content="GASを使い、スプレッドシートの担当者リストからGoogleドライブフォルダを自動作成し、URLを記録する方法を初心者向けに解説します。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://tree-tools.github.io/articles/blog/gas-foldercreate/" />
+  <!-- <meta property="og:image" content="https://tree-tools.github.io/assets/images/ogp.jpg" /> -->
+  
+  <!-- 広告コードはここに挿入 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+</head>
+
+<body>
+  <!-- ヘッダー読込 -->
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+
+    <article class="article-content">
+
+      <h1 class="page-title">GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法</h1>
+
+      <div class="article-meta">
+        <span class="date">投稿日：2025-07-15</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+          <span>GAS</span>
+          <span>業務効率化</span>
+          <span>スプレッドシート</span>
+          <span>Googleドライブ</span>
+        </span>
+      </div>
+
+      <section class="section summary">
+        <p>毎回手動で行っていた「担当者ごとのドライブフォルダ作成＆URL記録」の作業をGASで自動化。初心者なりに書いたコードとその過程を、実体験ベースで記録しておきます。</p>
+      </section>
+
+      <section class="section intro">
+        <p>
+          このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
+          丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
+        </p>
+      </section>
+
+      <!-- body内に広告表示位置 -->
+      <!-- 横長ノーマル -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#purpose">やりたかったこと</a></li>
+          <li><a href="#logic">使ったロジック・ポイント</a></li>
+          <li><a href="#code">コード例</a></li>
+          <li><a href="#memo">メモ・反省・次回やりたいこと</a></li>
+          <li><a href="#links">関連リンク</a></li>
+        </ul>
+      </nav>
+
+      <section id="purpose" class="section">
+        <h2>やりたかったこと</h2>
+        <p>イベントやプロジェクトのたびに、スプレッドシートの担当者リストをもとにGoogleドライブにフォルダを作っていました。その手間を省きたくて、GASで自動化することにしました。</p>
+      </section>
+
+      <section id="logic" class="section">
+        <h2>使ったロジック・ポイント</h2>
+        <p>
+          今回のフォルダ作成ツールでは、GASの基本的なDrive・SpreadsheetAPIを組み合わせて実装しています。以下に、処理のポイントを整理します。
+        </p>
+
+        <h3>① 名前の取得</h3>
+        <ul>
+          <li>スプレッドシートのA列にある担当者名を読み込む</li>
+          <li>空欄や重複の処理は今回は未対応（今後対応したい）</li>
+        </ul>
+
+        <h3>② フォルダの作成</h3>
+        <ul>
+          <li>親フォルダIDをあらかじめ指定</li>
+          <li>名前をフォルダ名として使って新しいフォルダを作成</li>
+        </ul>
+
+        <h3>③ URLの書き込み</h3>
+        <ul>
+          <li>作成したフォルダのURLをB列に記録</li>
+          <li>位置をズラさないよう注意</li>
+        </ul>
+      </section>
+
+      <!-- body内に広告表示位置 -->
+      <!-- 横長ノーマル -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <section id="code" class="section">
+        <h2>コード例</h2>
+
+        <p>以下が実際に使ったコードの一例です。フォルダを作ってURLを記録するシンプルな流れです。</p>
+
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">function createFoldersFromSheet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues();
+  const parentFolderId = 'ここに親フォルダのIDを入れる';
+  const parentFolder = DriveApp.getFolderById(parentFolderId);
+
+  for (let i = 0; i < data.length; i++) {
+    const name = data[i][0];
+    if (!name) continue;
+
+    const newFolder = parentFolder.createFolder(name);
+    sheet.getRange(i + 2, 2).setValue(newFolder.getUrl());
+  }
+}</code></pre>
+        </div>
+      </section>
+
+      <section id="memo" class="section">
+        <h2>メモ・反省・次回やりたいこと</h2>
+        <p>
+          ・禁止文字（例：「/」）が入ってるとエラーになる。今後は自動除去か変換を入れたい。<br>
+          ・この処理の後にPDF保存も自動でやるようにしたら、かなりスムーズになった。<br>
+          ・フォルダとスプシ自体もテンプレからコピーして作れたら、もっとラクになりそう。<br>
+          ・通知メールも追加できたら完璧。次回チャレンジ予定。
+        </p>
+      </section>
+
+      <section id="links" class="section">
+        <h2>関連リンク</h2>
+        <ul>
+          <li><a href="/articles/blog/ec-csv-to-spreadsheet/">PDF保存の自動処理を追加した話（作成中）</a></li>
+        </ul>
+      </section>
+
+      <p class="back-link">
+        <a href="/articles/blog/index.html">← 記事一覧に戻る</a>
+      </p>
+
+      <!-- body内に広告表示位置 -->
+      <!-- 横長ノーマル -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+    </article>
+  </main>
+
+  <!-- フッター読み込み -->
+  <div data-include="/includes/footer.html"></div>
+
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+
+</body>
+
+</html>

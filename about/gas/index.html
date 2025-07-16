@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>GASとは？ | GASで作業をもっとラクに</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Google Apps Script（GAS）の仕組みを初心者向けにわかりやすく解説。スプレッドシートやGmailの自動化で業務効率化を目指す方必見！">
+  <meta name="keywords" content="Google Apps Script, GAS, 自動化, 初心者, 入門">
+  <meta property="og:title" content="GASとは？初心者向けにGoogle Apps Scriptをやさしく解説">
+  <meta property="og:description" content="Google Apps Script（GAS）の仕組みを初心者向けに解説。スプレッドシートやGmailの自動化など活用方法を紹介。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tree-tools.github.io/about/gas/index.html">
+  <!-- <meta property="og:image" content="https://tree-tools.github.io/assets/images/ogp.png"> -->
+
+  <link rel="canonical" href="https://tree-tools.github.io/about/gas/index.html">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+  <!-- ヘッダー読込 -->
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/beginner/">GAS活用ガイド</a></li>
+        <li>GASとは？</li>
+      </ol>
+    </nav>
+
+    <h1>GASとは？<br>
+      初心者向けGoogle Apps Script解説ガイド</h1>
+
+    <section class="section">
+      <h2>このページはこんな人向け</h2>
+      <p>
+        このページは、<strong>GASという名前は聞いたことがあるけれど、何ができるのかよくわからない</strong>という初心者の方を対象にしています。<br>
+        <br>
+        特に、こんな方におすすめです
+      </p>
+      <ul>
+        <li>スプレッドシートやGoogleのサービスをもっと効率的に使いたい人</li>
+        <li>業務で「同じ作業を何度も繰り返している」と感じている人</li>
+        <li>プログラミングに詳しくないけれど、少しでも作業を自動化してみたい人</li>
+        <li>GASについて調べたものの、難しくて挫折しそうな人</li>
+      </ul>
+      <p>
+        このページでは、できるだけ専門用語を使わず、<strong>GASの全体像</strong>をわかりやすく紹介します。
+      </p>
+      <p>
+        もっと専門的な内容を知りたいという方は、ぜひ以下のページものぞいてみてください！
+      </p>
+      <p>
+        ▶ <a href="/articles/blog/index.html">ブログ記事一覧</a>
+      </p>
+    </section>
+
+    <section class="section">
+      <nav class="toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#sec-what">GASとは？</a></li>
+          <li><a href="#sec-compare">手作業との比較</a></li>
+          <li><a href="#sec-services">連携できるGoogleサービス・外部サービス</a></li>
+          <li><a href="#sec-examples">GASでできること【具体例つき】</a></li>
+          <li><a href="#sec-industries">【業種別】活用シーン</a></li>
+          <li><a href="#sec-advantages">GASのメリットと注意点</a></li>
+          <li><a href="#sec-start">まず何から始めればいい？</a></li>
+          <li><a href="#sec-summary">まとめ</a></li>
+        </ul>
+      </nav>
+    </section>
+
+    <section id="sec-what" class="section">
+      <h2>GASとは何か</h2>
+      <p>
+        Google Apps Script（GAS）は、Googleが提供する無料のスクリプトサービスです。 <br>
+        スプレッドシートやGmail、カレンダーなどのGoogleサービスを自動化でき、日々の面倒な作業を効率化する強力なツールとして多くの企業や個人が活用しています。
+      </p>
+      <p>
+        GASの特徴は、クラウド上で動作することと、Googleアカウントさえあればすぐに始められる手軽さです。<br>
+        パソコンに特別なソフトをインストールする必要はなく、ブラウザだけでコードの作成・実行が完結します。
+      </p>
+      <p>
+        ExcelのマクロやVBAと似た自動化ツールとして比較されることもありますが、GASはGoogleのクラウドサービスと連携できるのが大きな強みです。<br>
+        誰でもすぐに、無料で、高度な自動化を体験できます。
+      </p>
+    </section>
+
+
+    <section id="sec-compare" class="section">
+      <h2>手作業との比較</h2>
+      <p>
+        通常の業務ではスプレッドシートの集計やメール送信、レポート作成などを手作業で行ってきました。<br>
+        例えば、同じようなメールを毎月送るたびに内容をコピーして宛先を変更したり、大量のデータを一つひとつ手入力でまとめたりするのは、時間もかかり、ミスが起こりやすい作業です。
+      </p>
+      <p>
+        GASを使えば、こうした繰り返し作業を自動化できるので、人手によるミスを防ぎながら作業時間を大幅に短縮できます。<br>
+        特にスプレッドシートやGmailのような日常的に使うツールと直接連携できるため、「わざわざ他のツールを覚える必要がない」という点も大きなメリットです。
+      </p>
+
+      <table class="compare-table3">
+        <thead>
+          <tr>
+            <th>作業内容</th>
+            <th>これまでの手作業</th>
+            <th>GASを使った場合</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>データ集計</td>
+            <td>手入力で計算やコピペを繰り返す</td>
+            <td>自動で集計、条件に合わせて結果を出力</td>
+          </tr>
+          <tr>
+            <td>メール送信</td>
+            <td>毎回手動で作成・送信</td>
+            <td>テンプレート化して自動送信</td>
+          </tr>
+          <tr>
+            <td>レポート作成</td>
+            <td>データをコピーして手動で作成</td>
+            <td>最新データを自動で反映しPDF化</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        同じ作業を毎月・毎週繰り返している人ほど、GASを使うことで驚くほど効率が変わります。
+      </p>
+    </section>
+
+    <section id="sec-services" class="section">
+      <h2>連携できるGoogleサービス・外部サービス</h2>
+      <p>
+        GASは<strong>さまざまなツールや外部サービスとつながる</strong>のが最大の強みです。<br>
+        単にスプレッドシートを操作するだけでなく、他のツールを組み合わせることで、自動化の可能性は無限に広がります。
+      </p>
+      <p>たとえば、次のようなツールやサービスと連携できます：</p>
+
+      <dl class="definition-list">
+        <dt>① Google スプレッドシート</dt>
+        <dd>データ整理、計算、レポート自動生成などが可能</dd>
+
+        <dt>② Gmail</dt>
+        <dd>自動メール送信、定型メールの管理</dd>
+
+        <dt>③ Google カレンダー</dt>
+        <dd>予定の登録・更新、リマインド送信</dd>
+
+        <dt>④ Google フォーム</dt>
+        <dd>回答取得後の自動処理や通知</dd>
+
+        <dt>⑤ Google ドキュメント・スライド</dt>
+        <dd>テンプレートへの差し込みで書類や資料を自動生成</dd>
+
+        <dt>⑥ Google ドライブ</dt>
+        <dd>ファイルのアップロード・整理・共有の自動化</dd>
+
+        <dt>⑦ Slack、Chatwork、LINE Notify などの外部サービス</dt>
+        <dd>チャット通知やレポートの自動投稿</dd>
+
+        <dt>⑧ 外部のWeb API</dt>
+        <dd>天気、為替レート、SNS情報などの外部データ取得・連携</dd>
+      </dl>
+      <p>
+        これらを組み合わせれば、<strong>「面倒な作業を一気に自動化」</strong>できます。<br>
+        あなたの業務に合った活用方法をぜひ探してみましょう！
+      </p>
+    </section>
+
+    <section id="sec-examples" class="section">
+      <h2>GASでできること【具体例つき】</h2>
+      <p>
+        GASを使えば、さまざまな業務を<strong>自動化・効率化</strong>できます。<br>
+        次のような作業が代表的な例です：
+      </p>
+
+      <dl class="definition-list">
+        <dt>① レポート作成の自動化</dt>
+        <dd>
+          ・売上レポートをPDF化して自動保存<br>
+          ・Googleフォームの回答をまとめて上司へ送信
+        </dd>
+
+        <dt>② 通知・リマインド</dt>
+        <dd>
+          ・締切が近づいたらSlackやLINEに通知<br>
+          ・Googleカレンダー予定の前日に自動リマインド
+        </dd>
+
+        <dt>③ データ処理の効率化</dt>
+        <dd>
+          ・複数シートの統合・集計<br>
+          ・CSVデータの自動取込・変換<br>
+          ・入力ミスや重複データの自動検出
+        </dd>
+
+        <dt>④ 外部サービスとの連携</dt>
+        <dd>
+          ・Slackにリアルタイムで通知を送る／Chatworkにレポートを自動投稿する<br>
+          ・Web APIと連携して外部データを取得<br>
+          ・LINE通知でリアルタイム連携
+        </dd>
+
+        <dt>⑤ ファイル操作</dt>
+        <dd>
+          ・フォルダを自動生成・整理<br>
+          ・スプレッドシートから画像を生成
+        </dd>
+
+        <dt>⑥ ちょっと変わった活用例</dt>
+        <dd>
+          ・天気予報を毎朝Slackに投稿<br>
+          ・為替レートを自動取得<br>
+          ・Webスクレイピングで情報収集
+        </dd>
+      </dl>
+      <p>
+        これらの仕組みを一度作ってしまえば、<strong>繰り返しの作業を手放せる</strong>のがGASの大きな魅力です！<br>
+        あなたの業務でも、ぜひ活用してみてください。
+      </p>
+    </section>
+
+    <section id="sec-industries" class="section">
+      <h2>【業種別】活用シーン</h2>
+      <p>
+        GASはさまざまな業種・業務で活用されています。<br>
+        業務の効率化や自動化に役立つ、具体的なシーンをご紹介します。
+      </p>
+
+      <dl class="definition-list">
+        <dt>① 営業・マーケティング</dt>
+        <dd>
+          ・顧客情報をもとに営業報告書を自動作成<br>
+          ・アンケート結果を集計してグラフ化
+        </dd>
+
+        <dt>② 総務・人事</dt>
+        <dd>
+          ・勤怠データを自動で集計し、月次レポートを作成<br>
+          ・社内アンケート結果を集計して共有
+        </dd>
+
+        <dt>③ 経理・財務</dt>
+        <dd>
+          ・経費申請のスプレッドシートを整理しPDF出力<br>
+          ・請求書をテンプレートから自動生成して保存
+        </dd>
+
+        <dt>④ 教育・研修</dt>
+        <dd>
+          ・テストの得点を集計し、成績一覧を自動作成<br>
+          ・Google Classroomと連携して課題状況を可視化
+        </dd>
+
+        <dt>⑤ 物流・製造</dt>
+        <dd>
+          ・出荷状況をスプレッドシートにリアルタイム反映<br>
+          ・在庫数が減ったらSlackに自動通知
+        </dd>
+
+        <dt>⑥ 医療・福祉</dt>
+        <dd>
+          ・患者の予約データを自動集計して日別リストに<br>
+          ・定期検診の時期が来たらリマインドメールを送信
+        </dd>
+
+        <dt>⑦ 趣味・個人利用</dt>
+        <dd>
+          ・家計簿の入力データをグラフで自動可視化<br>
+          ・SNSフォロワー数を定期取得して記録
+        </dd>
+      </dl>
+      <p>
+        <strong>「こんなこともGASでできるの！？」</strong><br>
+        そんな新しい発見が、きっと見つかります。
+      </p>
+    </section>
+
+    <section id="sec-advantages" class="section">
+      <h2>GASのメリットと注意点</h2>
+      <h3>GASのメリット</h3>
+      <p>
+        GASの最大のメリットは、Google公式のサービスであるため安心して利用できる点です。
+        スプレッドシートやGmailといった普段使っているサービスを、そのまま自動化できるので、新しくツールを導入する手間やコストがかかりません。
+      </p>
+      <p>
+        さらに、GASは基本的に無料で使えます。
+        社内の業務フローに合わせて柔軟にカスタマイズできるため、自分だけの便利ツールを自作することも可能です。
+      </p>
+      <h3>注意点</h3>
+      <p>
+        一方で、GASを使う際には「認証設定」や「アクセス権限」などの管理が必要です。
+        スクリプトが誰のアカウントで動いているのか、どのデータにアクセスできるのかを正しく理解しないと、思わぬ情報漏えいや操作ミスの原因になることもあります。
+      </p>
+      <p>
+        このサイトでは、初心者が安心してGASを使い始められるように、認証の基礎知識や安全に使うポイントも丁寧に解説しています。
+      </p>
+    </section>
+
+    <section id="sec-start" class="section">
+      <h2>まず何から始めればいい？</h2>
+      <p>
+        「GASに興味はあるけど、どこから手をつければいいかわからない」<br>
+        そんな方は、まずはコピペで動かせる簡単なサンプルコードから試してみるのがおすすめです。
+      </p>
+      <p>
+        最初から複雑なコードを書こうとすると挫折しやすいため、このサイトでは、初心者向けに必要最低限のステップだけをまとめたガイドを用意しています。
+      </p>
+      <p>
+        GASの仕組みを理解した後は、【初心者ガイド】で一歩ずつ実際に動かしてみましょう。 <br>
+        認証や権限設定が不安な方は、【認証ガイド】を先に読むと安心です。
+      </p>
+      <p>
+        ▶ <a href="/beginner/">初心者ガイドを見る</a><br>
+        ▶ <a href="/beginner/auth-guide.html">認証ガイドを見る</a>
+      </p>
+
+      <p>
+        GASを実際に動かすステップを、<strong>図解つきで初心者にもわかりやすく</strong>まとめたページがあります。
+        まずはそちらを見て、実際に手を動かしてみてください。
+      </p>
+      <p>
+        ▶ <a href="/beginner/try-first-gas.html">初心者向け実践ページを見る</a>
+      </p>
+    </section>
+
+    <section id="sec-summary" class="section">
+      <h2>まとめ</h2>
+      <p>
+        Google Apps Script（GAS）は、Googleの公式サービスと連携して、日々の繰り返し作業を自動化できるとても便利なツールです。<br>
+        スプレッドシートやGmail、カレンダーなど、普段使っているサービスとすぐに連携できるので、誰でも手軽に業務効率化を始められます。
+      </p>
+      <p>
+        このページでGASの基本や活用例を知ったら、ぜひ実際に手を動かして、できることを体感してみてください。<br>
+        初心者向けのガイドや、認証のポイントなど、次に読むべきページも用意していますので、下のリンクからチェックしてみてください。
+      </p>
+      <p>
+        ▶ <a href="/beginner/">GAS初心者ガイドを見る</a><br>
+        ▶ <a href="/beginner/auth-guide.html">GASの認証ガイドを見る</a><br>
+        ▶ <a href="/articles/blog/">GASツールの記事を見る</a>
+      </p>
+      <p>
+        GASを上手に活用して、日々の作業をもっとラクにしていきましょう！
+      </p>
+    </section>
+
+  </main>
+  <!-- フッター読込 -->
+  <div data-include="/includes/footer.html"></div>
+
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>●●を自動化するGASツールを作成しました（作業時間を90%短縮） | GASで作業をもっとラクに</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="●●を自動化するGASツールを作成した背景や開発ポイント、効果について詳しく解説します。">
+  <!-- 広告コードはここに挿入 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../../../../style.css">
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="site-title">GASで作業をもっとラクに</div>
+      <nav class="hamburger-menu">
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="menu-icon">&#9776;</label>
+        <ul class="menu">
+          <li><a href="../../../../index.html">トップ</a></li>
+          <li><a href="../../../../gas-about.html">GASとは</a></li>
+          <li><a href="../../../../gas-auth-guide.html">GAS認証ガイド</a></li>
+          <li><a href="../../../../gas-use.html">GASでできること</a></li>
+          <li><a href="../../../../privacy.html">プライバシーポリシー</a></li>
+          <li><a href="../../../../contact.html">お問い合わせ</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <h1>●●を自動化するGASツールを作成しました（作業時間を90%短縮）</h1>
+
+    <div class="article-meta">
+      2025-06-25 | カテゴリ: 技術
+      <div class="tags">
+        <span>GAS</span>
+        <span>業務効率化</span>
+      </div>
+    </div>
+
+    <div class="guide-img-content">
+      <img src="../../../../img/create01.jpg" alt="作成しているイメージ" class="guide-img">
+    </div>
+
+    <div class="section section-summary">
+      <h2>この記事で紹介するツールについて</h2>
+      <p>
+        本記事では、業務で繰り返し発生する●●作業を自動化するGASツールをご紹介します。
+        ツールの開発背景や実際の処理の流れ、導入による効果、そして応用アイデアまでを詳しく解説します。
+        同様の課題を抱える方のヒントになれば幸いです。
+      </p>
+    </div>
+
+    <!-- body内に広告表示位置 -->
+    <!-- 横長ノーマル -->
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+      data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <nav id="toc" class="toc">
+      <h2>目次</h2>
+      <ul>
+        <li><a href="#background">ツールを作った背景</a></li>
+        <li><a href="#overview">ツールの概要と自動化の流れ</a></li>
+        <li><a href="#devnote">開発時の工夫ポイント</a></li>
+        <li><a href="#result">導入効果</a></li>
+        <li><a href="#application">応用アイデア</a></li>
+        <li><a href="#conclusion">おわりに</a></li>
+      </ul>
+    </nav>
+
+    <div class="section section-background">
+      <h2>1. ツールを作った背景</h2>
+      <p>
+        当時、●●の業務では毎回手作業で同じような処理をしており、非効率な状態でした。
+        複数人が関わる中でミスも発生し、業務の属人化も進んでいました。
+        そこで、GASとスプレッドシートを活用し、再利用可能なツールを自作することにしました。
+      </p>
+    </div>
+
+    <div class="section section-overview">
+      <h2>2. ツールの概要と自動化の流れ</h2>
+      <div class="highlight">
+        <h3>ツールの処理フロー</h3>
+        1. ●●が入力される<br>
+        2. 自動で●●を実行<br>
+        3. 結果が●●として出力される
+      </div>
+      <h3>自動転記の動きと使い方</h3>
+      <p>
+        特別な操作は不要で、ユーザーは通常のスプレッドシート操作だけで完結します。
+        GASがバックグラウンドで処理を担うため、現場の手間は実質ゼロです。
+      </p>
+      <div class="highlight">
+        <h3>使用している主要なGAS関数</h3>
+        <ul>
+          <li>SpreadsheetApp.getActiveSpreadsheet()<br>
+            実行中のスプレッドシートを取得</li>
+          <li>getRange(row, column, numRows, numColumns)<br>
+            行列の番号で範囲を指定</li>
+          <li>setValues(array)<br>
+            2次元配列を範囲に書き込む</li>
+          <li>setValue(value)<br>
+            単一セルに値を設定</li>
+          <li>getLastRow()<br>
+            データの入った最後の行番号</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section section-devnote">
+      <h2>3. 開発時の工夫ポイント</h2>
+      <ul>
+        <li>処理ごとに関数を分割し、再利用しやすい構成に</li>
+        <li>テンプレートは Googleドキュメント で定義し、変数置換で出力</li>
+        <li>失敗時はエラーログを残し、ユーザー通知も実装</li>
+      </ul>
+      <p>
+        コード自体はシンプルですが、実行時の安定性と拡張性を意識しました。
+      </p>
+    </div>
+
+    <div class="section section-result">
+      <h2>4. 導入効果</h2>
+      <p>
+        このツールを導入したことで、作業時間が <strong>30分 → 3分</strong> に短縮されました。
+        ヒューマンエラーも減り、他のメンバーにも展開できたことでチーム全体の効率化に貢献しました。
+      </p>
+    </div>
+
+    <div class="section section-application">
+      <h2>5. 応用アイデア</h2>
+      <p>この仕組みは他にも以下のような業務に応用できます：</p>
+      <ul>
+        <li>見積書・納品書・領収書の自動化</li>
+        <li>日報やアンケート結果の自動集計</li>
+        <li>定期メール配信や進捗リマインド通知</li>
+      </ul>
+    </div>
+
+    <div class="section section-conclusion" id="conclusion">
+      <h2>6. おわりに</h2>
+      <p>
+        本記事では、セキュリティ上コードや画面は非公開ながらも、ツールの設計と効果を紹介しました。
+        GASは小さな業務改善にも効果的です。興味のある方はぜひ、似た仕組みの構築にチャレンジしてみてください。
+      </p>
+      <p>
+        ご要望があれば、他のツールや応用例も記事化して紹介予定です。<br>
+        同様の悩みを抱えている方は、ぜひ本記事の内容を参考にして、まずは小さな自動化から始めてみてください。<br>
+        「社内で導入したい」「自分の業務にも応用したい」など、具体的なご相談もお待ちしています！
+      </p>
+    </div>
+
+    <p>
+      ▼ このコードに興味がある方、他の自動化ツールの検討をしたい方は、
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeavickL5Az-J7FapogkiRCkw_Kd3AwPa9EW5wyFXfr8IVOYQ/viewform?usp=header"
+        target="_blank" rel="noopener">こちらの問い合わせフォーム</a>からお気軽にご連絡ください。
+    </p>
+
+    <!-- body内に広告表示位置 -->
+    <!-- 横長ノーマル -->
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+      data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <p><a href="../../blog/">← 記事一覧に戻る</a></p>
+  </main>
+
+  <footer>
+    <div>
+      <p>&copy; 2025 GASで作業をもっとラクに</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>【GAS実践入門】スプレッドシートの取得・値の読み書きを丁寧に解説 | GASで作業をもっとラクに</title>
+  <meta name="description" content="Google Apps Script初心者向けに、スプレッドシートの操作に欠かせないgetRange, getValue, getValuesなどの使い分けを実例とコード付きで解説。業務自動化の第一歩をわかりやすく紹介します。">
+<meta property="og:title" content="【GAS実践入門】初心者向けスプレッドシート操作の基本コード解説" />
+<meta property="og:description" content="GASでスプレッドシートを操作する基本：getRange, getValueなどの使い分けやコード例を初心者向けにまとめました。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/articles/blog/sheet-range-value/" />
+<!-- <meta property="og:image" content="https://example.com/assets/images/og-gas-basic.png" /> -->
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+
+    <article class="article-content">
+
+      <h1 class="page-title">【GAS実践入門】スプレッドシートの取得・値の読み書きを丁寧に解説</h1>
+
+      <div class="article-meta">
+        <span class="date">投稿日：2025-07-18</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+          <span>GAS</span>
+          <span>業務効率化</span>
+          <span>GAS実践入門</span>
+        </span>
+      </div>
+
+      <section class="section summary">
+        <p>GASを触りはじめると最初に出てくる「getRange」「getValue」あたりのコード。コピペで動くけど、意味がわからずモヤモヤしていた当時の自分のために整理しました。</p>
+      </section>
+
+      <section class="section intro">
+        <p>
+          このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
+          丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
+        </p>
+      </section>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+      <h2>目次</h2>
+      <ul>
+        <li><a href="#intro">はじめに</a></li>
+        <li><a href="#get-sheet">スプレッドシートの取得方法</a></li>
+        <li><a href="#getrange">getRange() の書き方いろいろ</a></li>
+        <li><a href="#getvalue">getValue() / getValues() / setValue() / setValues() の違いは？</a></li>
+        <li><a href="#what-you-can-do">これが理解できると何ができる？</a></li>
+        <li><a href="#experience">実際に作って役立った場面（体験談）</a></li>
+        <li><a href="#mistakes">よくやったミス＆気をつけてること</a></li>
+        <li><a href="#summary">まとめ</a></li>
+      </ul>
+
+      <section id="get-sheet" class="section">
+        <h2>スプレッドシートの取得方法、3パターンあるって知ってた？</h2>
+
+        <h3>よく見るのがこれ：</h3>
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">
+SpreadsheetApp.getActiveSpreadsheet()
+    </code></pre>
+        </div>
+        <p>これは「今開いているスプレッドシート」を取得する書き方です。とりあえず動かしたいときに便利ですが、シートが複数あるときは挙動に注意が必要です。</p>
+
+        <h3>名前でシートを指定する：</h3>
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">
+.getSheetByName("シート1")
+    </code></pre>
+        </div>
+        <p>名前で指定することで、対象のシートを明確に指定できます。</p>
+
+        <h3>スプレッドシートのIDから取得する：</h3>
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">
+SpreadsheetApp.openById("スプレッドシートのID")
+    </code></pre>
+        </div>
+        <p>複数のスプレッドシートを操作したいときに便利です。この書き方なら、「別ファイル」も扱うことができます。</p>
+      </section>
+
+      <section id="getrange" class="section">
+        <h2>getRange() の書き方いろいろ：最初はここでつまずいた</h2>
+        <p>
+          <code>getRange()</code> はセルの位置や範囲を指定するためのメソッドですが、書き方にバリエーションがあり、初心者の頃はよく混乱しました。<br>
+          特に、「A1形式」と「行・列で指定する形式」の違いに気づくまでに少し時間がかかりました。以下に代表的な3パターンを整理しておきます。
+        </p>
+
+        <table class="compare-table compare-table3">
+          <thead>
+            <tr>
+              <th>書き方</th>
+              <th>意味</th>
+              <th>例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>getRange("B3")</code></td>
+              <td>A1形式で指定</td>
+              <td>「B3」の1セルを取得</td>
+            </tr>
+            <tr>
+              <td><code>getRange(3, 2)</code></td>
+              <td>行・列で1セルだけ取得</td>
+              <td>3行2列目 → 「B3」を取得</td>
+            </tr>
+            <tr>
+              <td><code>getRange(3, 2, 2, 2)</code></td>
+              <td>行・列 + 行数・列数で範囲指定</td>
+              <td>3行2列から2行2列 → 「B3:C4」を取得</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          最初は「A1形式」ばかり使っていましたが、あとから <code>getRange(行, 列, 行数, 列数)</code>
+          のような指定ができると、ループ処理での範囲操作や表形式のデータ処理が一気にやりやすくなることに気づきました。<br>
+          たとえば、「上から10行分をまとめて取得して別の場所に貼り付ける」ような処理が、行列指定だととてもスムーズに書けます。
+        </p>
+        <p>
+          また、動的に行数や列数を計算して <code>getRange(row, col, numRows, numCols)</code>
+          を使うと、柔軟な処理が可能になるため、コピペから一歩進んで「自分で制御するコード」に近づける感覚がありました。
+        </p>
+      </section>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+      <section id="getvalue" class="section">
+        <h2>getValue() / getValues() / setValue() / setValues() の違いは？</h2>
+
+        <p>
+          これらのメソッドは、スプレッドシートから値を取得・設定するうえで最もよく使うものです。<br>
+          似ている名前なので混乱しやすく、初心者が最初につまずくポイントでもあります。<br>
+          特に、配列を扱うメソッドと単一の値を扱うメソッドを混同すると、<strong>undefined やエラー</strong>になってしまうこともあります。
+        </p>
+
+        <table class="compare-table compare-table4">
+          <thead>
+            <tr>
+              <th>メソッド</th>
+              <th>対象の範囲</th>
+              <th>データ形式</th>
+              <th>よくある用途</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>getValue()</code></td>
+              <td>1セルのみ</td>
+              <td>単一の値（文字列・数値など）</td>
+              <td>特定セルの値を読み取る</td>
+            </tr>
+            <tr>
+              <td><code>getValues()</code></td>
+              <td>複数セル</td>
+              <td>2次元配列</td>
+              <td>表全体を取得する、ループ処理用</td>
+            </tr>
+            <tr>
+              <td><code>setValue()</code></td>
+              <td>1セルのみ</td>
+              <td>単一の値をセット</td>
+              <td>特定のセルに1つの値を書き込む</td>
+            </tr>
+            <tr>
+              <td><code>setValues()</code></td>
+              <td>複数セル</td>
+              <td>2次元配列でセット</td>
+              <td>複数のセルにまとめて書き込む</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>getValue() の例</h3>
+        <p>1つのセルから値を読み取ります。</p>
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">
+function readSingleCell() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート1");
+  const value = sheet.getRange("B3").getValue();
+  Logger.log(value); // 単一の値（例："テスト"）
+}
+    </code></pre>
+        </div>
+
+        <h3>getValues() の例</h3>
+        <p>複数のセルから値を取得する場合、2次元配列で返ってきます。</p>
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">
+function readMultipleCells() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート1");
+  const data = sheet.getRange("A1:C3").getValues();
+  Logger.log(data); // [[A1, B1, C1], [A2, B2, C2], [A3, B3, C3]]
+}
+    </code></pre>
+        </div>
+
+        <h3>setValue() の例</h3>
+        <p>1セルに値を直接書き込むときに使います。</p>
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">
+function writeSingleCell() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート1");
+  sheet.getRange("A1").setValue("こんにちは");
+}
+    </code></pre>
+        </div>
+
+        <h3>setValues() の例</h3>
+        <p>複数のセルに対して2次元配列で値を設定します。</p>
+        <div class="code-container">
+          <button class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">
+function writeMultipleCells() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート1");
+  const values = [
+    ["A1", "B1", "C1"],
+    ["A2", "B2", "C2"],
+    ["A3", "B3", "C3"]
+  ];
+  sheet.getRange("A1:C3").setValues(values);
+}
+    </code></pre>
+        </div>
+
+        <h3>よくあるミス</h3>
+        <ul>
+          <li><code>getValues()</code> の結果（2次元配列）を <code>setValue()</code> に渡してエラーになる</li>
+          <li><code>setValues()</code> でセル範囲のサイズと配列のサイズが一致していない（例：3×3セルに2×2の配列）</li>
+          <li>1セルを取得したいのに <code>getValues()</code> を使って、<code>[[値]]</code> の配列になってしまい扱いづらくなる</li>
+        </ul>
+
+        <p>
+          特に初心者の頃は「getValueとgetValuesの違いって何？」とよくわからないまま使っていて、エラーが出てようやく気づくことも多かったです。<br>
+          データ形式（単一値か配列か）を意識することがとても大事です。
+        </p>
+      </section>
+
+      <section id="benefits" class="section">
+        <h2>これが理解できると何ができる？</h2>
+
+        <p>
+          <code>getRange()</code> や <code>getValue()</code> / <code>setValues()</code>
+          といった基本的な読み書きの仕組みが理解できると、GASで扱える範囲が一気に広がります。
+        </p>
+
+        <ul>
+          <li><strong>スプレッドシートの読み書きが自由自在にできるようになる</strong><br>
+            値の取得、書き込み、範囲操作が自在になると、単純な記録から複雑な集計・加工まで自動化できます。</li>
+          <li><strong>「とりあえず動いた」から「ちゃんと狙って処理する」へ</strong><br>
+            コピペで動かすフェーズから、「このセルの値を使って、この範囲を書き換える」といった意図的な処理にステップアップできます。</li>
+          <li><strong>値の貼り付け、移動、ループ処理がしやすくなってツール化につながる</strong><br>
+            ループと組み合わせることで、「行ごとのチェック」や「条件による分岐処理」など、業務の自動化ツールが作れるようになります。</li>
+          <li><strong>GASでの自動化の基礎が身につく</strong><br>
+            GASのスクリプトは基本的に「値を読む → 加工する → 書く」の繰り返しです。これができれば、あとは応用次第で実用的なツールが作れます。</li>
+        </ul>
+      </section>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+      <section id="experience" class="section">
+        <h2>実際に作って役立った場面（体験談）</h2>
+
+        <p>
+          基本の書き方が理解できるようになってから、以下のようなツールを作れるようになりました。どれも最初は小さなスクリプトから始まりましたが、業務の中で十分使えるレベルまで育ちました。
+        </p>
+
+        <ul>
+          <li><strong>日次で他のスプレッドシートからデータを引っ張って一覧化するツール</strong><br>
+            各担当者が入力した別ファイルのデータを、1つのファイルに自動集計。朝一で「最新の一覧」ができていて便利でした。</li>
+
+          <li><strong>指定したセルにだけコメントを追記するツール</strong><br>
+            社内で「レビュー済」や「確認済」などのコメントを、特定の条件で自動で書き込むツールを作りました。</li>
+
+          <li><strong>表の特定範囲だけをコピーして別シートに貼り付ける処理</strong><br>
+            毎月提出する報告書用に、必要な行だけを抽出して整理した形で貼り付ける処理。転記ミスがゼロに。</li>
+        </ul>
+
+        <p>
+          最初は「どう書くか」に必死でしたが、少しずつ慣れるうちに「何をしたいか」→「それをコードでどう書くか」という思考に変わってきました。<br>
+          この切り替えができるようになると、コピペから卒業して、オリジナルの処理が書けるようになっていきました。
+        </p>
+      </section>
+
+      <section id="mistakes" class="section">
+        <h2>よくやったミス＆気をつけてること</h2>
+
+        <p>
+          GASをいじり始めたころ、何度も同じようなミスを繰り返していました。<br>
+          エラーになって初めて「そういう仕様だったのか」と気づくことも多く、今でも気をつけるようにしています。
+        </p>
+
+        <ul>
+          <li><strong><code>getValue()</code> したのに 2次元配列扱いして <code>undefined</code></strong><br>
+            1セルだけ取得したつもりなのに、配列としてループしようとして失敗。<br>
+            <code>getValue()</code>は単一値、<code>getValues()</code>は2次元配列という区別が大事。
+          </li>
+
+          <li><strong>A1指定のつもりで <code>getRange(1,1)</code> と書いてた</strong><br>
+            「B3」と書くつもりで <code>getRange(3,2)</code> にしないとズレるのに、慣れないうちは混乱しがち。</li>
+
+          <li><strong><code>setValues()</code> の対象セルと配列サイズが合っていない</strong><br>
+            <code>[[1,2],[3,4]]</code> のような配列を <code>1行1列</code> に書き込もうとしてエラー。<br>
+            セル範囲と配列サイズが一致しているか、いつも確認が必要。
+          </li>
+
+          <li><strong><code>.getSheetByName()</code> のシート名が微妙に違っていて <code>null</code> が返る</strong><br>
+            全角スペースや大文字・小文字の違いで一致しないことも。<br>
+            <code>sheet == null</code> のチェックを必ず入れるようになった。
+          </li>
+        </ul>
+
+        <p>こうした小さなミスでも、エラーの原因がわかれば大きな学びになります。</p>
+      </section>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+      <section id="summary" class="section">
+        <h2>まとめ：動くコードより、「なぜそう書いてあるか」を考えてみると面白くなる</h2>
+
+        <p>
+          最初のうちは、「コピペで動いたからOK」と思って満足していました。<br>
+          でも、処理の意味や構造を理解するようになってからは、ただ動くだけでなく、<strong>「なぜそう書いてあるのか」「何をしているのか」</strong>を考えるようになりました。
+        </p>
+
+        <p>
+          書き方がわかると、今度は応用がきくようになり、自分なりの改善やカスタマイズができるようになります。<br>
+          GASはシンプルだからこそ、自分の業務やアイディアに合わせてどんどん展開できるのが魅力です。
+        </p>
+
+        <p>
+          この記事が、同じように「動くけど、意味がわからない」で止まっていた誰かの助けになればうれしいです。<br>
+          自分の過去のつまずきが、これからの誰かのヒントになりますように。
+        </p>
+      </section>
+
+      <p class="back-link">
+        <a href="/articles/blog/index.html">← 記事一覧に戻る</a>
+      </p>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+    </article>
+  </main>
+
+  <div data-include="/includes/footer.html"></div>
+
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+</body>
+
+</html>

@@ -5,7 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GASのコードの必要最低限の読み方 | GASで作業をもっとラクに</title>
-  <meta name="description" content="GASを独学で学ぶ初心者向けに、まず覚えるべき記号や構文だけを厳選して解説。コピペだけで終わらせず、少しずつコードが読めるようになる実践的なステップを紹介します。" />
+  <meta name="description"
+    content="GASを独学で学ぶ初心者向けに、まず覚えるべき記号や構文だけを厳選して解説。コピペだけで終わらせず、少しずつコードが読めるようになる実践的なステップを紹介します。" />
 
   <!-- 広告コードはここに挿入 -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
@@ -64,20 +65,41 @@
       <nav class="section toc">
         <h2>目次</h2>
         <ul>
-          <li><a href="#why">なぜ読む必要があるのか</a></li>
+          <li><a href="#why">はじめに：「コピペで動いたけど、結局よくわからん」</a></li>
+          <li><a href="#why2">前提：「ちゃんと覚える」より「必要なときに調べる」が現実的</a></li>
           <li><a href="#basic">まず覚えておきたい記号と構文</a></li>
           <li><a href="#write">書くときに知っておきたい構文</a></li>
-          <li><a href="#example">簡単なコードを読んでみる</a></li>
-          <li><a href="#next">まとめと次回予告</a></li>
+          <li><a href="#example">これさえ分かれば「ちょっと直す」ができるようになる</a></li>
+          <li><a href="#summary">まとめ</a></li>
         </ul>
       </nav>
 
       <section id="why" class="section">
-        <h2>なぜ読む必要があるのか</h2>
+        <h2>はじめに：「コピペで動いたけど、結局よくわからん」</h2>
         <p>
-          GASはChatGPTやネットで調べれば、動くコードを簡単にコピペできます。<br>
-          でも「ちょっとここだけ変えたい」と思ったときに、何がどの処理なのか分からないとつまずきます。<br>
-          だからこそ、<strong>まずはコードの構造をざっくり読めるようになる</strong>ことが大切です。
+          GAS（Google Apps Script）を独学していると、まずやるのがネットやChatGPTで検索して、コードをそのままコピペして動かすことですよね。<br>
+          実際、それだけでもある程度のツールは作れてしまうのがGASのいいところ。
+        </p>
+        <p>
+          でも、ちょっとカスタマイズしようとすると<br>
+          「どこを直せばいいか分からない…」<br>
+          「このコード、何してるの？」<br>
+          と詰まること、ありませんか？
+        </p>
+        <p>
+          かつての自分もそうでした。<br>
+          なのでこの記事では、<strong>「まずはこれだけ分かればGASのコードをなんとなく読める！」</strong>という最低限のポイントだけをピックアップしました。
+        </p>
+      </section>
+
+      <section id="why2" class="section">
+        <h2>前提：「ちゃんと覚える」より「必要なときに調べる」が現実的</h2>
+        <p>
+          JavaScript（GASのベースになっている言語）にはいろんな記号や構文がありますが、全部覚える必要はありません。<br>
+          最初は「なんとなく雰囲気がわかる」「意味の見当がつく」レベルでOK。
+        </p>
+        <p>
+          知らない書き方が出てきたらその都度ググればいいし、ChatGPTに「このコードってどういう意味？」と聞くのもありです。
         </p>
       </section>
 
@@ -87,17 +109,53 @@
 
         <table class="compare-table3">
           <thead>
-            <tr><th>記号・構文</th><th>意味・用途</th><th>例</th></tr>
+            <tr>
+              <th>記号・構文</th>
+              <th>意味・用途</th>
+              <th>例</th>
+            </tr>
           </thead>
           <tbody>
-            <tr><td><code>//</code></td><td>1行コメント</td><td><code>// これはコメント</code></td></tr>
-            <tr><td><code>/* ... */</code></td><td>複数行コメント</td><td><code>/* コメント */</code></td></tr>
-            <tr><td><code>" "</code></td><td>文字列</td><td><code>let name = "Taro";</code></td></tr>
-            <tr><td><code>{ }</code></td><td>処理のかたまり</td><td><code>if (true) { ... }</code></td></tr>
-            <tr><td><code>;</code></td><td>文の終わり（省略可）</td><td><code>let x = 10;</code></td></tr>
-            <tr><td><code>function</code></td><td>関数の定義</td><td><code>function greet(name) { ... }</code></td></tr>
-            <tr><td><code>()</code></td><td>関数の引数など</td><td><code>greet("Taro");</code></td></tr>
-            <tr><td><code>[]</code></td><td>配列</td><td><code>let list = ["A", "B"];</code></td></tr>
+            <tr>
+              <td><code>//</code></td>
+              <td>1行コメント</td>
+              <td><code>// これはコメント</code></td>
+            </tr>
+            <tr>
+              <td><code>/* ... */</code></td>
+              <td>複数行コメント</td>
+              <td><code>/* コメント */</code></td>
+            </tr>
+            <tr>
+              <td><code>" "</code></td>
+              <td>文字列</td>
+              <td><code>let name = "Taro";</code></td>
+            </tr>
+            <tr>
+              <td><code>{ }</code></td>
+              <td>処理のかたまり</td>
+              <td><code>if (true) { ... }</code></td>
+            </tr>
+            <tr>
+              <td><code>;</code></td>
+              <td>文の終わり（省略可）</td>
+              <td><code>let x = 10;</code></td>
+            </tr>
+            <tr>
+              <td><code>function</code></td>
+              <td>関数の定義</td>
+              <td><code>function greet(name) { ... }</code></td>
+            </tr>
+            <tr>
+              <td><code>()</code></td>
+              <td>関数の引数など</td>
+              <td><code>greet("Taro");</code></td>
+            </tr>
+            <tr>
+              <td><code>[]</code></td>
+              <td>配列</td>
+              <td><code>let list = ["A", "B"];</code></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -108,14 +166,38 @@
 
         <table class="compare-table3">
           <thead>
-            <tr><th>記号・構文</th><th>意味・用途</th><th>例</th></tr>
+            <tr>
+              <th>記号・構文</th>
+              <th>意味・用途</th>
+              <th>例</th>
+            </tr>
           </thead>
           <tbody>
-            <tr><td><code>=</code></td><td>代入</td><td><code>let age = 20;</code></td></tr>
-            <tr><td><code>==</code></td><td>値の比較</td><td><code>if (age == 20)</code></td></tr>
-            <tr><td><code>===</code></td><td>値と型の比較</td><td><code>if (age === 20)</code></td></tr>
-            <tr><td><code>+</code></td><td>足し算／文字列結合</td><td><code>"Hello " + name</code></td></tr>
-            <tr><td><code>-, *, /</code></td><td>計算</td><td><code>let total = 10 * 2;</code></td></tr>
+            <tr>
+              <td><code>=</code></td>
+              <td>代入</td>
+              <td><code>let age = 20;</code></td>
+            </tr>
+            <tr>
+              <td><code>==</code></td>
+              <td>値の比較</td>
+              <td><code>if (age == 20)</code></td>
+            </tr>
+            <tr>
+              <td><code>===</code></td>
+              <td>値と型の比較</td>
+              <td><code>if (age === 20)</code></td>
+            </tr>
+            <tr>
+              <td><code>+</code></td>
+              <td>足し算／文字列結合</td>
+              <td><code>"Hello " + name</code></td>
+            </tr>
+            <tr>
+              <td><code>-, *, /</code></td>
+              <td>計算</td>
+              <td><code>let total = 10 * 2;</code></td>
+            </tr>
           </tbody>
         </table>
       </section>
@@ -127,8 +209,8 @@
       </script>
 
       <section id="example" class="section">
-        <h2>簡単なコードを読んでみる</h2>
-        <p>以下は、初心者向けの簡単な関数の例です。</p>
+        <h2>これさえ分かれば「ちょっと直す」ができるようになる</h2>
+        <p>たとえば、こういうコードがあったとします。</p>
 
         <div class="code-container">
           <button class="copy-btn">Copy</button>
@@ -138,23 +220,25 @@
 }</code></pre>
         </div>
 
-        <p>このコードの流れ：</p>
-        <ul>
-          <li>関数<code>sendGreeting</code>を定義</li>
-          <li><code>name</code>という引数を受け取る</li>
-          <li>挨拶文を作って変数<code>message</code>に代入</li>
-          <li><code>Logger.log()</code>でログに出力</li>
-        </ul>
-      </section>
-
-      <section id="next" class="section">
-        <h2>まとめと次回予告</h2>
         <p>
-          最初は「なんとなく読める」で十分です。<br>
-          完璧に覚えなくても、見慣れていけば少しずつ理解できるようになります。<br>
-          次回は「GASでよく使う関数のパターン」と「エラーが出たときの見方」などを紹介予定です。
+          これが「関数の定義」→「変数に文字列＋名前を代入」→「ログに出力」という流れだとわかれば、<br>
+          たとえば <code>"こんにちは"</code> を <code>"Hello"</code> に変えたいとか、<code>name</code> の前に <code>"Mr. "</code>を足したいとか、<br>
+          自分の使いやすいように手直しできるようになります。
         </p>
       </section>
+
+      <section id="summary" class="section">
+        <h2>まとめ：まずは「読める」が正義、覚えるのは後でいい</h2>
+        <p>
+          プログラミングの入り口で大事なのは、完璧な理解ではなく<strong>「なんとなく読める感覚」</strong>です。<br>
+          GASを使っていく中で、必要に応じて調べればいいし、回数こなすうちに自然と覚えます。
+        </p>
+        <p>
+          最初のうちは「雰囲気」で読んで、「必要になったら調べる」でOK。<br>
+          独学でも、やってるうちにだんだん自信がついてきます。
+        </p>
+      </section>
+
 
       <p class="back-link">
         <a href="/articles/blog/index.html">← 記事一覧に戻る</a>

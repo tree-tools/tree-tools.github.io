@@ -264,8 +264,7 @@ img.guide-img {
   padding-left: 1rem;
 }
 
-.compare-table,
-.compare-table3 {
+.compare-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
@@ -273,9 +272,7 @@ img.guide-img {
 }
 
 .compare-table th,
-.compare-table td,
-.compare-table3 th,
-.compare-table3 td {
+.compare-table td {
   border: 1px solid #ccc;
   padding: 12px;
   text-align: left;
@@ -284,13 +281,18 @@ img.guide-img {
 .compare-table th {
   background-color: #f5f5f5;
   font-weight: bold;
+}
+
+.compare-table2 th {
   width: 50%;
 }
 
 .compare-table3 th {
-  background-color: #f5f5f5;
-  font-weight: bold;
   width: 33%;
+}
+
+.compare-table4 th {
+  width: 25%;
 }
 
 

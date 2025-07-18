@@ -123,8 +123,7 @@
 
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-function addPrefectureToAddress() {
+          <pre><code class="language-javascript">function addPrefectureToAddress() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   const data = sheet.getDataRange().getValues();
 
@@ -141,9 +140,7 @@ function addPrefectureToAddress() {
       const prefecture = json.results[0].address1;
       sheet.getRange(i + 1, 2).setValue(prefecture + address);
     }
-  }
-}
-          </code></pre>
+  }</code></pre>
         </div>
       </section>
 
@@ -154,14 +151,6 @@ function addPrefectureToAddress() {
           また、郵便番号の桁数が不正でもエラー処理がなく落ちるので、<strong>事前チェックやエラーハンドリング</strong>を入れるべきだと感じました。<br>
           今後は、<strong>郵便番号と住所が一致しているか確認するチェック機能</strong>や、<strong>未記載住所の抽出機能</strong>も加えていきたいと思っています。
         </p>
-      </section>
-
-      <section id="links" class="section">
-        <h2>関連リンク</h2>
-        <ul>
-          <li><a href="https://zipcloud.ibsnet.co.jp/doc/api" target="_blank" rel="noopener">郵便番号API（zipcloud）</a></li>
-          <li><a href="/articles/blog/index.html">自作GASツール一覧</a></li>
-        </ul>
       </section>
 
       <p class="back-link">

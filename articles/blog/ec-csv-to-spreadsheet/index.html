@@ -44,6 +44,7 @@
         <span class="category">カテゴリ：技術</span> |
         <span class="tags">
           <span>GAS</span>
+          <span>ツール</span>
           <span>業務効率化</span>
           <span>スプレッドシート</span>
           <span>CSV</span>
@@ -132,50 +133,37 @@
 
       <section id="code" class="section">
         <h2>コード例</h2>
-
-        <h3>データ転記の基本</h3>
-        <p>基本的なコピペのコードです。これを少しずつ書き換えて自分のツールに合うようにカスタマイズしてきました</p>
-
-        <div class="code-container">
-          <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-function copyRangeToAnotherSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sourceSheet = ss.getActiveSheet(); // 現在のシート
-  const targetSheet = ss.getSheetByName('貼り付け先シート名'); // ←貼り付け先シート名に変更
-
-  const range = sourceSheet.getRange('A1:B5'); // コピーする範囲
-  const values = range.getValues(); // 値を取得
-
-  targetSheet.getRange('A1:B5').setValues(values); // 同じ範囲に貼り付け
-}            
-          </code></pre>
-        </div>
-
-        <h3>確認ダイアログの例</h3>
-        <p>自分がGASを作る時は大体この確認ダイアログを使っています。<br>
-          誤操作をした時に処理を実行させないようにしています。</p>
+        <p>基本的なデータ転記のコピペのコードです。これを少しずつ書き換えて自分のツールに合うようにカスタマイズしてきました</p>
+        <p>確認ダイアログは誤操作をした時に処理を実行させないようにしています。<br>
+          自分がGASを作る時は大体この確認ダイアログを使っています。</p>
 
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-function runWithConfirmation() {
+          <pre><code class="language-javascript">function copyRangeToAnotherSheet() {
   // 確認ダイアログを表示
   const response = Browser.msgBox(
     '確認',
-    '「○○の処理」を開始してもよろしいですか？',
+    '貼り付けを開始してもよろしいですか？',
     Browser.Buttons.OK_CANCEL
   );
 
   // OKを押した場合のみ実行
   if (response == 'ok') {
-    // 実際の処理（省略）
-    Browser.msgBox('処理が完了しました');
+
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sourceSheet = ss.getActiveSheet(); // 現在のシート
+    const targetSheet = ss.getSheetByName('貼り付け先シート名'); // ←貼り付け先シート名に変更
+
+    const range = sourceSheet.getRange('A1:B5'); // コピーする範囲
+    const values = range.getValues(); // 値を取得
+
+    targetSheet.getRange('A1:B5').setValues(values); // 同じ範囲に貼り付け
+
+    Browser.msgBox('貼り付けが完了しました');
   } else {
     Browser.msgBox('処理はキャンセルされました');
   }
-}            
-          </code></pre>
+}</code></pre>
         </div>
       </section>
 

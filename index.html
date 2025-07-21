@@ -50,6 +50,14 @@
       </p>
     </section>
 
+    <section id="sec-updates" class="section">
+      <h2>最新の更新情報</h2>
+      <dl class="update-list" id="latest-updates"></dl>
+      <p>
+        ▶ <a href="/about/updates.html">サイト更新履歴</a> - 更新履歴一覧はこちら
+      </p>
+    </section>
+
     <!-- body内に広告表示位置 -->
     <!-- 横長ノーマル -->
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
@@ -237,6 +245,12 @@
 
   <script src="/assets/js/includes.js"></script>
   <script src="/assets/js/common.js"></script>
+
+  <!-- 最新記事の更新 -->
+  <script src="/assets/js/load-updates.js"></script>
+  <script>
+    loadUpdates({ targetId: 'latest-updates', count: 3 });
+  </script>
 </body>
 
 </html>

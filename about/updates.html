@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>サイト更新履歴</title>
+  <meta name="description" content="このサイトの更新履歴一覧ページです。" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+
+  <meta property="og:title" content="サイト更新履歴 | GASで作業をもっとラクに" />
+  <meta property="og:description" content="このサイトでは、GASを独学で学んだ経験をもとに、初心者にも役立つ業務効率化のヒントを紹介しています。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tree-tools.github.io/about/updates.html" />
+  <!-- <meta property="og:image" content="https://tree-tools.github.io/assets/images/ogp.png" /> -->
+
+  <!-- 広告コードはここに挿入 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <link rel="canonical" href="https://tree-tools.github.io/about/updates.html" />
+  <!-- <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon"> -->
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/about/"></a>運営方針とプロフィール</li>
+        <li>サイト更新履歴</li>
+      </ol>
+    </nav>
+
+    <h1 class="page-title">サイト更新履歴｜GASで作業をもっとラクに</h1>
+
+    <section class="section">
+      <h2>サイト更新履歴</h2>
+      <p>
+        このサイトでは、Google Apps Script（GAS）に関する実践的な情報や、自作ツールの紹介、使い方のコツなどを随時アップデートしています。<br>
+        まだまだ手探りで学んでいる途中ではありますが、学んだことや気づいたことを記録として残しつつ、同じように独学で進めている人のヒントにもなればと思っています。
+      </p>
+      <p>
+        新しいツールの紹介や活用アイディア、改善点の修正、過去記事の加筆・調整など、日々の試行錯誤を少しずつ追加しています。<br>
+        「こんなこともGASでできるんだ」という発見があるような、リアルで実用的な情報をこれからも増やしていく予定です。
+      </p>
+      <p>
+        以下に、主な更新履歴をまとめていきます。
+      </p>
+    </section>
+    <section class="section">
+      <dl class="update-list" id="update-log"></dl>
+    </section>
+
+    <!-- body内に広告表示位置 -->
+    <!-- 横長ノーマル -->
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+      data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <section class="section">
+      <p>
+        <a href="/">トップページへ戻る</a>
+      </p>
+    </section>
+  </main>
+
+  <div data-include="/includes/footer.html"></div>
+
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+
+  <script src="/assets/js/load-updates.js"></script>
+  <script>
+    loadUpdates({ targetId: 'update-log' });
+  </script>
+</body>
+
+</html>

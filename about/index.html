@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tree-tools.github.io/about/" />
   <!-- <meta property="og:image" content="https://tree-tools.github.io/assets/images/ogp.png" /> -->
-   
+
   <!-- 広告コードはここに挿入 -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
     crossorigin="anonymous"></script>
@@ -19,7 +19,7 @@
   <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
-  <link rel="canonical" href="https://tree-tools.github.io/example.com/about/" />
+  <link rel="canonical" href="https://tree-tools.github.io/about/" />
   <!-- <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon"> -->
 </head>
 
@@ -98,24 +98,12 @@
         サイトの内容は随時更新していきます。<br>
         新しい情報や便利な活用例を引き続き追加していく予定です。
       </p>
-    </section>
 
-    <section class="section">
-      <h2>サイト更新履歴</h2>
-      <ul>
-        <li>2025/07/18 - 「【GAS実践入門】スプレッドシートの取得・値の読み書きを丁寧に解説」記事追加</li>
-        <li>2025/07/18 - 「GASのコードの必要最低限の読み方」記事追加</li>
-        <li>2025/07/18 - 「スプレッドシートの関数セルに色を付けるべき理由」記事追加</li>
-        <li>2025/07/17 - 「都道府県が記載されてない住所に都道府県を追加するツール」記事追加</li>
-        <li>2025/07/17 - 「リストの編集をしたら自動で更新日時を書き込んでくれるツール」記事追加</li>
-        <li>2025/07/17 - 「GASをスマホの操作で処理開始させるための工夫」記事追加</li>
-        <li>2025/07/16 - 「ボタンを押したら指定の箇所だけクリアにするGASツール」記事追加</li>
-        <li>2025/07/15 - 「GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法」記事追加</li>
-        <li>2025/07/05 - 記事一覧ページ公開</li>
-        <li>2025/07/03 - Aboutページ公開</li>
-        <li>2025/07/01 - 記事「GASを動かしてみる」公開</li>
-        <li>2025/06/30 - サイト全体リニューアル</li>
-      </ul>
+      <h3>最新の更新情報</h3>
+      <dl class="update-list" id="latest-updates"></dl>
+      <p>
+        ▶ <a href="/about/updates.html">サイト更新履歴</a> - 更新履歴一覧はこちら
+      </p>
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -165,7 +153,7 @@
     <script>
       (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-    
+
     <section class="section">
       <p>
         <a href="/">トップページへ戻る</a>
@@ -178,6 +166,12 @@
 
   <script src="/assets/js/includes.js"></script>
   <script src="/assets/js/common.js"></script>
+
+  <!-- 最新記事の更新 -->
+  <script src="/assets/js/load-updates.js"></script>
+  <script>
+    loadUpdates({ targetId: 'latest-updates', count: 3 });
+  </script>
 </body>
 
 </html>

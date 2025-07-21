@@ -1,7 +1,19 @@
 [
   {
+    "title": "Browser.msgBoxって何？処理前に“確認”したい時のGAS小技",
+    "url": "/articles/blog/browser-msgbox/index.html",
+    "summary": "GASで確認ダイアログを表示するBrowser.msgBoxの使い方と注意点を、独学中の実体験をもとに紹介します。",
+    "date": "2025-07-21",
+    "tags": [
+      "業務効率化",
+      "How to",
+      "スプレッドシート",
+      "GAS実践入門"
+    ]
+  },
+  {
     "title": "【GAS実践入門】スプレッドシートの取得・値の読み書きを丁寧に解説",
-    "url": "./sheet-range-value/index.html",
+    "url": "/articles/blog/sheet-range-value/index.html",
     "summary": "Google Apps Script初心者向けに、スプレッドシートの操作に欠かせないgetRange, getValue, getValuesなどの使い分けを実例とコード付きで解説。業務自動化の第一歩をわかりやすく紹介します。",
     "date": "2025-07-18",
     "tags": [
@@ -13,7 +25,7 @@
   },
   {
     "title": "GASのコードの必要最低限の読み方",
-    "url": "./gas-code-reading/index.html",
+    "url": "/articles/blog/gas-code-reading/index.html",
     "summary": "GASを独学で学ぶ初心者向けに、まず覚えるべき記号や構文だけを厳選して解説。コピペだけで終わらせず、少しずつコードが読めるようになる実践的なステップを紹介します。",
     "date": "2025-07-18",
     "tags": [
@@ -26,7 +38,7 @@
   },
   {
     "title": "スプレッドシートの関数セルに色を付けるべき理由",
-    "url": "./spreadsheet-function-color/index.html",
+    "url": "/articles/blog/spreadsheet-function-color/index.html",
     "summary": "関数セルに色を付けることで、スプレッドシートの作業効率と安全性を高める運用術を紹介します。",
     "date": "2025-07-18",
     "tags": [
@@ -38,7 +50,7 @@
   },
   {
     "title": "都道府県が記載されてない住所に都道府県を追加するツール",
-    "url": "./address-pref-fill/index.html",
+    "url": "/articles/blog/address-pref-fill/index.html",
     "summary": "GASと郵便番号APIで、都道府県のない住所を自動補完。初心者の実体験ベースの実用ツール事例を紹介します。",
     "date": "2025-07-17",
     "tags": [
@@ -50,7 +62,7 @@
   },
   {
     "title": "リストの編集をしたら自動で更新日時を書き込んでくれるツール",
-    "url": "./gas-mobile-trigger/index.html",
+    "url": "/articles/blog/auto-update-timestamp/index.html",
     "summary": "スプレッドシートのリストを編集したら、GASで自動的に更新日時を記録する小さなツールの紹介。作業漏れや入力忘れを防げる実践例です。",
     "date": "2025-07-17",
     "tags": [
@@ -62,7 +74,7 @@
   },
   {
     "title": "GASをスマホの操作で処理開始させるための工夫",
-    "url": "./gas-mobile-trigger/index.html",
+    "url": "/articles/blog/gas-mobile-trigger/index.html",
     "summary": "GASをスマホから実行する方法を紹介。図形ボタンが使えない環境でも、onEditトリガーと確認セルで安全に処理を始める実践例です。",
     "date": "2025-07-17",
     "tags": [
@@ -75,7 +87,7 @@
   },
   {
     "title": "ボタンを押したら指定の箇所だけクリアにするGASツール",
-    "url": "./gas-clear-range/index.html",
+    "url": "/articles/blog/gas-clear-range/index.html",
     "summary": "Googleスプレッドシートで、ボタン一つで特定範囲だけをクリアするGAS関数を紹介。誤操作を防ぐ確認ダイアログ付きで、現場で使えるスクリプトと注意点を解説します。",
     "date": "2025-07-16",
     "tags": [
@@ -87,7 +99,7 @@
   },
   {
     "title": "GASでスプレッドシートの担当者リストからGoogleドライブフォルダを自動作成する方法",
-    "url": "./gas-foldercreate/index.html",
+    "url": "/articles/blog/gas-foldercreate/index.html",
     "summary": "Googleスプレッドシートの担当者リストから、自動でGoogleドライブフォルダを作成してURLを記録するGASツールを実装。",
     "date": "2025-07-15",
     "tags": [
@@ -100,7 +112,7 @@
   },
   {
     "title": "GASでスプレッドシートからGmail下書きを自動作成するツール",
-    "url": "./gmail-draft-tool/index.html",
+    "url": "/articles/blog/gmail-draft-tool/index.html",
     "summary": "GASでスプレッドシートのデータを元にGmail下書きを一括作成する仕組みを紹介。確認フローも実装。",
     "date": "2025-07-02",
     "tags": [
@@ -113,7 +125,7 @@
   },
   {
     "title": "スプレッドシートから請求書PDFを自動作成するツール",
-    "url": "./invoice-pdf-tool/index.html",
+    "url": "/articles/blog/invoice-pdf-tool/index.html",
     "summary": "スプレッドシート情報を元にPDF請求書を自動生成し、Googleドライブへ保存するGASツールを解説。",
     "date": "2025-07-01",
     "tags": [
@@ -126,7 +138,7 @@
   },
   {
     "title": "【GASで簡単自動化】ECサイトのCSVをスプレッドシートに自動転記するGASツール",
-    "url": "./ec-csv-to-spreadsheet/index.html",
+    "url": "/articles/blog/ec-csv-to-spreadsheet/index.html",
     "summary": "ECサイトから出力されたCSVデータをGoogleスプレッドシートの購入リストに自動転記するツールを解説。",
     "date": "2025-06-29",
     "tags": [

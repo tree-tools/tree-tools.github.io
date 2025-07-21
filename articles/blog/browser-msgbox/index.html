@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browser.msgBoxって何？処理前に“確認”したい時のGAS小技 | GASで作業をもっとラクに</title>
+  <meta name="description" content="GASで確認ダイアログを表示するBrowser.msgBoxの使い方と注意点を、独学中の実体験をもとに紹介します。" />
+  <meta property="og:title" content="GASで確認ダイアログを出す｜Browser.msgBoxの使い方と注意点" />
+  <meta property="og:description" content="GASで確認メッセージを出すBrowser.msgBoxの使い方と、スマホでは表示されない点の注意・代替方法を紹介。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://yourdomain.com/articles/blog/browser-msgbox/" />
+  <!-- <meta property="og:image" content="https://yourdomain.com/assets/images/ogp/browser-msgbox.png" /> -->
+
+  <!-- 広告コードはここに挿入 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+
+    <article class="article-content">
+
+      <h1 class="page-title">Browser.msgBoxって何？処理前に“確認”したい時のGAS小技</h1>
+
+      <div class="article-meta">
+        <span class="date">投稿日：2025-07-20</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+          <span>GAS</span>
+          <span>業務効率化</span>
+        </span>
+      </div>
+
+      <section class="section summary">
+        <p>
+          GASで確認メッセージを表示したいときに使える「Browser.msgBox」。<br>
+          私自身が独学中に「処理していいか確認したい」「完了したことを伝えたい」と思ったときによく使っています。<br>
+          ただし、スマホでは表示されないという落とし穴も。この記事ではその使い方と注意点、スマホ対応の代替案まで実体験ベースで紹介します。
+        </p>
+      </section>
+
+      <section class="section intro">
+        <p>
+          このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
+          丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
+        </p>
+      </section>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#what">Browser.msgBoxとは？</a></li>
+          <li><a href="#how">実際に使っている例</a></li>
+          <li><a href="#caution">スマホでは使えない注意点</a></li>
+          <li><a href="#alternative">スマホ対応の代替方法</a></li>
+          <li><a href="#summary">まとめ</a></li>
+        </ul>
+      </nav>
+
+      <section id="what" class="section">
+        <h2>Browser.msgBoxとは？</h2>
+        <p>
+          GASでポップアップのようにメッセージを表示したり、ユーザーに「OK」「キャンセル」などの操作を求めるための関数です。<br>
+          PCのスプレッドシートからスクリプトを実行する際に便利です。
+        </p>
+        <p>▼ 例：処理前に「続行しますか？」と聞く</p>
+        <pre><code class="language-javascript">var response = Browser.msgBox(
+  'この処理を実行します。続けますか？',
+  Browser.Buttons.YES_NO
+);
+
+if (response == 'yes') {
+  // 実行処理
+} else {
+  // キャンセル処理
+}</code></pre>
+      </section>
+
+      <section id="how" class="section">
+        <h2>実際に使っている例</h2>
+        <h3>1. 処理スタート前の確認</h3>
+        <p>いきなり実行して思わぬ事故になるのを防ぐため、最初に実行するか聞いてます。</p>
+        <pre><code class="language-javascript">var ans = Browser.msgBox(
+  'この処理はデータを更新します。本当に実行しますか？',
+  Browser.Buttons.OK_CANCEL
+);
+if (ans === 'cancel') return;</code></pre>
+
+        <h3>2. 処理対象件数の確認</h3>
+        <p>スプレッドシートのA列にデータが100件あると想定して実行しようとしたが、うっかり50件だけしか選択してなく処理…というミスを防ぎます。</p>
+        <pre><code class="language-javascript">var count = sheet.getRange("A2:A")
+  .getValues()
+  .filter(String).length;
+
+var ans = Browser.msgBox(
+  '処理対象は' + count + '件です。処理を開始しますか？',
+  Browser.Buttons.YES_NO
+);
+if (ans !== 'yes') return;</code></pre>
+
+        <h3>3. 処理完了の通知</h3>
+        <p>GASは処理が終わったタイミングがわかりにくいので、終了報告を表示させます。</p>
+        <pre><code class="language-javascript">Browser.msgBox('完了しました。' + count + '件を処理しました。');</code></pre>
+      </section>
+
+      <section id="caution" class="section">
+        <h2>スマホでは使えない注意点</h2>
+        <p>
+          <strong>Browser.msgBoxはPCからの手動実行時にしか表示されません。</strong><br>
+          Webアプリ経由やスマホ、タブレットでは一切表示されないので注意が必要です。
+        </p>
+      </section>
+
+      <section id="alternative" class="section">
+        <h2>スマホ対応の代替方法</h2>
+
+        <p>セルにメッセージを貼り付けることで、Browser.msgBoxの代わりにメッセージを表示させることが出来ます。</p>
+        <pre><code class="language-javascript">sheet.getRange("B1").setValue('処理を開始します...');</code></pre>
+        <p>
+          こういった工夫で、スマホからでも視覚的に処理の確認・進捗を伝えることができます。
+        </p>
+      </section>
+
+      <section id="summary" class="section">
+        <h2>まとめ</h2>
+        <p>
+          GASで確認や通知を行う方法として、<strong>Browser.msgBox</strong>はとても手軽で便利です。特に、処理を開始する前に「本当に実行していいのか？」をユーザーに確認したいとき、処理が完了したことを明示的に伝えたいときに重宝します。
+        </p>
+        <p>
+          ただし、この機能は<strong>PCブラウザからの手動実行限定</strong>という大きな制限があります。Webアプリ化したものやスマホからの実行ではメッセージが一切表示されないため、表示されることを前提にした設計はトラブルの元になります。
+        </p>
+        <p>
+          実際、私もスマホで確認メッセージが出ないことに気づかず処理を実行してしまい、意図しないデータ変更をしたことがあります。そうした経験から、今ではセルやチェックボックスを使って事前確認や完了通知を代替するようにしています。
+        </p>
+        <p>
+          <strong>まとめると：</strong>
+        </p>
+        <ul>
+          <li>Browser.msgBoxは確認や通知にとても便利</li>
+          <li>PC上でのみ使えるためスマホ・Webアプリでは非表示</li>
+          <li>スマホ対応したい場合はセルやチェックボックスで工夫するのが安心</li>
+          <li>動作環境に応じてメッセージの出し方を変える設計が大事</li>
+        </ul>
+        <p>
+          初心者のうちは「表示されると思っていたのに出ない」といったことが起きやすいですが、それも含めて試行錯誤です。小さなつまずきから学びながら、自分なりの便利な使い方を見つけていければ十分だと思います。
+        </p>
+      </section>
+
+      <p class="back-link">
+        <a href="/articles/blog/index.html">← 記事一覧に戻る</a>
+      </p>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <section class="section">
+        <p>
+          <a href="/">トップページへ戻る</a>
+        </p>
+      </section>
+
+    </article>
+  </main>
+
+  <div data-include="/includes/footer.html"></div>
+
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+
+</body>
+
+</html>

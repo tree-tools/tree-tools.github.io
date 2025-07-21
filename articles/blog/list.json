@@ -1,10 +1,23 @@
 [
   {
+    "title": "let / var / const の違いとは？GAS初心者がつまずいた変数の基本",
+    "url": "/articles/blog/let-var-const/index.html",
+    "summary": "GASで確認ダイアログを表示するBrowser.msgBoxの使い方と注意点を、独学中の実体験をもとに紹介します。",
+    "date": "2025-07-21",
+    "tags": [
+      "GAS",
+      "業務効率化",
+      "How to",
+      "GAS実践入門"
+    ]
+  },
+  {
     "title": "Browser.msgBoxって何？処理前に“確認”したい時のGAS小技",
     "url": "/articles/blog/browser-msgbox/index.html",
     "summary": "GASで確認ダイアログを表示するBrowser.msgBoxの使い方と注意点を、独学中の実体験をもとに紹介します。",
     "date": "2025-07-21",
     "tags": [
+      "GAS",
       "業務効率化",
       "How to",
       "スプレッドシート",
@@ -17,6 +30,7 @@
     "summary": "Google Apps Script初心者向けに、スプレッドシートの操作に欠かせないgetRange, getValue, getValuesなどの使い分けを実例とコード付きで解説。業務自動化の第一歩をわかりやすく紹介します。",
     "date": "2025-07-18",
     "tags": [
+      "GAS",
       "業務効率化",
       "How to",
       "スプレッドシート",
@@ -29,6 +43,7 @@
     "summary": "GASを独学で学ぶ初心者向けに、まず覚えるべき記号や構文だけを厳選して解説。コピペだけで終わらせず、少しずつコードが読めるようになる実践的なステップを紹介します。",
     "date": "2025-07-18",
     "tags": [
+      "GAS",
       "業務効率化",
       "How to",
       "スプレッドシート",

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>let / var / const の違いとは？GAS初心者がつまずいた変数の基本 | GASで作業をもっとラクに</title>
+  <meta name="description" content="GAS初心者がつまずきやすいlet・var・constの違いや、変数・定数の使い分けを実例ベースで分かりやすく解説。独学者向けの実践記事です。" />
+  <meta property="og:title" content="let / var / const の違いとは？GAS初心者がつまずいた変数の基本" />
+  <meta property="og:description" content="GAS初心者がつまずきやすい変数の使い方を、let・var・constの実例と一緒に分かりやすく解説。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://tree-tools.github.io/articles/blog/let-var-const.html" />
+  <!-- <meta property="og:image" content="https://tree-tools.github.io/assets/img/ogp-default.png" /> -->
+
+  <!-- 広告コードはここに挿入 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+</head>
+
+<body>
+  <!-- ヘッダー読込 -->
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+
+    <article class="article-content">
+
+      <h1 class="page-title">let / var / const の違いとは？GAS初心者がつまずいた変数の基本</h1>
+
+      <div class="article-meta">
+        <span class="date">投稿日：2025-07-19</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+          <span>GAS</span>
+          <span>業務効率化</span>
+        </span>
+      </div>
+
+      <section class="section summary">
+        <p>GASを独学で始めたときに最初につまずいた「let」「var」「const」の違いや、変数と定数の基本を、実際の例とともに分かりやすく解説します。</p>
+      </section>
+
+      <section class="section intro">
+        <p>
+          このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
+          丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
+        </p>
+      </section>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#about-variable">変数って何？</a></li>
+          <li><a href="#difference">let / var / const の違い</a></li>
+          <li><a href="#bug">varでハマった実例</a></li>
+          <li><a href="#const">constは固定値用</a></li>
+          <li><a href="#cases">定数と変数の具体例</a></li>
+          <li><a href="name">命名規則</a></li>
+          <li><a href="#summary">まとめ</a></li>
+        </ul>
+      </nav>
+
+      <section id="about-variable" class="section">
+        <h2>変数って何？</h2>
+        <p>変数とは、データに名前をつけて保存する「箱」のようなものです。</p>
+        <pre><code class="language-javascript">let name = "たろう";</code></pre>
+        <p>これで、<code>name</code> という変数に「たろう」という文字列が入ります。</p>
+
+        <p>同じように、数字を入れることもできます</p>
+        <pre><code class="language-javascript">let count = 5;</code></pre>
+        <p>このあとで<code>count</code>を使えば、「5」として処理してくれるわけです。<br>
+          この「名前をつけて値をしまう」という仕組みが、プログラムの基本です。</p>
+
+      </section>
+
+      <section id="difference" class="section">
+        <h2>let / var / const の違い</h2>
+        <p>GAS（JavaScript）には、変数を宣言する方法が3つあります。</p>
+        <pre><code class="language-javascript">var name = "たろう";
+let name = "たろう";
+const name = "たろう";</code></pre>
+        <p>どれも「変数宣言」に使いますが、挙動や使いどころに違いがあります。</p>
+        <table class="compare-table compare-table4">
+          <thead>
+            <tr>
+              <th>宣言方法</th>
+              <th>再代入</th>
+              <th>再宣言</th>
+              <th>スコープ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>var</td>
+              <td>OK</td>
+              <td>OK</td>
+              <td>関数単位</td>
+            </tr>
+            <tr>
+              <td>let</td>
+              <td>OK</td>
+              <td>NG</td>
+              <td>ブロック単位</td>
+            </tr>
+            <tr>
+              <td>const</td>
+              <td>NG</td>
+              <td>NG</td>
+              <td>ブロック単位</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>初心者の頃は「表見てもよく分からん」ってなりましたが、次の実例を見れば納得できます。</p>
+      </section>
+
+      <section id="bug" class="section">
+        <h2>varでハマった実例</h2>
+        <p>ループ内で宣言した<code>var</code>が外でも使えてしまう例：</p>
+        <pre><code class="language-javascript">for (var i = 0; i < 5; i++) {
+  Logger.log(i);
+}
+Logger.log(i); // → 5 と出る</code></pre>
+        <p><code>let</code>にすればブロックスコープで防げます。</p>
+        <pre><code class="language-javascript">for (let i = 0; i < 5; i++) {
+  Logger.log(i);
+}
+Logger.log(i); // → エラー（iはループの外にいない）</code></pre>
+
+      </section>
+
+      <section id="const" class="section">
+        <h2>constは固定値用</h2>
+        <p>変わらない前提の値には<code>const</code>を使います。</p>
+        <pre><code class="language-javascript">const TAX_RATE = 0.1;</code></pre>
+        <p>
+          途中で値を変えてしまうミスを防げます。<br>
+          こういう「決めたら変わらない数字」は、const のほうが明らかに安全でした。
+        </p>
+      </section>
+
+      <section id="cases" class="section">
+        <h2>定数と変数の具体例</h2>
+        <h3>定数にすべき例（const）</h3>
+        <ul>
+          <li><code>const TAX_RATE = 0.1;</code> → 税率は固定値</li>
+          <li><code>const API_KEY = "abc123";</code> → セキュリティ上、変更すべきでない</li>
+          <li><code>const MAX_LENGTH = 100;</code> → 入力制限など、仕様上固定</li>
+        </ul>
+
+        <h3>変数にすべき例（let）</h3>
+        <ul>
+          <li><code>let userName = "たろう";</code> → 入力内容は人によって変わる</li>
+          <li><code>let count = 0;</code> → カウント処理などで値が増える</li>
+          <li><code>let isValid = false;</code> → 処理の中で状態が変わる</li>
+        </ul>
+        <p>最初は<code>let</code>だけ使っておいて、あとから「この値は固定だな」と思ったら<code>const</code>に変える…くらいの感覚でOKです。</p>
+      </section>
+
+      <section id="name" class="section">
+        <h2>命名規則</h2>
+        <p>変数には意味のある名前をつけるようにしています。<br>
+          昔の自分は「a」とか「data1」とかで済ませていたけど、あとから見返すと超わかりにくいです</p>
+        <p>以下のような名前付けがオススメです</p>
+        <ul>
+          <li>意味が通じる名前 →<code>userName</code>,<code>totalPrice</code>,<code>isValid</code></li>
+          <li>キャメルケース（2語目以降を大文字に） →<code>userAge</code>,<code>formData</code></li>
+          <li>基本は英単語（慣れたら辞書引きながらでもOK）</li>
+        </ul>
+        <p>変数名が分かりやすいだけで、コード全体の読みやすさが段違いになります。</p>
+      </section>
+
+      <section id="summary" class="section">
+        <h2>まとめ</h2>
+        <p>GASを独学でやる中で、<code>let</code>と<code>const</code>の使い分けを覚えると、バグを減らせて、後から読みやすいコードになります。</p>
+        <p>「これは変わる？変わらない？」を基準に考えて、まずは <strong>const → let の順で検討</strong> するのがおすすめです。</p>
+      </section>
+
+      <p class="back-link">
+        <a href="/articles/blog/index.html">← 記事一覧に戻る</a>
+      </p>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <section class="section">
+        <p>
+          <a href="/">トップページへ戻る</a>
+        </p>
+      </section>
+
+    </article>
+  </main>
+
+  <div data-include="/includes/footer.html"></div>
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+</body>
+
+</html>

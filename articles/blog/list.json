@@ -1,5 +1,17 @@
 [
   {
+    "title": "関数ってどう作るの？初心者がつまずいたところと使いこなせた理由",
+    "url": "/articles/blog/gas-function-basics/index.html",
+    "summary": "GAS初心者が「関数って何？」とつまずいた経験や、実際に使ってみて便利だった点、関数化のメリットなどを実体験ベースで紹介します。",
+    "date": "2025-07-23",
+    "tags": [
+      "GAS",
+      "業務効率化",
+      "How to",
+      "GAS実践入門"
+    ]
+  },
+  {
     "title": "forって何？GAS初心者が実例で学んだ繰り返し処理の基本",
     "url": "/articles/blog/gas-for-loop/index.html",
     "summary": "GAS初心者がつまずきやすいfor文について、基本構文・スプレッドシート活用例・ifとの組み合わせ・多重ループの注意点まで、独学体験をもとに実践的に解説します。",

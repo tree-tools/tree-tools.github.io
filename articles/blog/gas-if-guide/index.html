@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>if文とは？GAS初心者が実例で学んだ条件分岐の基本 | GASで作業をもっとラクに</title>
+  <meta name="description"
+    content="Google Apps Script初心者がつまずいたif文の基本とテクニックを、実例ベースで解説。条件分岐・複数条件・returnやcontinueの活用例も紹介。">
+  <meta property="og:title" content="if文とは？GAS初心者が実例で学んだ条件分岐の基本" />
+  <meta property="og:description" content="Google Apps Script初心者がつまずいたif文の基本とテクニックを、実例ベースで解説。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://tree-tools.github.io/articles/blog/gas-if-guide/" />
+  <meta property="og:image" content="https://tree-tools.github.io/assets/images/tree-toos-icon.png">
+
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="canonical" href="https://tree-tools.github.io/articles/blog/gas-if-guide/" />
+
+  <!-- 共通JS -->
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <!-- Prism.js コード用 -->
+  <script src="/assets/js/copy-code.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <!-- favicon -->
+  <link rel="icon" href="https://tree-tools.github.io/assets/images/tree-toos-icon.png" type="image/x-icon">
+  <!-- 広告 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+
+    <article class="article-content">
+
+      <h1 class="page-title">if文とは？GAS初心者が実例で学んだ条件分岐の基本</h1>
+
+      <div class="article-meta">
+        <span class="date">投稿日：2025-07-19</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+          <span>GAS</span>
+          <span>業務効率化</span>
+          <span>How to</span>
+          <span>GAS実践入門</span>
+        </span>
+      </div>
+
+      <section class="section summary">
+        <p>Google Apps
+          Script（GAS）初心者が「if文」でつまずいたリアルな体験をもとに、基本から応用、よく使う条件分岐の書き方、そして`return`や`continue`と組み合わせたテクニックを紹介します。</p>
+      </section>
+
+      <section class="section intro">
+        <p>
+          このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
+          丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
+        </p>
+      </section>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#basic">ifって何？</a></li>
+          <li><a href="#pattern1">よく使うパターン①：空欄スキップ</a></li>
+          <li><a href="#else">else / else ifの違い</a></li>
+          <li><a href="#pattern2">よく使うパターン②：複数条件</a></li>
+          <li><a href="#real">実際によく使った場面</a></li>
+          <li><a href="#tech">テクニック：if + return / continue</a></li>
+          <li><a href="#summary">まとめ</a></li>
+        </ul>
+      </nav>
+
+      <section id="basic" class="section">
+        <h2>ifって何？</h2>
+        <p>条件に応じて処理を分けるための文法で、GASにおける意思決定の基礎。</p>
+        <pre><code class="language-javascript">if (条件) {
+  // 実行する処理
+}</code></pre>
+        <ul>
+          <li>「〇〇だったらこうする」という判断ルールをGASに書いてあげるのがif</li>
+          <li>スプレッドシートで言うなら「このセルが空欄だったら処理しない」みたいなときに使えます</li>
+        </ul>
+      </section>
+
+      <section id="pattern1" class="section">
+        <h2>よく使うパターン①：空欄スキップ</h2>
+        <pre><code class="language-javascript">if (cell.getValue() === "") {
+  return;
+}</code></pre>
+        <p>
+          これは、<strong>空欄なら処理を中断する（return）</strong>という使い方です。<br>
+          ループ処理の中で使うと、いらない行をスキップできて超便利です。
+        </p>
+      </section>
+
+      <section id="else" class="section">
+        <h2>else / else ifの違い</h2>
+        <h3>elseは「それ以外」の全部</h3>
+        <pre><code class="language-javascript">if (条件A) {
+  // Aがtrueのとき
+} else {
+  // Aじゃないとき
+}</code></pre>
+
+        <h3>else ifは「他にも条件があるとき」</h3>
+        <pre><code class="language-javascript">if (score >= 80) {
+  Logger.log("合格！");
+} else if (score >= 60) {
+  Logger.log("追試！");
+} else {
+  Logger.log("不合格…");
+}</code></pre>
+        <p>else ifで追加の条件分岐、elseでそれ以外を処理します。</p>
+      </section>
+
+      <section id="pattern2" class="section">
+        <h2>よく使うパターン②：複数条件（AND / OR）</h2>
+        <pre><code class="language-javascript">if (value1 === "OK" && value2 > 100) {
+  // 条件をすべて満たすときの処理
+}</code></pre>
+        <p>AND（&&）とOR（||）を使って、複雑な条件を組み合わせることもできます。</p>
+        <ul>
+          <li>&&は 両方とも満たすとき（AND）</li>
+          <li>||は どっちか満たせばOK（OR）</li>
+          <p>「〇〇で、かつ△△のとき」は&&、「〇〇または△△のとき」は||</p>
+        </ul>
+      </section>
+
+      <section id="real" class="section">
+        <h2>実際によく使った場面</h2>
+        <ul>
+          <li>空欄スキップ（if (cell === "") return;）</li>
+          <li>ログ出力の条件（テストする時によく使う）</li>
+          <li>値の分類・グループ分け</li>
+          <li>重複チェック</li>
+          <li>処理の早期終了</li>
+        </ul>
+      </section>
+
+      <section id="tech" class="section">
+        <h2>テクニック：if + return / continue</h2>
+
+        <h3>早期リターン</h3>
+        <pre><code class="language-javascript">if (!email) return;</code></pre>
+        <p>値がない場合は早めに処理を終了できます。</p>
+
+        <h3>continueでスキップ</h3>
+        <pre><code class="language-javascript">for (let i = 0; i < rows.length; i++) {
+  if (rows[i][0] === "") continue;
+  // それ以外の処理
+}</code></pre>
+        <p>ループ内で条件に合わないときだけ飛ばすテクニックです。</p>
+      </section>
+
+      <section id="summary" class="section">
+        <h2>まとめ</h2>
+        <p>
+          教科書にはいろんなif文の書き方が載ってますが、実際に使うのは「空欄スキップ」「分類」「条件一致」くらいがほとんどです。<br>
+          複雑な条件も、分解して if を小分けにしたほうが結局わかりやすいです。<br>
+          最初は書きすぎたり、複雑にし過ぎてエラーになったりしましたが、「読みやすさ」を優先したらうまくいくようになりました。
+        </p>
+
+      </section>
+
+      <p class="back-link">
+        <a href="/articles/blog/index.html">← 記事一覧に戻る</a>
+      </p>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+      <section class="section">
+        <p><a href="/">トップページへ戻る</a></p>
+      </section>
+
+    </article>
+  </main>
+
+  <div data-include="/includes/footer.html"></div>
+
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+
+</body>
+
+</html>

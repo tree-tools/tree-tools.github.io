@@ -1,5 +1,17 @@
 [
   {
+    "title": "if文とは？GAS初心者が実例で学んだ条件分岐の基本",
+    "url": "/articles/blog/gas-if-guide/index.html",
+    "summary": "Google Apps Script初心者がつまずいたif文の基本とテクニックを、実例ベースで解説。条件分岐・複数条件・returnやcontinueの活用例も紹介します。",
+    "date": "2025-07-22",
+    "tags": [
+      "GAS",
+      "業務効率化",
+      "How to",
+      "GAS実践入門"
+    ]
+  },
+  {
     "title": "let / var / const の違いとは？GAS初心者がつまずいた変数の基本",
     "url": "/articles/blog/let-var-const/index.html",
     "summary": "GASで確認ダイアログを表示するBrowser.msgBoxの使い方と注意点を、独学中の実体験をもとに紹介します。",

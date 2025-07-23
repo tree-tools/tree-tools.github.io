@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>forって何？GAS初心者が実例で学んだ繰り返し処理の基本 | GASで作業をもっとラクに</title>
+  <meta name="description" content="GAS初心者がつまずきやすいfor文について、基本構文・スプレッドシート活用例・ifとの組み合わせ・多重ループの注意点まで、独学体験をもとに実践的に解説します。" />
+
+  <meta property="og:title" content="forって何？ | GASで作業をもっとラクに" />
+  <meta property="og:description" content="GAS初心者向けにfor文の基本・活用例・注意点を実体験ベースで解説。スプレッドシート操作や多重ループにも触れています。" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://tree-tools.github.io/articles/blog/gas-for-loop/" />
+  <meta property="og:image" content="https://tree-tools.github.io/assets/images/ogp/for-loop.jpg" />
+
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="canonical" href="https://tree-tools.github.io/articles/blog/gas-for-loop" />
+
+  <!-- 共通JS -->
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <!-- Prism.js コード用 -->
+  <script src="/assets/js/copy-code.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <!-- favicon -->
+  <link rel="icon" href="https://tree-tools.github.io/assets/images/tree-toos-icon.png" type="image/x-icon">
+  <!-- 広告 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6247585947417000"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+
+    <article class="article-content">
+
+      <h1 class="page-title">forって何？GAS初心者が実例で学んだ繰り返し処理の基本</h1>
+
+      <div class="article-meta">
+        <span class="date">投稿日：2025-07-23</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+          <span>GAS</span>
+          <span>業務効率化</span>
+          <span>How to</span>
+          <span>GAS実践入門</span>
+        </span>
+      </div>
+
+      <section class="section summary">
+        <p>
+          GAS初心者の頃に最初につまずいた「for文」について、自分の実体験を元に解説します。基本構文からスプレッドシートでの実用例、ifとの組み合わせ、二重ループやインデントの工夫まで、「実際にどう使ったか」をベースに紹介します。
+        </p>
+      </section>
+
+      <section class="section intro">
+        <p>
+          このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
+          丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
+        </p>
+      </section>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#basic">for文の基本</a></li>
+          <li><a href="#spreadsheet">スプレッドシートでの実用例</a></li>
+          <li><a href="#if-combo">ifとの組み合わせ</a></li>
+          <li><a href="#double-loop">二重ループの注意点</a></li>
+          <li><a href="#advanced">三重以上とreturn・continueの活用</a></li>
+          <li><a href="#indent">インデントの意味とコツ</a></li>
+          <li><a href="#summary">まとめ</a></li>
+        </ul>
+      </nav>
+
+      <section id="basic" class="section">
+        <h2>for文の基本</h2>
+        <p>繰り返し処理の基本形は以下のような形です。</p>
+        <pre><code class="language-javascript">for (let i = 0; i < 5; i++) {
+  Logger.log(i);
+}</code></pre>
+        <p>
+          「何回も同じ処理をしたい」場面でまず使うのがこの形です。<br>
+          iが0から始まって、1ずつ増えながら、5未満の間繰り返す、という流れです。
+        </p>
+        <p>初心者の頃は、</p>
+        <ul>
+          <li>i++ ってなんだ？</li>
+          <li>i < 5 で終わるの？</li>
+          <li>letって必要？</li>
+        </ul>
+        <p>みたいなところが気になりましたが、まずは「何回も同じ処理をしたいときに使うんだ」とだけ覚えればOKです。</p>
+
+      </section>
+
+      <section id="spreadsheet" class="section">
+        <h2>スプレッドシートでの実用例</h2>
+        <p>GASでスプシを操作するなら、行ごとに何か処理したいときに for が活躍します。</p>
+        <pre><code class="language-javascript">const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("データ");
+const values = sheet.getDataRange().getValues();
+
+for (let i = 1; i &lt; values.length; i++) {
+  const row = values[i];
+  Logger.log(row[0]);
+}</code></pre>
+        <p>
+          ヘッダー行を飛ばして1行ずつ処理したいときにこのパターンをよく使います。<br>
+          values[i] で1行分の配列が取れます。
+        </p>
+      </section>
+
+      <section id="if-combo" class="section">
+        <h2>ifとの組み合わせ</h2>
+        <p>たとえば「未処理」のデータだけ抽出したいとき。</p>
+        <pre><code class="language-javascript">for (let i = 1; i &lt; values.length; i++) {
+  const row = values[i];
+  if (row[3] === "未処理") {
+    Logger.log("処理が必要：" + row[0]);
+  }
+}</code></pre>
+        <p>「条件付きで処理したい」場面ではifを組み合わせるのが基本です。</p>
+      </section>
+
+      <section id="double-loop" class="section">
+        <h2>二重ループの注意点</h2>
+        <pre><code class="language-javascript">for (let i = 0; i &lt; list1.length; i++) {
+  for (let j = 0; j &lt; list2.length; j++) {
+    if (list1[i][0] === list2[j][0]) {
+      Logger.log("一致：" + list1[i][0]);
+    }
+  }
+}</code></pre>
+        <p>多重ループでは変数名（i/j）や処理のネストに注意。可読性が重要です。</p>
+      </section>
+
+      <section id="advanced" class="section">
+        <h2>三重以上とreturn・continueの活用</h2>
+        <p><strong>continue</strong>で処理をスキップ：</p>
+        <pre><code class="language-javascript">for (let i = 0; i &lt; data.length; i++) {
+  if (data[i][2] === "") continue;
+  // 本処理
+}</code></pre>
+
+        <p><strong>return</strong>で早期終了：</p>
+        <pre><code class="language-javascript">function findKeyword() {
+  for (let i = 0; i &lt; data.length; i++) {
+    if (data[i][1].includes("重要")) {
+      Logger.log("見つけた！");
+      return;
+    }
+  }
+}</code></pre>
+      </section>
+
+      <section id="indent" class="section">
+        <h2>インデントの意味とコツ</h2>
+        <p>コードの構造を明確にするための「見た目のルール」。可読性のために超重要。</p>
+        <p><strong>悪い例：</strong></p>
+        <pre><code class="language-javascript">for (let i = 0; i &lt; list.length; i++) {
+for (let j = 0; j &lt; list2.length; j++) {
+if (list[i] === list2[j]) {
+Logger.log("一致！");
+}
+}
+}</code></pre>
+        <p><strong>良い例：</strong></p>
+        <pre><code class="language-javascript">for (let i = 0; i &lt; list.length; i++) {
+  for (let j = 0; j &lt; list2.length; j++) {
+    if (list[i] === list2[j]) {
+      Logger.log("一致！");
+    }
+  }
+}</code></pre>
+        <p>「自分のため」に、将来の「自分が読むとき」に、きれいにしておくのが大事です。</p>
+      </section>
+
+      <section id="summary" class="section">
+        <h2>まとめ</h2>
+        <p>最初はただの「繰り返し」でも、</p>
+        <ul>
+          <li>データを走査する</li>
+          <li>条件付きで処理する</li>
+          <li>多重ループで複雑な処理に対応する</li>
+        </ul>
+        <p>といった具合に、使える場面が一気に広がります。</p>
+        <p>
+          GASでは「スプレッドシートとの連携」がほぼ必須なので、forの使いどころは本当に多いです。<br>
+          慣れれば、仕事効率も思考整理も加速します。
+        </p>
+      </section>
+
+      <section id="links" class="section">
+        <h2>関連リンク</h2>
+        <ul>
+          <li><a href="/articles/blog/gas-if-guide/index.html">if文とは？GAS初心者が実例で学んだ条件分岐の基本</a></li>
+        </ul>
+      </section>
+
+      <p class="back-link">
+        <a href="/articles/blog/index.html">← 記事一覧に戻る</a>
+      </p>
+
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+      <section class="section">
+        <p><a href="/">トップページへ戻る</a></p>
+      </section>
+
+    </article>
+  </main>
+
+  <div data-include="/includes/footer.html"></div>
+
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+
+</body>
+
+</html>

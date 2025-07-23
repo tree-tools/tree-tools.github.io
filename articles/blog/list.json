@@ -1,5 +1,17 @@
 [
   {
+    "title": "forって何？GAS初心者が実例で学んだ繰り返し処理の基本",
+    "url": "/articles/blog/gas-for-loop/index.html",
+    "summary": "GAS初心者がつまずきやすいfor文について、基本構文・スプレッドシート活用例・ifとの組み合わせ・多重ループの注意点まで、独学体験をもとに実践的に解説します。",
+    "date": "2025-07-23",
+    "tags": [
+      "GAS",
+      "業務効率化",
+      "How to",
+      "GAS実践入門"
+    ]
+  },
+  {
     "title": "if文とは？GAS初心者が実例で学んだ条件分岐の基本",
     "url": "/articles/blog/gas-if-guide/index.html",
     "summary": "Google Apps Script初心者がつまずいたif文の基本とテクニックを、実例ベースで解説。条件分岐・複数条件・returnやcontinueの活用例も紹介します。",

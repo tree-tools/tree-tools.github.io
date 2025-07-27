@@ -8,12 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initHeader() {
-  const menuToggle = document.getElementById("menu-toggle");
-  const navMenu = document.getElementById("nav-menu");
-  const header = document.querySelector(".site-header");
-
-  console.log("menuToggle:", menuToggle);
-  console.log("navMenu:", navMenu);
+  const menuToggle = document.getElementById("menu-toggle"); // memuボタンのid
+  const navMenu = document.getElementById("nav-menu"); // navのid
+  const header = document.querySelector(".site-header"); // headerのクラス
 
   if (menuToggle && navMenu) {
     menuToggle.addEventListener("click", (e) => {

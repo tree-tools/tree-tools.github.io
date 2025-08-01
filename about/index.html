@@ -38,10 +38,15 @@
     </nav>
 
     <h1 class="page-title">サイトの運営方針とプロフィール</h1>
-    <section class="section">
+    <section>
       <p>
-        「GASで作業をもっとラクに」は、Google Apps Script（GAS）の活用を通じて業務効率化を目指すサイトです。<br>
-        初心者向けというより、自分自身が独学で学んできた経験や試行錯誤をまとめることで、同じようにGASを学びたい方の役に立てばと思い立ち上げました。
+        「GASで作業をもっとラクに」は、Google Apps Script（GAS）を使って日々の作業を自動化・効率化することを目指すサイトです。<br>
+        このサイトは、いわゆる初心者向けの教科書的な解説ではなく、私自身が独学でGASを学びながら試してきたコードや、つまずいたポイント、実務で実際に使えるよう工夫した記録をもとにしています。</p>
+      <p>
+        GASを始めたばかりの頃、「こういう具体例があったら助かったのに」と思ったことを形にしながら、同じように手を動かしながら学びたい方にとって、実用的で再現性のあるヒントを届けられたらという思いで立ち上げました。
+      </p>
+      <p>
+        少しずつ、自分の手で作れるようになっていく感覚を楽しんでもらえるよう、読みやすく、コピペしてすぐ試せる構成を心がけています。
       </p>
     </section>
 
@@ -73,14 +78,26 @@
     <section class="section">
       <h2>当サイトのコンテンツ</h2>
       <p>
-        このサイトでは、次のような内容を掲載しています。
+        このサイトでは、GASを使って業務を効率化したい方のために、以下のような情報を掲載しています。<br>
+        初心者の方でも少しずつ実践できるよう、丁寧な解説とコピペしやすいコードを中心に構成しています。
       </p>
-      <ul class="toc" aria-label="ページ内目次">
-        <li>GASの基本的な使い方</li>
-        <li>実務に役立つサンプルコード</li>
-        <li>GASを使った業務効率化のアイデア</li>
-        <li>よくあるトラブル解決方法</li>
-      </ul>
+
+      <h3>GASの基本的な使い方</h3>
+      <p>
+        「GASとは何か？」「どこで書くの？」「どうやって動かすの？」といった超入門の内容から、スプレッドシートやGmailとの連携の基本まで、まず最初に押さえておきたい知識をわかりやすく解説しています。
+      </p>
+
+      <h3>実務に役立つサンプルコード</h3>
+      <p>
+        日々の業務でそのまま使えるGASコードを多数掲載しています。
+        たとえば、スプレッドシートのデータからGmailの下書きを自動で作るツールやGoogleドライブへの自動保存など、実用性の高いものを中心に紹介しています。
+      </p>
+
+      <h3>GASを使った業務効率化のアイデア</h3>
+      <p>
+        「こんな作業、自動化できないかな？」と感じた時にヒントになるような活用アイデアをまとめています。
+        Excelやメールとの連携、小規模なシステム代替など、GASならではの手軽さを活かした自動化の事例を掲載しています。
+      </p>
     </section>
 
     <section class="section">
@@ -91,7 +108,24 @@
         また、定型的な注文メールをミスなく簡単に作成できるようにしたり、チーム全体の作業時間やヒューマンエラーを半分以下に減らすことも目標に取り組んできました。<br>
         これらのツールの一部は、このサイト内の下記リンクのページで紹介していますので、興味のある方はぜひ覗いてみてください。
       </p>
-      <p>▶ <a href="/articles/blog/index.html">ブログ記事一覧（具体的なGASツール解説など）</a></p>
+      <div class="page-links">
+        <a href="/articles/blog/gmail-draft-tool/">
+          <p>メール作成ツールの紹介</p>
+          <p class="p-link">▶ スプレッドシートからGmail下書きを自動作成する業務効率化ツール</p>
+        </a>
+      </div>
+      <div class="page-links">
+        <a href="/articles/blog/invoice-pdf-tool/">
+          <p>請求書PDF作成ツールの紹介</p>
+          <p class="p-link">▶ GASでスプレッドシートから請求書PDFを自動作成し各ドライブへ保存するツール</p>
+        </a>
+      </div>
+      <div class="page-links">
+        <a href="/articles/blog/">
+          <p>その他、具体的なGASツール解説など</p>
+          <p class="p-link">▶ ブログ記事一覧</p>
+        </a>
+      </div>
     </section>
 
     <section class="section">
@@ -103,9 +137,12 @@
 
       <h3>最新の更新情報</h3>
       <dl class="update-list" id="latest-updates"></dl>
-      <p>
-        ▶ <a href="/about/updates.html">サイト更新履歴</a> - 更新履歴一覧はこちら
-      </p>
+      <div class="page-links">
+        <a href="/about/updates.html">
+          <p>更新履歴一覧はこちら</p>
+          <p class="p-link">▶ サイト更新履歴</p>
+        </a>
+      </div>
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -134,18 +171,37 @@
         「自分にもできそう」「ちょっと試してみようかな」と感じたら、それが第一歩です。<br>
         ご質問や感想などがあれば、ぜひお気軽に下記よりお寄せください。
       </p>
-      <p>▶ <a href="/contact/">お問い合わせページ</a></p>
+
+      <div class="page-links">
+        <a href="/contact/">
+          <p>お問い合わせはこちら</p>
+          <p class="p-link">▶ お問い合わせページ</p>
+        </a>
+      </div>
     </section>
     <section>
       <h3>次に読みたいおすすめページ</h3>
-      <ul>
-        <li>GASの基本を学びたい方はこちら<br>
-          ▶ <a href="/about/gas/">GASとは？</a></li>
-        <li>実際のツール事例を見てみたい方はこちら<br>
-          ▶ <a href="/articles/blog/index.html">GAS活用の記事一覧</a></li>
-        <li>まずは手を動かして試したい方はこちら<br>
-          ▶ <a href="/beginner/try-first-gas.html">GASを動かしてみる</a></li>
-      </ul>
+
+      <div class="page-links">
+        <a href="/about/gas/">
+          <p>GASの基本を学びたい方はこちら</p>
+          <p class="p-link">▶ GASとは？</p>
+        </a>
+      </div>
+
+      <div class="page-links">
+        <a href="/articles/blog/">
+          <p>実際のツール事例を見てみたい方はこちら</p>
+          <p class="p-link">▶ GAS活用の記事一覧</p>
+        </a>
+      </div>
+
+      <div class="page-links">
+        <a href="/beginner/try-first-gas.html">
+          <p>まずは手を動かして試したい方はこちら</p>
+          <p class="p-link">▶ GASを動かしてみる</p>
+        </a>
+      </div>
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -156,7 +212,7 @@
       (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
-    <section class="section">
+    <section>
       <p>
         <a href="/">トップページへ戻る</a>
       </p>

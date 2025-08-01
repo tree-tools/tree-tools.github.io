@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>GASで作業をもっとラクに | Google Apps Scriptガイド</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <meta name="description" content="GASで作業をもっとラクに！初心者から経験者まで、Google Apps Scriptを活用して業務効率化するための解説やサンプルコードを紹介しています。">
   <meta name="robots" content="index, follow">
   <meta property="og:title" content="GASで作業をもっとラクに | Google Apps Script活用ガイド">
@@ -38,29 +38,37 @@
   <div data-include="/includes/header.html"></div>
 
   <main>
-    <nav class="breadcrumb" aria-label="パンくずリスト">
+    <!-- <nav class="breadcrumb" aria-label="パンくずリスト">
       <ol>
         <li>トップ</li>
       </ol>
-    </nav>
+    </nav> -->
     <h1 class="page-title">GASで作業をもっとラクに｜Google Apps Script活用</h1>
 
-    <section class="section">
+    <section>
       <p>
         このサイト「GASで作業をもっとラクに」は、Google Apps Script（GAS）を使って、日々の業務を効率化し、作業ミスを減らすことを目指すガイドサイトです。<br>
         自分自身の試行錯誤の経験をもとに、初心者の方にも、すでに少しGASを使ったことのある方にも、それぞれのレベルや目的に合わせて役立つ情報をお届けしています。<br>
         GASを活用して「こんなことができるんだ！」という発見や、「やってみたいけど難しそう…」という不安を少しでも解消できるよう、実践的でわかりやすい解説を心がけて運営しています。<br>
-      <p>▶ <a href="/about/index.html">運営方針とプロフィール</a> - このサイトの概要</p>
-      <p>あなたの作業がもっとラクに、もっとスムーズになるヒントを見つけてください。</p>
-      </p>
+        あなたの作業がもっとラクに、もっとスムーズになるヒントを見つけてください。</p>
+
+      <div class="page-links">
+        <a href="/about/index.html">
+          <p>このサイトの概要はこちら</p>
+          <p class="p-link">▶ 運営方針とプロフィール</p>
+        </a>
+      </div>
     </section>
 
     <section id="sec-updates" class="section">
       <h2>最新の更新情報</h2>
       <dl class="update-list" id="latest-updates"></dl>
-      <p>
-        ▶ <a href="/about/updates.html">サイト更新履歴</a> - 更新履歴一覧はこちら
-      </p>
+      <div class="page-links">
+        <a href="/about/updates.html">
+          <p>更新履歴一覧はこちら</p>
+          <p class="p-link">▶ サイト更新履歴</p>
+        </a>
+      </div>
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -96,10 +104,20 @@
         「プログラミングは難しそう」と感じる方でも、初心者向けに基礎から解説しているので安心です。
       </p>
       <p>
-        GASの基本や仕組みを知りたい方は、こちらのページをぜひご覧ください。<br>
-        ▶ <a href="/about/gas/index.html">GASとは？</a> - GASの基本や仕組みをわかりやすく解説<br>
-        ▶ <a href="/beginner/index.html">GAS初心者ガイド</a> - GASを1から順に解説
+        GASの基本や仕組みを知りたい方は、こちらのページをぜひご覧ください。
       </p>
+      <div class="page-links">
+        <a href="/about/gas/index.html">
+          <p>GASの基本や仕組みをわかりやすく解説</p>
+          <p class="p-link">▶ GASとは？</p>
+        </a>
+      </div>
+      <div class="page-links">
+        <a href="/beginner/index.html">
+          <p>GASを1から順に解説</p>
+          <p class="p-link">▶ GAS初心者ガイド</p>
+        </a>
+      </div>
     </section>
 
     <section id="sec-examples" class="section">
@@ -115,9 +133,14 @@
         業種を問わず活用の幅が広がります。
       </p>
       <p>
-        「実際どんなことに使えるの？」という方のために、よくある業務例や具体的な活用イメージをまとめました。<br>
-        ▶ <a href="/about/gas/index.html">GASとは？</a> - よくある活用例を詳しく解説
+        「実際どんなことに使えるの？」という方のために、よくある業務例や具体的な活用イメージをまとめました。
       </p>
+      <div class="page-links">
+        <a href="/about/gas/index.html">
+          <p>よくある活用例を詳しく解説</p>
+          <p class="p-link">▶ GASとは？</p>
+        </a>
+      </div>
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -138,9 +161,12 @@
         プログラミングが初めての方でも、サンプルコードをそのままコピーして動かせるように構成しています。<br>
         ページを読み終える頃には、ネット上のサンプルコードを探して試したり、自分で少しずつ書き換えてみることができるようになります。
       </p>
-      <p>
-        ▶ <a href="/beginner/try-first-gas.html">GASを動かしてみる</a> - コードを動かす最初の一歩
-      </p>
+      <div class="page-links">
+        <a href="/beginner/try-first-gas.html">
+          <p>コードを動かす最初の一歩</p>
+          <p class="p-link">▶ GASを動かしてみる</p>
+        </a>
+      </div>
     </section>
 
     <section id="sec-auth" class="section">
@@ -153,9 +179,12 @@
         「許可して大丈夫なの？」と不安になる方も多いですが、どの権限が必要なのかも詳しく説明しているので安心です。<br>
         まずはここを読んで、GASをスムーズに動かせるようにしましょう。
       </p>
-      <p>
-        ▶ <a href="/beginner/auth-guide.html">GASの認証ガイド</a> - 認証を突破するステップを解説
-      </p>
+      <div class="page-links">
+        <a href="/beginner/auth-guide.html">
+          <p>認証を突破するステップを解説</p>
+          <p class="p-link">▶ GASの認証ガイド</p>
+        </a>
+      </div>
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -176,9 +205,12 @@
         ECサイトの注文管理、請求書の自動作成、注文メールの作成など、<br>
         現場で役立ったGASの使い方を紹介しているので、<strong>「次に自分が作りたいもの」を考えるヒント</strong>になるはずです。
       </p>
-      <p>
-        ▶ <a href="/articles/blog/index.html">GAS活用の記事一覧</a> - 実例から学ぶGAS活用アイデア
-      </p>
+      <div class="page-links">
+        <a href="/articles/blog/index.html">
+          <p>実例から学ぶGAS活用アイデア</p>
+          <p class="p-link">▶ GAS活用の記事一覧</p>
+        </a>
+      </div>
     </section>
 
     <section id="sec-request" class="section">
@@ -193,9 +225,12 @@
       <p>
         また、GASはGoogleの公式ツールなので、GoogleスプレッドシートやGmailなどのサービスと自然に連携でき、<strong>小規模な業務でも効果的な自動化</strong>が可能です。
       </p>
-      <p>
-        ▶ <a href="/about/gas/index.html">GASとは？</a> - まずは基本を知って依頼内容を明確に
-      </p>
+      <div class="page-links">
+        <a href="/about/gas/index.html">
+          <p>まずは基本を知って依頼内容を明確に</p>
+          <p class="p-link">▶ GASとは？</p>
+        </a>
+      </div>
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -218,7 +253,7 @@
       </p>
     </section>
 
-    <section>
+    <section class="section">
       <h2>関連ページ</h2>
       <ul>
         <li>このサイトの概要を知りたい方はこちら<br>

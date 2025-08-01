@@ -14,7 +14,7 @@ header {
 
 main {
   max-width: 800px;
-  padding-top: 60px;
+  padding: 60px 10px 0 10px;
   margin: auto;
 }
 
@@ -52,50 +52,6 @@ main {
   color: inherit;
   cursor: pointer;
 }
-
-
-/* ハンバーガーメニュー
-.hamburger-menu {
-  position: relative;
-  display: inline-block;
-}
-
-.menu-icon {
-  display: block;
-  font-size: 26px;
-  cursor: pointer;
-  padding: 0 10px;
-}
-
-#menu-toggle {
-  display: none;
-}
-
-.menu {
-  display: none;
-  position: absolute;
-  right: 0;
-  background: #fff;
-  border: 1px solid #ccc;
-  list-style: none;
-  padding: 10px;
-  margin: 0;
-  z-index: 1000;
-  width: 160px;
-}
-
-.menu li {
-  margin-bottom: 10px;
-}
-
-.menu li a {
-  text-decoration: none;
-  color: #333;
-}
-
-#menu-toggle:checked+.menu-icon+.menu {
-  display: block;
-} */
 
 
 /* ハンバーガーメニュー初期状態 */
@@ -218,9 +174,8 @@ h1,
 h2,
 h3 {
   color: #2c3e50;
-  margin-top: 1.5rem;
+  margin-top: 20px;
 }
-
 
 .toc ul {
   padding-left: 1.2rem;
@@ -298,16 +253,47 @@ img.guide-img {
 
 .section {
   margin-bottom: 0;
-  padding: 0 1em 1em 1em;
-  border-bottom: 2px solid #ddd;
-  /* background: #f9f9f9; */
-  /* border-left: 5px solid #1976D2; */
-  /* border-radius: 4px; */
+  padding: 60px 0 16px 0;
+}
+
+.section h2,
+.section h3,
+.section p,
+.section ul {
+  padding-left: 10px;
 }
 
 .section h2 {
-  padding-top: 60px;
-  margin-top: 0px;
+  background-color: #ddd;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ページリンク */
+.page-links{
+  background: #fff8e1;
+  border-left: 5px solid #ffb300;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
+  margin: 5px 20px;
+  transition: transform 0.2s ease;
+}
+
+.page-links a {
+  color: #2c3e50;
+  text-decoration: none;
+  display: inline-block; /* transformを効かせるため */
+}
+
+.p-link{
+  color: #1976D2;
+}
+
+.page-links:hover {
+  transform: translateX(10px);
+}
+
+.page-links p{
+  margin: 0;
 }
 
 .highlight {
@@ -473,22 +459,25 @@ pre {
 /* ↓ 更新履歴 */
 
 dl.update-list {
-  /* border-left: 4px solid #007acc; */
-  padding-left: 1em;
+  padding-left: 15px;
 }
 
 dl.update-list dt {
-  /* font-weight: bold; */
-  margin-top: 0.5em;
-  /* color: #007acc; */
+  margin-top: 10px;
 }
 
 dl.update-list dd {
-  margin: 0 0 0.5em 1em;
+  padding: 0 0 10px 15px;
+  margin: 0;
+  border-bottom: 1px solid #333;
+}
+
+dl.update-list a {
+  color: #1976D2;
+  text-decoration: none;
 }
 
 /* ↑ 更新履歴 */
-
 
 
 /* ↓フッター */
@@ -496,6 +485,8 @@ dl.update-list dd {
   background-color: #fff;
   padding: 20px 0;
   font-size: 14px;
+  border-top: 1px solid #ddd;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .site-footer a {

@@ -179,6 +179,7 @@ h3 {
 
 .toc ul {
   padding-left: 1.2rem;
+  margin: 0 10px;
 }
 
 .toc a {
@@ -213,16 +214,21 @@ img.guide-img {
 }
 
 .faq {
-  background: #fff8e1;
-  border-left: 5px solid #ffb300;
-  padding-left: 1rem;
+  background: #e8ffe0;
+  border-left: 5px solid #4cff00;
+  padding: 10px 0 10px 25px;
+  margin-left: 20px;
+}
+
+.table-scroll {
+  overflow-x: scroll;
 }
 
 .compare-table {
-  width: 100%;
+  width: 750px;
   border-collapse: collapse;
-  margin-top: 1rem;
   font-size: 16px;
+  margin: auto;
 }
 
 .compare-table th,
@@ -269,7 +275,7 @@ img.guide-img {
 }
 
 /* ページリンク */
-.page-links{
+.page-links {
   background: #fff8e1;
   border-left: 5px solid #ffb300;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -281,10 +287,11 @@ img.guide-img {
 .page-links a {
   color: #2c3e50;
   text-decoration: none;
-  display: inline-block; /* transformを効かせるため */
+  display: inline-block;
+  /* transformを効かせるため */
 }
 
-.p-link{
+.p-link {
   color: #1976D2;
 }
 
@@ -292,16 +299,34 @@ img.guide-img {
   transform: translateX(10px);
 }
 
-.page-links p{
+.page-links p {
   margin: 0;
 }
 
 .highlight {
-  background: #fff8e1;
-  border-left: 5px solid #ffb300;
-  padding: 1em;
-  margin: 1em 0;
+  background: #e8ffe0;
+  border-left: 5px solid #4cff00;
+  padding: 5px 25px;
+  margin: 0, 0, 0, 20px;
 }
+
+.highlight h2{
+  margin: 0;
+}
+
+.list-area {
+  background: #e0e8ff;
+  border-left: 4px solid #004cff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 5px 15px;
+  margin: 0 15px;
+  list-style-type: square;
+}
+
+.list-area li::marker {
+  color: #004cff;
+}
+
 
 .muted-box {
   background: #f9f9f9;
@@ -440,34 +465,40 @@ pre {
 
 
 .definition-list {
-  margin: 1em 0;
-  padding: 0;
+  margin: 0 20px;
+  padding: 5px 10px;
+
+  background: #e0e8ff;
+  border-left: 4px solid #004cff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .definition-list dt {
   font-weight: bold;
-  margin-top: 1em;
 }
 
 .definition-list dd {
-  margin-left: 1.5em;
-  margin-top: 0.3em;
-  margin-bottom: 0.8em;
+  margin: 0 0 5px 20px;
   line-height: 1.6;
 }
 
 /* ↓ 更新履歴 */
 
 dl.update-list {
-  padding-left: 15px;
+  margin-left: 20px;
+  
+  /* background: #d6d6d6; */
+  border-left: 4px solid #666666;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 dl.update-list dt {
+  padding-left: 10px;
   margin-top: 10px;
 }
 
 dl.update-list dd {
-  padding: 0 0 10px 15px;
+  padding: 0 0 5px 25px;
   margin: 0;
   border-bottom: 1px solid #333;
 }

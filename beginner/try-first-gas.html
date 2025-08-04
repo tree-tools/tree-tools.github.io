@@ -46,8 +46,7 @@
     <h1 class="page-title">GASを動かしてみる</h1>
 
     <!-- ページ冒頭の概要 -->
-    <section class="section">
-      <h2>Google Apps Script（GAS）とは？</h2>
+    <section>
       <p>
         Google Apps Script（GAS）は、Google スプレッドシートやドキュメントなど、普段の業務で使うGoogleサービスを自動化・便利にするためのプログラミング環境です。<br>
         たとえば「毎週の集計作業をワンクリックで済ませたい」「定期的なメールを自動送信したい」といった作業を、GASを使えば無料で実現できます。
@@ -56,7 +55,7 @@
         このページでは、GASを使ったスプレッドシート作業の自動化を初心者の方にも分かりやすく解説します。<br>
         実際にサンプルコードを動かすところまで、一歩ずつ進めていきましょう。
       </p>
-      <p>※ GASの開発はPCでの作業が前提です。スマホでは編集や実行は困難なため、必ずPCで操作してください。</p>
+      <p>※ GASの開発はPCでの作業が前提です。スマホでの開発は編集や実行は困難なため、必ずPCで操作してください。</p>
     </section>
 
     <section class="highlight">
@@ -84,29 +83,35 @@
       <p>このページは、次の流れで進みます。</p>
       <ul>
         <li><a href="#what-can-do">GASでできること</a></li>
-        <li><a href="#open-gas">GASを開く方法</a></li>
-        <li><a href="#try-code">サンプルコードを動かしてみる</a></li>
-        <li><a href="#execute-script">スクリプトを実行する方法</a></li>
-        <li><a href="#examples">GASの活用例</a></li>
+        <li><a href="#open-gas">1.GASを開く方法</a></li>
+        <li><a href="#try-code">2.サンプルコードを動かしてみる</a></li>
+        <li><a href="#execute-script">3.スクリプトを実行する方法</a></li>
+        <li><a href="#examples">代表的なGASの活用例</a></li>
         <li><a href="#faq">よくあるつまずき・Q&A</a></li>
-        <li><a href="#next-step">次のステップ</a></li>
       </ul>
     </section>
 
     <section id="what-can-do" class="section">
       <h2>GASでできること</h2>
-      <p>GASを使うと、普段の作業を自動化し、時間や手間を大きく削減できます。</p>
-      <ul>
+      <p>
+        <a href="/about/gas/">GASとは？</a>でも触れた通り、GASは、Googleの各種サービスを自由に操作・連携できる強力な自動化ツールです。<br>
+        GASを活用すれば、日々繰り返している定型作業をスクリプトで自動化し、業務にかかる時間や手間を大幅に削減することができます。<br>
+        たとえば下記のようにGASに任せることで、人の手を介さずに正確かつスムーズに処理できるようになります。
+      </p>
+      <ul class="list-area">
         <li>スプレッドシート内のデータをチェックして自動修正</li>
         <li>毎週の報告メールを自動で送信</li>
         <li>複数シート間のデータを一括転記</li>
         <li>PDF作成や定期処理の自動化</li>
       </ul>
-      <p>こうした作業を無料でできるのがGASの大きな魅力です。</p>
+      <p>
+        ちょっとした処理でも積み重ねれば大きな効率化につながるため、個人の業務改善からチーム全体の生産性向上まで、幅広い場面で効果を発揮します。<br>
+        こうした作業を無料でできるのがGASの大きな魅力です。
+      </p>
     </section>
 
     <section id="open-gas" class="section">
-      <h2>GASを開く方法</h2>
+      <h2>1.GASを開く方法</h2>
       <p>ここではスプレッドシートからGASを開く手順を説明します。</p>
       <ol>
         <li>Google スプレッドシートを開く</li>
@@ -127,11 +132,11 @@
     </script>
 
     <section id="try-code" class="section">
-      <h2>サンプルコードを動かしてみる</h2>
+      <h2>2.サンプルコードを動かしてみる</h2>
       <p>実際にコードを書いてGASの動きを体験してみましょう。</p>
 
       <div class="step">
-        <h3>スクリプトファイルを確認</h3>
+        <h3>①スクリプトファイルを確認</h3>
         <p>Apps Script エディタが開くと <code>Code.gs</code> というファイルが表示されます。<br>
           ここにコードを書きます。</p>
       </div>
@@ -141,7 +146,7 @@
       </div>
 
       <div class="step">
-        <h3>サンプルコードを入力</h3>
+        <h3>②サンプルコードを入力</h3>
         <p>以下のコードをコピーし、エディタに貼り付けてください。</p>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
@@ -149,37 +154,58 @@
   Logger.log("Hello, GAS!");
 }</code></pre>
         </div>
-      </div>
-
-      <div class="step">
-        <h3>コードの意味</h3>
+        <p>コードの意味</p>
         <ul>
           <li><code>function</code> は関数を定義するキーワードです。</li>
           <li><code>Logger.log()</code> はログ出力用の命令です。</li>
           <li>関数名は自由に付けられます。</li>
         </ul>
+
+        <div class="try-img-content">
+          <img src="/assets/images/gas-try02.png" alt="新しいスプレッドシート" class="guide-img">
+        </div>
       </div>
 
       <div class="step">
-        <h3>保存</h3>
+        <h3>③保存</h3>
         <p>エディタは自動保存されますが、ディスクアイコンを押して手動保存も可能です。</p>
       </div>
 
       <div class="step">
-        <h3>実行準備</h3>
+        <h3>④実行</h3>
         <p>ツールバーの ▶ 実行ボタンを押して、スクリプトを実行しましょう。</p>
       </div>
     </section>
 
     <section id="execute-script" class="section">
-      <h2>スクリプトを実行する方法</h2>
+      <h2>3.スクリプトを実行する方法</h2>
       <p>ここでは、スクリプトの実行時に出る注意点やログの見方を説明します。</p>
       <p>Apps Script エディタの ▶ 実行ボタンを押すとコードが動きます。</p>
       <p>初回実行時にはGoogleアカウントでの権限承認が必要です。</p>
+      
+      <div class="page-links">
+        <a href="/beginner/auth-guide.html">
+          <p>権限の承認方法はこちら</p>
+          <p class="p-link">▶ GAS認証ガイド</p>
+        </a>
+      </div>
+      
       <p>
-        ▶ <a href="/beginner/auth-guide.html">権限の承認方法はこちら</a>
+        実行後は、メニューの「表示」→「ログ」で結果を確認できます。<br>
+        今回のコードの場合は、実行が成功すれば実行ログに「情報　Hello, GAS!」と表示されます。
       </p>
-      <p>実行後は、メニューの「表示」→「ログ」で結果を確認できます。</p>
+      <div class="try-img-content">
+        <img src="/assets/images/gas-try-strat01.png" alt="新しいスプレッドシート" class="guide-img">
+      </div>
+
+      <p>
+        実行が失敗した場合は、実行ログにエラーとその理由（英語）が表示されます。<br>
+        今回のコードの場合は、『コード.gsというファイルの2行目に記載されている「Logger」という関数は存在しない』というエラーメッセージが表示されています
+      </p>
+      <div class="try-img-content">
+        <img src="/assets/images/gas-try-false01.png" alt="新しいスプレッドシート" class="guide-img">
+      </div>
+
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -196,6 +222,10 @@
 
       <div class="example">
         <h3>スプレッドシートに書き込む</h3>
+        <p>
+          こちらはスプレッドシートのA1セルに「Hello, Spreadsheet!」という文字を貼り付けるコードです。<br>
+          これを活用すれば、大量のコピペやリストの編集などのツールを作成できます。
+        </p>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
           <pre><code class="language-javascript">function writeToSheet() {
@@ -206,6 +236,10 @@
       </div>
       <div class="example">
         <h3>メール送信</h3>
+        <p>
+          宛先と件名、本文を指定してメールを送るコードです。<br>
+          これを活用すれば、購入者リストに記載されている人に対して一斉にメールを送ることが出来ます。
+        </p>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
           <pre><code class="language-javascript">function sendMail() {
@@ -220,7 +254,7 @@
       <p>GASを使い始めたばかりの人がよくつまずくポイントをまとめました。</p>
       <ul>
         <li>権限エラーが出る → <a href="/gas-auth-guide.html" class="btn">権限承認ページ</a></li>
-        <li>スプレッドシートが動かない → 開いているか確認</li>
+        <li>スプレッドシートが動かない → スプレッドシートが正常に開いているか確認</li>
         <li>それでも解決しない場合 → <a href="/contact/" class="btn">お問い合わせ</a></li>
       </ul>
     </section>
@@ -242,23 +276,26 @@
       <p>
         さらにステップアップしたい方は、以下のページも参考にしてみてください。
       </p>
+
+      <div class="page-links">
+        <a href="/beginner/">
+          <p>初心者ガイドを見る</p>
+          <p class="p-link">▶ GAS初心者ガイド</p>
+        </a>
+      </div>
+      <div class="page-links">
+        <a href="/beginner/auth-guide.html">
+          <p>次のステップに進む</p>
+          <p class="p-link">▶ GASの認証ガイド</p>
+        </a>
+      </div>
+      <div class="page-links">
+        <a href="/articles/blog/">
+          <p>GASツールの記事を見る</p>
+          <p class="p-link">▶ 記事一覧</p>
+        </a>
+      </div>
     </section>
-
-    <aside class="section highlight">
-      <h2>もっと詳しくGASを知りたい方へ</h2>
-      <p>
-        GASの仕組みを深く理解したい方は、以下のページをチェックしてください。<br>
-        基礎から応用まで、さらに詳しく解説しています。
-      </p>
-      <p>
-        ▶ <a href="/about/gas/index.html" class="btn">GASとは</a>
-        ▶ <a href="/articles/blog/index.html" class="btn">GAS記事一覧</a>
-      </p>
-    </aside>
-
-    <p class="back-link">
-      <a href="/beginner/index.html">← GAS初心者ガイドに戻る</a>
-    </p>
 
     <!-- body内に広告表示位置 -->
     <!-- 横長ノーマル -->

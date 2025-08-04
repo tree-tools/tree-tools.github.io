@@ -38,7 +38,7 @@
     </nav>
 
     <h1 class="page-title">GAS初心者ガイド</h1>
-    <section class="section">
+    <section>
       <p>
         Google Apps Script（GAS）は、Googleのサービスを自動化できるとても便利なツールです。<br>
         「GASって難しそう…」と感じている初心者の方でも、このページを読めば安心して学び始められます。<br>
@@ -54,8 +54,22 @@
       (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 
-    <!-- STEP 1 -->
     <section class="section">
+      <nav class="toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#step1">STEP 1：GASとは？</a></li>
+          <li><a href="#step2">STEP 2：GASを動かしてみよう</a></li>
+          <li><a href="#step3">STEP 3：GASの認証を理解しよう</a></li>
+          <li><a href="#step4">STEP 4：自分が作りたいものを探してみよう</a></li>
+          <li><a href="#faq">よくある質問</a></li>
+          <li><a href="#summary">まとめ</a></li>          
+        </ul>
+      </nav>
+    </section>
+
+    <!-- STEP 1 -->
+    <section class="section" id="step1">
       <h2>STEP 1：GASとは？</h2>
       <p>
         まずは「GASってそもそも何なのか？」を知るところから始めましょう。<br>
@@ -73,13 +87,17 @@
         「プログラミングなんて無理…」と思う方もいるかもしれませんが、GASは<strong>コピー＆ペーストから始められる</strong>ので初心者でも安心です。<br>
         仕組みを知るだけでも、どんな場面で役立つかのヒントがきっと見つかります。
       </p>
-      <p>
-        ▶ <a href="/about/gas/index.html">GASとは？（詳しく見る）</a>
-      </p>
+      
+      <div class="page-links">
+        <a href="/about/gas/">
+          <p>STEP 1に進む</p>
+          <p class="p-link">▶ GASとは？</p>
+        </a>
+      </div>
     </section>
     
     <!-- STEP 2 -->
-    <section class="section">
+    <section class="section" id="step2">
       <h2>STEP 2：GASを動かしてみよう</h2>
       <p>
         ここまで「GASとは何か」や「どんなことができるか」を理解したら、いよいよ実践のステップです。<br>
@@ -89,9 +107,13 @@
         プログラミングが初めての方でも安心して取り組めるよう、サンプルコードをそのままコピーして動かせる形で紹介しています。<br>
         ページを読み終える頃には、ネット上で見つけたサンプルコードを試したり、自分で少しずつ書き換えていけるステージにたどり着いているはずです。
       </p>
-      <p>
-        ▶ <a href="/beginner/try-first-gas.html">GASを動かしてみる（詳しく見る）</a>
-      </p>
+      
+      <div class="page-links">
+        <a href="/beginner/try-first-gas.html">
+          <p>STEP 2に進む</p>
+          <p class="p-link">▶ GASを動かしてみる</p>
+        </a>
+      </div>
     </section>
     
     <!-- body内に広告表示位置 -->
@@ -103,18 +125,22 @@
     </script>
 
     <!-- STEP 3 -->
-    <section class="section">
+    <section class="section" id="step3">
       <h2>STEP 3：GASの認証を理解しよう</h2>
       <p>
         GASを使うときに表示される「認証」について、仕組みや警告画面の意味をわかりやすく解説します。<br>
         安全に作業を進めるためのポイントもまとめています。
       </p>
-      <p>
-        ▶ <a href="/beginner/auth-guide.html">GAS認証ガイド（詳しく見る）</a>
-      </p>
+
+      <div class="page-links">
+        <a href="/beginner/auth-guide.html">
+          <p>STEP 3に進む</p>
+          <p class="p-link">▶ GAS認証ガイド</p>
+        </a>
+      </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="step4">
       <h2>STEP 4：自分が作りたいものを探してみよう</h2>
       <p>
         GASの仕組みや基本的な使い方を学んだら、次は「実際にどんなツールを作れるのか」を具体的にイメージしてみましょう。<br>
@@ -125,9 +151,13 @@
         「次に自分が作りたいもの」を考えるヒントになるはずです。<br>
         ぜひ、記事をチェックして、あなたの仕事や作業に活かせるアイデアを見つけてください。
       </p>
-      <p>
-        ▶ <a href="/articles/blog/index.html">GAS活用の記事一覧を見る</a>
-      </p>
+      
+      <div class="page-links">
+        <a href="/articles/blog/">
+          <p>STEP 4に進む</p>
+          <p class="p-link">▶ GAS活用の記事一覧</p>
+        </a>
+      </div>
     </section>    
 
     <!-- body内に広告表示位置 -->
@@ -139,8 +169,8 @@
     </script>
 
     <!-- FAQ -->
-    <section class="section">
-      <h2 id="faq-title">よくある質問</h2>
+    <section class="section" id="faq">
+      <h2>よくある質問</h2>
       <div class="faq">
         <strong>Q. GASは無料で使えますか？</strong><br>
         A. 使えます。Googleアカウントさえあれば、誰でも無料で利用できます。
@@ -155,7 +185,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="summary">
       <h2>まとめ</h2>
       <p>
         ここまで、GASの基本から、実際にコードを動かす方法、そして作れるツールの具体例まで、順を追ってご紹介してきました。<br>
@@ -165,23 +195,40 @@
         次のステップは、ぜひあなた自身が「何を自動化したいか」「どんな作業をラクにしたいか」を考え、実際に手を動かしてみることです。<br>
         このサイトでは、GASの具体的な活用例をまとめた記事を多数掲載しています。きっと、あなたのヒントになる事例が見つかるはずです。
       </p>
-      <p>
-        ▶ <a href="/articles/blog/index.html">GAS活用の記事一覧を見る</a>
-      </p>
+      <div class="page-links">
+        <a href="/articles/blog/">
+          <p>GASツールの記事を見る</p>
+          <p class="p-link">▶ GAS活用の記事一覧</p>
+        </a>
+      </div>
     </section>
 
     <section class="section">
       <h2>関連ページ</h2>
-      <ul>
-        <li>STEP 1：GASの基本を知りたい方はこちら<br>
-          ▶ <a href="/about/gas/index.html">GASとは？</a></li>
-        <li>STEP 2：GASの操作を体験してみたい方はこちら<br>
-          ▶ <a href="/beginner/try-first-gas.html">GASを動かしてみる</a></li>
-        <li>STEP 3：認証の仕組みを知りたい方はこちら<br>
-          ▶ <a href="/beginner/auth-guide.html">GASの認証ガイド</a></li>
-        <li>STEP 4：作りたいツールのヒントを探したい方はこちら<br>
-          ▶ <a href="/articles/blog/index.html">GAS活用の記事一覧</a></li>
-      </ul>
+      <div class="page-links">
+        <a href="/about/gas/">
+          <p>STEP 1：GASの基本を知りたい方はこちら</p>
+          <p class="p-link">▶ GASとは？</p>
+        </a>
+      </div>      
+      <div class="page-links">
+        <a href="/beginner/try-first-gas.html">
+          <p>STEP 2：GASの操作を体験してみたい方はこちら</p>
+          <p class="p-link">▶ GASを動かしてみる</p>
+        </a>
+      </div>      
+      <div class="page-links">
+        <a href="/beginner/auth-guide.html">
+          <p>STEP 3：認証の仕組みを知りたい方はこちら</p>
+          <p class="p-link">▶ GASの認証ガイド</p>
+        </a>
+      </div>
+      <div class="page-links">
+        <a href="/articles/blog/index.html">
+          <p>STEP 4：作りたいツールのヒントを探したい方はこちら</p>
+          <p class="p-link">▶ GAS活用の記事一覧</p>
+        </a>
+      </div>
     </section>
 
     <!-- body内に広告表示位置 -->

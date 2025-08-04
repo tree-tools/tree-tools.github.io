@@ -4,17 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <title>GASとは？ | GASで作業をもっとラクに</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <meta name="description" content="Google Apps Script（GAS）の仕組みを初心者向けにわかりやすく解説。スプレッドシートやGmailの自動化で業務効率化を目指す方必見！">
   <meta name="keywords" content="Google Apps Script, GAS, 自動化, 初心者, 入門">
   <meta property="og:title" content="GASとは？初心者向けにGoogle Apps Scriptをやさしく解説">
   <meta property="og:description" content="Google Apps Script（GAS）の仕組みを初心者向けに解説。スプレッドシートやGmailの自動化など活用方法を紹介。">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://tree-tools-gas-guide.pages.dev/about/gas/index.html">
+  <meta property="og:url" content="https://tree-tools-gas-guide.pages.dev/about/gas/">
   <meta property="og:image" content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png">
 
   <link rel="stylesheet" href="/assets/css/style.css">
-  <link rel="canonical" href="https://tree-tools-gas-guide.pages.dev/about/gas/index.html">
+  <link rel="canonical" href="https://tree-tools-gas-guide.pages.dev/about/gas/">
 
   <!-- 共通JS -->
   <script src="/assets/js/includes.js"></script>
@@ -49,7 +49,7 @@
         <br>
         特に、こんな方におすすめです
       </p>
-      <ul>
+      <ul class="list-area">
         <li>スプレッドシートやGoogleのサービスをもっと効率的に使いたい人</li>
         <li>業務で「同じ作業を何度も繰り返している」と感じている人</li>
         <li>プログラミングに詳しくないけれど、少しでも作業を自動化してみたい人</li>
@@ -61,9 +61,12 @@
       <p>
         もっと専門的な内容を知りたいという方は、ぜひ以下のページものぞいてみてください！
       </p>
-      <p>
-        ▶ <a href="/articles/blog/index.html">ブログ記事一覧</a>
-      </p>
+      <div class="page-links">
+        <a href="/articles/blog/">
+          <p>具体的なGASツール解説を見る</p>
+          <p class="p-link">▶ ブログ記事一覧</p>
+        </a>
+      </div>
     </section>
 
     <!-- body内に広告表示位置 -->
@@ -118,32 +121,34 @@
         特にスプレッドシートやGmailのような日常的に使うツールと直接連携できるため、「わざわざ他のツールを覚える必要がない」という点も大きなメリットです。
       </p>
 
-      <table class="compare-table compare-table3">
-        <thead>
-          <tr>
-            <th>作業内容</th>
-            <th>これまでの手作業</th>
-            <th>GASを使った場合</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>データ集計</td>
-            <td>手入力で計算やコピペを繰り返す</td>
-            <td>自動で集計、条件に合わせて結果を出力</td>
-          </tr>
-          <tr>
-            <td>メール送信</td>
-            <td>毎回手動で作成・送信</td>
-            <td>テンプレート化して自動送信</td>
-          </tr>
-          <tr>
-            <td>レポート作成</td>
-            <td>データをコピーして手動で作成</td>
-            <td>最新データを自動で反映しPDF化</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="compare-table compare-table3">
+          <thead>
+            <tr>
+              <th>作業内容</th>
+              <th>これまでの手作業</th>
+              <th>GASを使った場合</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>データ集計</td>
+              <td>手入力で計算やコピペを繰り返す</td>
+              <td>自動で集計、条件に合わせて結果を出力</td>
+            </tr>
+            <tr>
+              <td>メール送信</td>
+              <td>毎回手動で作成・送信</td>
+              <td>テンプレート化して自動送信</td>
+            </tr>
+            <tr>
+              <td>レポート作成</td>
+              <td>データをコピーして手動で作成</td>
+              <td>最新データを自動で反映しPDF化</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <p>
         同じ作業を毎月・毎週繰り返している人ほど、GASを使うことで驚くほど効率が変わります。
@@ -161,10 +166,16 @@
     <section id="sec-services" class="section">
       <h2>連携できるGoogleサービス・外部サービス</h2>
       <p>
-        GASは<strong>さまざまなツールや外部サービスとつながる</strong>のが最大の強みです。<br>
-        単にスプレッドシートを操作するだけでなく、他のツールを組み合わせることで、自動化の可能性は無限に広がります。
+        GASの最大の魅力は、<strong>Googleの各種サービスだけでなく外部のツールやクラウドサービス</strong>と柔軟につながる点にあります。<br>
+        単なるスプレッドシート操作にとどまらず、GmailやGoogleカレンダー、Googleドライブといったサービスとの連携はもちろん、外部APIを使って他社のツールとやりとりすることも可能です。
       </p>
-      <p>たとえば、次のようなツールやサービスと連携できます：</p>
+      <p>
+        つまり、GASは「単体で完結する自動化ツール」ではなく、「複数のツールをつなげて業務の流れ全体を効率化するハブ」として活用できる強力なプラットフォームです。<br>
+        日々繰り返す手作業をGASでつなぎ合わせることで、自分だけの業務自動化システムを構築することができます。
+      </p>
+      <p>
+        たとえば、GASは次のようなツールやサービスと連携できます。
+      </p>
 
       <dl class="definition-list">
         <dt>① Google スプレッドシート</dt>
@@ -200,10 +211,16 @@
     <section id="sec-examples" class="section">
       <h2>GASでできること【具体例つき】</h2>
       <p>
-        GASを使えば、さまざまな業務を<strong>自動化・効率化</strong>できます。<br>
-        次のような作業が代表的な例です：
+        GASを活用すれば、日常業務の中にある繰り返し作業や手間のかかる手動操作を、<strong>自動化・効率化</strong>することができます。<br>
+        たとえば、毎日手入力していたデータ処理や、メールの送信、ファイルの整理といった業務を、GASによって自動で正確かつスピーディに行えるようになります。
       </p>
-
+      <p>
+        「この作業、毎回同じことをやっている気がする…」「手作業だとミスが起きがち…」と感じたことがある方には、GASは特に強い味方です。<br>
+        少しのスクリプトで、日々の業務に大きな変化をもたらすことができます。
+      </p>
+      <p>
+        具体的には、次のような作業がGASによって自動化しやすい代表例です。
+      </p>
       <dl class="definition-list">
         <dt>① レポート作成の自動化</dt>
         <dd>
@@ -261,8 +278,16 @@
     <section id="sec-industries" class="section">
       <h2>【業種別】活用シーン</h2>
       <p>
-        GASはさまざまな業種・業務で活用されています。<br>
-        業務の効率化や自動化に役立つ、具体的なシーンをご紹介します。
+        GASは、業種や職種を問わず、さまざまな現場で活用されています。<br>
+        その柔軟性と拡張性の高さから、IT部門だけでなく、営業、事務、教育、総務、人事、経理など、専門的なプログラミング知識がない現場の方でも、日々の業務改善に役立てることができます。
+      </p>
+      <p>
+        単純な繰り返し作業の自動化はもちろん、GoogleスプレッドシートやGmailといったツールを起点に、複数の業務をつなげて全体の流れを効率化することも可能です。<br>
+        ちょっとした工夫が、大幅な時間短縮や人的ミスの削減につながるのがGASの魅力です。
+      </p>
+      <p>
+        ここでは、実際にGASが役立つ具体的な業務シーンをご紹介します。<br>
+        「これ、自分の仕事でも使えるかも」と感じられる例がきっと見つかるはずです。
       </p>
 
       <dl class="definition-list">
@@ -318,16 +343,16 @@
       <h2>GASのメリットと注意点</h2>
       <h3>GASのメリット</h3>
       <p>
-        GASの最大のメリットは、Google公式のサービスであるため安心して利用できる点です。
+        GASの最大のメリットは、Google公式のサービスであるため安心して利用できる点です。<br>
         スプレッドシートやGmailといった普段使っているサービスを、そのまま自動化できるので、新しくツールを導入する手間やコストがかかりません。
       </p>
       <p>
-        さらに、GASは基本的に無料で使えます。
+        さらに、GASは基本的に無料で使えます。<br>
         社内の業務フローに合わせて柔軟にカスタマイズできるため、自分だけの便利ツールを自作することも可能です。
       </p>
       <h3>注意点</h3>
       <p>
-        一方で、GASを使う際には「認証設定」や「アクセス権限」などの管理が必要です。
+        一方で、GASを使う際には「認証設定」や「アクセス権限」などの管理が必要です。<br>
         スクリプトが誰のアカウントで動いているのか、どのデータにアクセスできるのかを正しく理解しないと、思わぬ情報漏えいや操作ミスの原因になることもあります。
       </p>
       <p>
@@ -353,21 +378,34 @@
         最初から複雑なコードを書こうとすると挫折しやすいため、このサイトでは、初心者向けに必要最低限のステップだけをまとめたガイドを用意しています。
       </p>
       <p>
-        GASの仕組みを理解した後は、【初心者ガイド】で一歩ずつ実際に動かしてみましょう。 <br>
+        GASの仕組みを理解した後は、【初心者ガイド】で一歩ずつ実際に動かしてみましょう。
+      </p>
+      <div class="page-links">
+        <a href="/beginner/">
+          <p>初心者ガイドを見る</p>
+          <p class="p-link">▶ GAS初心者ガイド</p>
+        </a>
+      </div>
+
+      <p>
         認証や権限設定が不安な方は、【認証ガイド】を先に読むと安心です。
       </p>
-      <p>
-        ▶ <a href="/beginner/">初心者ガイドを見る</a><br>
-        ▶ <a href="/beginner/auth-guide.html">認証ガイドを見る</a>
-      </p>
-
+      <div class="page-links">
+        <a href="/beginner/auth-guide.html">
+          <p>認証ガイドを見る</p>
+          <p class="p-link">▶ GAS認証ガイド</p>
+        </a>
+      </div>
       <p>
         GASを実際に動かすステップを、<strong>図解つきで初心者にもわかりやすく</strong>まとめたページがあります。
         まずはそちらを見て、実際に手を動かしてみてください。
       </p>
-      <p>
-        ▶ <a href="/beginner/try-first-gas.html">初心者向け実践ページを見る</a>
-      </p>
+      <div class="page-links">
+        <a href="/beginner/try-first-gas.html">
+          <p>初心者向け実践ページを見る</p>
+          <p class="p-link">▶ GASを動かしてみる</p>
+        </a>
+      </div>
     </section>
 
     <section id="sec-summary" class="section">
@@ -380,11 +418,26 @@
         このページでGASの基本や活用例を知ったら、ぜひ実際に手を動かして、できることを体感してみてください。<br>
         初心者向けのガイドや、認証のポイントなど、次に読むべきページも用意していますので、下のリンクからチェックしてみてください。
       </p>
-      <p>
-        ▶ <a href="/beginner/">GAS初心者ガイドを見る</a><br>
-        ▶ <a href="/beginner/auth-guide.html">GASの認証ガイドを見る</a><br>
-        ▶ <a href="/articles/blog/">GASツールの記事を見る</a>
-      </p>
+
+      
+      <div class="page-links">
+        <a href="/beginner/">
+          <p>初心者ガイドを見る</p>
+          <p class="p-link">▶ GAS初心者ガイド</p>
+        </a>
+      </div>
+      <div class="page-links">
+        <a href="/beginner/try-first-gas.html">
+          <p>次のステップに進む</p>
+          <p class="p-link">▶ GASを動かしてみる</p>
+        </a>
+      </div>
+      <div class="page-links">
+        <a href="/articles/blog/">
+          <p>GASツールの記事を見る</p>
+          <p class="p-link">▶ 記事一覧</p>
+        </a>
+      </div>
       <p>
         GASを上手に活用して、日々の作業をもっとラクにしていきましょう！
       </p>

@@ -60,10 +60,9 @@
       </div>
 
       <section class="section summary">
-        <p>GASを始めたばかりのころ「関数ってどう作るの？」「引数？戻り値？なにそれ？」と戸惑った自分が、実際にどうつまずいて、どうやって理解していったか。その過程と、関数を使って便利になった実感をリアルに紹介します。</p>
-      </section>
-
-      <section class="section intro">
+        <p>
+          GASを始めたばかりのころ「関数ってどう作るの？」「引数？戻り値？なにそれ？」と戸惑った自分が、実際にどうつまずいて、どうやって理解していったか。その過程と、関数を使って便利になった実感をリアルに紹介します。
+        </p>
         <p>
           このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
           丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
@@ -96,7 +95,7 @@
           GASを独学で触り始めたとき、一番最初に出てきた謎ワードのひとつが「関数」でした。<br>
           function doSomething() {} とか出てきて、「ああ、これは何かやるやつね」くらいの理解でコピペして動かしていましたが、いざ自分で何か作りたいとなったときに、
         </p>
-        <ul>
+        <ul class="list-area">
           <li>どうやって作るのか？</li>
           <li>どこに何を書けばいいのか？</li>
           <li>「引数」とか「戻り値」とは？</li>
@@ -107,7 +106,8 @@
       </section>
 
       <section id="about" class="section">
-        <p>「関数 = よく使う処理をひとまとめにしたもの」ってよく言われますが、最初はピンときませんでした。<br>
+        <p>
+          「関数 = よく使う処理をひとまとめにしたもの」ってよく言われますが、最初はピンときませんでした。<br>
           でも、何度かGASを書いていくうちに<strong>「同じようなコード、何回も書いてる…」</strong>と気づきました
         </p>
         <p>
@@ -118,33 +118,56 @@
 
       <section id="howto" class="section">
         <h2>関数の基本的な書き方</h2>
+        <p>これが一番シンプルな形です。「関数を作って、呼び出す」という流れが基本。</p>
         <pre><code class="language-javascript">function sayHello() {
   Logger.log("こんにちは！");
 }
 
 sayHello();</code></pre>
-        <p>これが一番シンプルな形です。「関数を作って、呼び出す」という流れが基本。</p>
+        <p>
+          「こんにちは！」とログを出す関数sayHello()を作成して、呼び出しています。
+        </p>
+
       </section>
 
       <section id="args-return" class="section">
         <h2>引数と戻り値とは</h2>
+
         <h3>引数</h3>
-        <p>関数に渡す「材料」みたいなものです。</p>
+        <p>
+          引数とは、関数に「これを使って処理してね」と渡す値のことです。<br>
+          料理でたとえるなら、関数はレシピ（手順）であり、引数はその材料にあたります。<br>
+          たとえば、数値や文字列などを引数として渡すことで、関数はその値を使って処理を行います。
+        </p>
         <pre><code class="language-javascript">function greet(name) {
   Logger.log("こんにちは " + name + "さん！");
 }
 
 greet("田中");  // → 「こんにちは 田中さん！」</code></pre>
+        <p>
+          greet(name)のnameが引数です。<br>
+          ( )に何か値を入れると、入れた値に応じて結果が反映されます
+        </p>
 
         <h3>戻り値</h3>
-        <p>関数の「結果」を外に返すときに使います。</p>
+        <p>
+          戻り値とは、関数が処理を終えたあとに「これが結果です」と返してくれる値のことです。<br>
+          関数内で計算や処理を行った結果を、呼び出し元に伝えるために使います。<br>
+          たとえば、2つの数字を足し算する関数であれば、足し算の結果が戻り値になります。
+        </p>
         <pre><code class="language-javascript">function add(a, b) {
   return a + b;
 }
 
 let result = add(3, 5);
 Logger.log(result);  // → 8</code></pre>
-        <p>引数と戻り値を使うと、より柔軟で使い回しやすい関数になります。</p>
+        <p>
+          returnの後に記載された内容が、その関数の戻り値になります。
+        </p>
+        <p>
+          引数と戻り値を使うことで、関数は特定のデータに依存せず、いろいろな場面で再利用できるようになります。<br>
+          つまり、処理の汎用性や柔軟性が高まり、「同じようなコードを何度も書かなくて済む」ようになるのです。
+        </p>
       </section>
 
       <section id="example" class="section">
@@ -154,7 +177,9 @@ Logger.log(result);  // → 8</code></pre>
   let sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   return sheet.getDataRange().getValues();
 }</code></pre>
-        <p>これを使うことで、複数の関数から同じ処理を呼び出せて、保守がラクになりました。</p>
+        <p>
+          これを使うことで、複数の関数から同じ処理を呼び出せて、保守がラクになりました。
+        </p>
       </section>
 
       <section id="merits" class="section">

@@ -15,7 +15,7 @@
 
   <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="canonical" href="https://tree-tools-gas-guide.pages.dev/articles/blog/gas-foldercreate/" />
-  
+
   <!-- 共通JS -->
   <script src="/assets/js/includes.js"></script>
   <script src="/assets/js/common.js"></script>
@@ -61,10 +61,10 @@
       </div>
 
       <section class="section summary">
-        <p>毎回手動で行っていた「担当者ごとのドライブフォルダ作成＆URL記録」の作業をGASで自動化。初心者なりに書いたコードとその過程を、実体験ベースで記録しておきます。</p>
-      </section>
-
-      <section class="section intro">
+        <p>
+          毎回手動で行っていた「担当者ごとのドライブフォルダ作成＆URL記録」の作業をGASで自動化しました。<br>
+          初心者なりに書いたコードとその過程を、実体験ベースで記録しておきます。
+        </p>
         <p>
           このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
           丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
@@ -102,19 +102,19 @@
         </p>
 
         <h3>① 名前の取得</h3>
-        <ul>
+        <ul class="list-area">
           <li>スプレッドシートのA列にある担当者名を読み込む</li>
           <li>空欄や重複の処理は今回は未対応（今後対応したい）</li>
         </ul>
 
         <h3>② フォルダの作成</h3>
-        <ul>
+        <ul class="list-area">
           <li>親フォルダIDをあらかじめ指定</li>
           <li>名前をフォルダ名として使って新しいフォルダを作成</li>
         </ul>
 
         <h3>③ URLの書き込み</h3>
-        <ul>
+        <ul class="list-area">
           <li>作成したフォルダのURLをB列に記録</li>
           <li>位置をズラさないよう注意</li>
         </ul>
@@ -155,19 +155,26 @@
       <section id="memo" class="section">
         <h2>メモ・反省・次回やりたいこと</h2>
         <p>
-          ・禁止文字（例：「/」）が入ってるとエラーになる。今後は自動除去か変換を入れたい。<br>
-          ・この処理の後にPDF保存も自動でやるようにしたら、かなりスムーズになった。<br>
-          ・フォルダとスプシ自体もテンプレからコピーして作れたら、もっとラクになりそう。<br>
-          ・通知メールも追加できたら完璧。次回チャレンジ予定。
+          禁止文字（例：「/」）が入ってるとエラーになるので、今後は自動除去か変換を入れたいです。<br>
+          この処理の後にPDF保存も自動でやるようにしたら、かなりスムーズになりました<br>
+          フォルダとスプシ自体もテンプレからコピーして作れたら、もっと作業がラクになりそうです。<br>
+          通知メールも追加できたら完璧になるので、次回チャレンジ予定です。
         </p>
       </section>
 
       <section id="links" class="section">
         <h2>関連リンク</h2>
-        <ul>
-          <li><a href="/articles/blog/ec-csv-to-spreadsheet/">【GASで簡単自動化】ECサイトのCSVをスプレッドシートに自動転記するGASツール</a></li>
-          <li><a href="/articles/blog/invoice-pdf-tool/">GASでスプレッドシートから請求書PDFを自動作成し各ドライブへ保存するツール</a></li>
-        </ul>
+        <div class="page-links">
+          <a href="/articles/blog/ec-csv-to-spreadsheet/">
+            <p class="p-link">【GASで簡単自動化】ECサイトのCSVをスプレッドシートに自動転記するGASツール</p>
+          </a>
+        </div>
+        <div class="page-links">
+          <a href="/articles/blog/invoice-pdf-tool/">
+            <p class="p-link">GASでスプレッドシートから請求書PDFを自動作成し各ドライブへ保存するツール</p>
+          </a>
+        </div>
+
       </section>
 
       <p class="back-link">

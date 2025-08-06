@@ -59,11 +59,10 @@
       </div>
 
       <section class="section summary">
-        <p>数百件単位で発生する請求書作成をGASで自動化し、作業効率化とヒューマンエラーの削減を実現した事例です。</p>
-      </section>
-
-      <section class="section intro">
         <p>
+          数百件単位で発生する請求書作成をGASで自動化し、作業効率化とヒューマンエラーの削減を実現した事例です。
+        </p>
+      <p>
           このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
           丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
         </p>
@@ -104,7 +103,7 @@
         </p>
 
         <h3>① PDF化処理の自動化</h3>
-        <ul>
+        <ul class="list-area">
           <li>
             <strong>UrlFetchApp</strong> を使って、スプレッドシートを PDF としてエクスポート
           </li>
@@ -117,7 +116,7 @@
         </ul>
 
         <h3>② フォルダへの自動保存</h3>
-        <ul>
+        <ul class="list-area">
           <li>
             顧客ごとに Drive フォルダの ID をスプレッドシートで管理し、保存先を動的に変更
           </li>
@@ -127,7 +126,7 @@
         </ul>
 
         <h3>③ 実行管理とエラー対策</h3>
-        <ul>
+        <ul class="list-area">
           <li>
             <strong>完了フラグ</strong>をスプレッドシートに記録することで、処理済みの行を管理
           </li>
@@ -221,7 +220,7 @@
         <h3>CreatePdf 関数の解説</h3>
         <p>CreatePdf 関数は独自に作成した関数です。<br>
           Googleスプレッドシートの特定のシートをPDF化し、Googleドライブ内の指定フォルダに保存する処理を行う関数です。</p>
-        <ul>
+        <ul class="list-area">
           <li><strong>folder</strong> … 保存先のDrive Folderオブジェクト</li>
           <li><strong>ssId</strong> … PDF化するスプレッドシートのID</li>
           <li><strong>shId</strong> … PDF化するシートのID</li>

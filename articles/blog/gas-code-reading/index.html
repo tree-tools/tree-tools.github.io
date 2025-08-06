@@ -60,10 +60,10 @@
       </div>
 
       <section class="section summary">
-        <p>GASはコピペでも動きますが、少しでもカスタマイズするなら「コードを読む力」が必要です。この記事では、初心者が最低限おさえておきたい構文や記号だけに絞って、実際の例と一緒に紹介します。</p>
-      </section>
-
-      <section class="section intro">
+        <p>
+          GASはコピペでも動きますが、少しでもカスタマイズするなら「コードを読む力」が必要です。<br>
+          この記事では、初心者が最低限おさえておきたい構文や記号だけに絞って、実際の例と一緒に紹介します。
+        </p>
         <p>
           このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
           丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
@@ -91,8 +91,8 @@
       <section id="why" class="section">
         <h2>はじめに：「コピペで動いたけど、結局よくわからん」</h2>
         <p>
-          GAS（Google Apps Script）を独学していると、まずやるのがネットやChatGPTで検索して、コードをそのままコピペして動かすことですよね。<br>
-          実際、それだけでもある程度のツールは作れてしまうのがGASのいいところ。
+          GASを独学していると、まずやるのがネットやChatGPTで検索して、コードをそのままコピペして動かすことです。<br>
+          実際、それだけでもある程度のツールは作れてしまうのがGASのいいところです。
         </p>
         <p>
           でも、ちょっとカスタマイズしようとすると<br>
@@ -109,111 +109,117 @@
       <section id="why2" class="section">
         <h2>前提：「ちゃんと覚える」より「必要なときに調べる」が現実的</h2>
         <p>
-          JavaScript（GASのベースになっている言語）にはいろんな記号や構文がありますが、全部覚える必要はありません。<br>
-          最初は「なんとなく雰囲気がわかる」「意味の見当がつく」レベルでOK。
+          JavaScript（GASのベースになっている言語）にはいろんな記号や構文がありますが、コピペをしている段階では全部覚える必要はありません。<br>
+          最初は「なんとなく雰囲気がわかる」「意味の見当がつく」レベルでOKです。
         </p>
         <p>
-          知らない書き方が出てきたらその都度ググればいいし、ChatGPTに「このコードってどういう意味？」と聞くのもありです。
+          知らない書き方が出てきたらその都度ググればいいし、ChatGPTに「このコードってどういう意味？」と聞くのもアリです。
         </p>
       </section>
 
       <section id="basic" class="section">
         <h2>まず覚えておきたい記号と構文</h2>
         <p>以下は、コードを読むときによく出てくる基本構文です。</p>
-
-        <table class="compare-table compare-table3">
-          <thead>
-            <tr>
-              <th>記号・構文</th>
-              <th>意味・用途</th>
-              <th>例</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>//</code></td>
-              <td>1行コメント</td>
-              <td><code>// これはコメント</code></td>
-            </tr>
-            <tr>
-              <td><code>/* ... */</code></td>
-              <td>複数行コメント</td>
-              <td><code>/* コメント */</code></td>
-            </tr>
-            <tr>
-              <td><code>" "</code></td>
-              <td>文字列</td>
-              <td><code>let name = "Taro";</code></td>
-            </tr>
-            <tr>
-              <td><code>{ }</code></td>
-              <td>処理のかたまり</td>
-              <td><code>if (true) { ... }</code></td>
-            </tr>
-            <tr>
-              <td><code>;</code></td>
-              <td>文の終わり（省略可）</td>
-              <td><code>let x = 10;</code></td>
-            </tr>
-            <tr>
-              <td><code>function</code></td>
-              <td>関数の定義</td>
-              <td><code>function greet(name) { ... }</code></td>
-            </tr>
-            <tr>
-              <td><code>()</code></td>
-              <td>関数の引数など</td>
-              <td><code>greet("Taro");</code></td>
-            </tr>
-            <tr>
-              <td><code>[]</code></td>
-              <td>配列</td>
-              <td><code>let list = ["A", "B"];</code></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="compare-table compare-table3">
+            <thead>
+              <tr>
+                <th>記号・構文</th>
+                <th>意味・用途</th>
+                <th>例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>//</code></td>
+                <td>
+                  1行コメント<br>
+                  コードに影響しない文章が書けます
+                </td>
+                <td><code>// これはコメント</code></td>
+              </tr>
+              <tr>
+                <td><code>/* ... */</code></td>
+                <td>複数行コメント</td>
+                <td><code>/* コメント1行目<br>
+                コメント2行目 */</code></td>
+              </tr>
+              <tr>
+                <td><code>" "</code></td>
+                <td>文字列</td>
+                <td><code>let name = "Taro";</code></td>
+              </tr>
+              <tr>
+                <td><code>{ }</code></td>
+                <td>処理のかたまり</td>
+                <td><code>if (true) { ... }</code></td>
+              </tr>
+              <tr>
+                <td><code>;</code></td>
+                <td>文の終わり（省略可）</td>
+                <td><code>let x = 10;</code></td>
+              </tr>
+              <tr>
+                <td><code>function</code></td>
+                <td>関数の定義</td>
+                <td><code>function greet(name) { ... }</code></td>
+              </tr>
+              <tr>
+                <td><code>()</code></td>
+                <td>関数の引数など</td>
+                <td><code>greet("Taro");</code></td>
+              </tr>
+              <tr>
+                <td><code>[]</code></td>
+                <td>配列</td>
+                <td><code>let list = ["A", "B"];</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section id="write" class="section">
         <h2>書くときに知っておきたい構文</h2>
         <p>自分でコードを書き始めるときに最低限知っておくと便利な構文です。</p>
-
-        <table class="compare-table compare-table3">
-          <thead>
-            <tr>
-              <th>記号・構文</th>
-              <th>意味・用途</th>
-              <th>例</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>=</code></td>
-              <td>代入</td>
-              <td><code>let age = 20;</code></td>
-            </tr>
-            <tr>
-              <td><code>==</code></td>
-              <td>値の比較</td>
-              <td><code>if (age == 20)</code></td>
-            </tr>
-            <tr>
-              <td><code>===</code></td>
-              <td>値と型の比較</td>
-              <td><code>if (age === 20)</code></td>
-            </tr>
-            <tr>
-              <td><code>+</code></td>
-              <td>足し算／文字列結合</td>
-              <td><code>"Hello " + name</code></td>
-            </tr>
-            <tr>
-              <td><code>-, *, /</code></td>
-              <td>計算</td>
-              <td><code>let total = 10 * 2;</code></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="compare-table compare-table3">
+            <thead>
+              <tr>
+                <th>記号・構文</th>
+                <th>意味・用途</th>
+                <th>例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>=</code></td>
+                <td>代入</td>
+                <td><code>let age = 20;</code></td>
+              </tr>
+              <tr>
+                <td><code>==</code></td>
+                <td>値の比較</td>
+                <td><code>if (age == 20)</code></td>
+              </tr>
+              <tr>
+                <td><code>===</code></td>
+                <td>値と型の比較</td>
+                <td><code>if (age === 20)</code></td>
+              </tr>
+              <tr>
+                <td><code>+</code></td>
+                <td>足し算／文字列結合</td>
+                <td><code>"Hello " + name</code></td>
+              </tr>
+              <tr>
+                <td><code>-, *, /</code></td>
+                <td>計算</td>
+                <td><code>let total = 10 * 2;</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6247585947417000" data-ad-slot="9719436679"
@@ -248,11 +254,10 @@
           GASを使っていく中で、必要に応じて調べればいいし、回数こなすうちに自然と覚えます。
         </p>
         <p>
-          最初のうちは「雰囲気」で読んで、「必要になったら調べる」でOK。<br>
+          最初のうちは「雰囲気」で読んで、「必要になったら調べる」でOKです。<br>
           独学でも、やってるうちにだんだん自信がついてきます。
         </p>
       </section>
-
 
       <p class="back-link">
         <a href="/articles/blog/index.html">← 記事一覧に戻る</a>

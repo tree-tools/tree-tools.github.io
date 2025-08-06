@@ -58,10 +58,10 @@
       </div>
 
       <section class="section summary">
-        <p>スプレッドシートの1列目を編集した際に、同じ行の2列目へ現在の日時を自動入力するGASスクリプトの紹介です。手動での記録漏れを防ぎたい方におすすめ。</p>
-      </section>
-
-      <section class="section intro">
+        <p>
+          スプレッドシートの1列目を編集した際に、同じ行の2列目へ現在の日時を自動入力するGASスクリプトの紹介です。<br>
+          手動での記録漏れを防ぎたい方におすすめです。
+        </p>      
         <p>
           このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
           丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
@@ -102,20 +102,20 @@
         </p>
 
         <h3>① 編集されたセルの情報を取得</h3>
-        <ul>
+        <ul class="list-area">
           <li><code>onEdit(e)</code> イベントで編集操作を検知</li>
           <li><code>e.range</code> から行・列の位置を取得</li>
           <li>対象となる列・行かどうかをチェック</li>
         </ul>
 
         <h3>② 処理対象シートを制限</h3>
-        <ul>
+        <ul class="list-area">
           <li>特定のシート名だけ処理対象にする</li>
           <li>別シートで反応しないようガード</li>
         </ul>
 
         <h3>③ 日時を書き込む</h3>
-        <ul>
+        <ul class="list-area">
           <li><code>new Date()</code> で現在日時を取得</li>
           <li>同じ行の2列目に日時を記録</li>
         </ul>
@@ -160,15 +160,6 @@ function onEdit(e) {
           - シート名でフィルタをかけないと、他のシートでも動いてしまうので必ずチェックするようにしています。<br>
           - 次は「誰が編集したのか」など、履歴ログを別シートに残す仕組みを作ってみたいです。
         </p>
-      </section>
-
-      <section id="links" class="section">
-        <h2>関連リンク</h2>
-        <ul>
-          <li><a href="/articles/blog/">他のGAS活用記事を見る</a></li>
-          <li><a href="https://developers.google.com/apps-script/guides/triggers?hl=ja" target="_blank"
-              rel="noopener">公式：GAS トリガーの使い方</a></li>
-        </ul>
       </section>
 
       <p class="back-link">

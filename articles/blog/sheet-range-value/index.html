@@ -60,10 +60,10 @@
       </div>
 
       <section class="section summary">
-        <p>GASを触りはじめると最初に出てくる「getRange」「getValue」あたりのコード。コピペで動くけど、意味がわからずモヤモヤしていた当時の自分のために整理しました。</p>
-      </section>
-
-      <section class="section intro">
+        <p>
+          GASを触りはじめると最初に出てくる「getRange」「getValue」あたりのコードです。<br>
+          コピペで動くけど、意味がわからずモヤモヤしていた当時の自分のために整理しました。
+        </p>
         <p>
           このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
           丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
@@ -87,32 +87,26 @@
       </ul>
 
       <section id="get-sheet" class="section">
-        <h2>スプレッドシートの取得方法、3パターンあるって知ってた？</h2>
+        <h2>スプレッドシートの取得方法</h2>
 
         <h3>よく見るのがこれ：</h3>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-SpreadsheetApp.getActiveSpreadsheet()
-    </code></pre>
+          <pre><code class="language-javascript">SpreadsheetApp.getActiveSpreadsheet()</code></pre>
         </div>
         <p>これは「今開いているスプレッドシート」を取得する書き方です。とりあえず動かしたいときに便利ですが、シートが複数あるときは挙動に注意が必要です。</p>
 
         <h3>名前でシートを指定する：</h3>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-.getSheetByName("シート1")
-    </code></pre>
+          <pre><code class="language-javascript">SpreadsheetApp.getSheetByName("シート1")</code></pre>
         </div>
-        <p>名前で指定することで、対象のシートを明確に指定できます。</p>
+        <p>シートの名前で指定することで、対象のシートを明確に指定できます。</p>
 
         <h3>スプレッドシートのIDから取得する：</h3>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-SpreadsheetApp.openById("スプレッドシートのID")
-    </code></pre>
+          <pre><code class="language-javascript">SpreadsheetApp.openById("スプレッドシートのID")</code></pre>
         </div>
         <p>複数のスプレッドシートを操作したいときに便利です。この書き方なら、「別ファイル」も扱うことができます。</p>
       </section>
@@ -124,41 +118,41 @@ SpreadsheetApp.openById("スプレッドシートのID")
           特に、「A1形式」と「行・列で指定する形式」の違いに気づくまでに少し時間がかかりました。以下に代表的な3パターンを整理しておきます。
         </p>
 
-        <table class="compare-table compare-table4">
-          <thead>
-            <tr>
-              <th>書き方</th>
-              <th>意味</th>
-              <th>例</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>getRange("B3")</code></td>
-              <td>A1形式で指定</td>
-              <td>「B3」の1セルを取得</td>
-            </tr>
-            <tr>
-              <td><code>getRange(3, 2)</code></td>
-              <td>行・列で1セルだけ取得</td>
-              <td>3行2列目 → 「B3」を取得</td>
-            </tr>
-            <tr>
-              <td><code>getRange(3, 2, 2, 2)</code></td>
-              <td>行・列 + 行数・列数で範囲指定</td>
-              <td>3行2列から2行2列 → 「B3:C4」を取得</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-scroll">
+          <table class="compare-table compare-table4">
+            <thead>
+              <tr>
+                <th>書き方</th>
+                <th>意味</th>
+                <th>例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>getRange("B3")</code></td>
+                <td>A1形式で指定</td>
+                <td>「B3」の1セルを取得</td>
+              </tr>
+              <tr>
+                <td><code>getRange(3, 2)</code></td>
+                <td>行・列で1セルだけ取得</td>
+                <td>3行2列目 → 「B3」を取得</td>
+              </tr>
+              <tr>
+                <td><code>getRange(3, 2, 2, 2)</code></td>
+                <td>行・列 + 行数・列数で範囲指定</td>
+                <td>3行2列から2行2列 → 「B3:C4」を取得</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
         <p>
-          最初は「A1形式」ばかり使っていましたが、あとから <code>getRange(行, 列, 行数, 列数)</code>
-          のような指定ができると、ループ処理での範囲操作や表形式のデータ処理が一気にやりやすくなることに気づきました。<br>
+          最初は「A1形式」ばかり使っていましたが、あとから<code>getRange(行, 列, 行数, 列数)</code>のような指定ができると、ループ処理での範囲操作や表形式のデータ処理が一気にやりやすくなることに気づきました。<br>
           たとえば、「上から10行分をまとめて取得して別の場所に貼り付ける」ような処理が、行列指定だととてもスムーズに書けます。
         </p>
         <p>
-          また、動的に行数や列数を計算して <code>getRange(row, col, numRows, numCols)</code>
-          を使うと、柔軟な処理が可能になるため、コピペから一歩進んで「自分で制御するコード」に近づける感覚がありました。
+          また、動的に行数や列数を計算して<code>getRange(row, col, numRows, numCols)</code>を使うと、柔軟な処理が可能になるため、コピペから一歩進んで「自分で制御するコード」に近づける感覚がありました。
         </p>
       </section>
 
@@ -216,46 +210,39 @@ SpreadsheetApp.openById("スプレッドシートのID")
         <p>1つのセルから値を読み取ります。</p>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-function readSingleCell() {
+          <pre><code class="language-javascript">function readSingleCell() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート1");
   const value = sheet.getRange("B3").getValue();
   Logger.log(value); // 単一の値（例："テスト"）
-}
-    </code></pre>
+}</code></pre>
         </div>
 
         <h3>getValues() の例</h3>
         <p>複数のセルから値を取得する場合、2次元配列で返ってきます。</p>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-function readMultipleCells() {
+          <pre><code class="language-javascript">function readMultipleCells() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート1");
   const data = sheet.getRange("A1:C3").getValues();
   Logger.log(data); // [[A1, B1, C1], [A2, B2, C2], [A3, B3, C3]]
-}
-    </code></pre>
+}</code></pre>
         </div>
 
         <h3>setValue() の例</h3>
         <p>1セルに値を直接書き込むときに使います。</p>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-function writeSingleCell() {
+          <pre><code class="language-javascript">function writeSingleCell() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート1");
   sheet.getRange("A1").setValue("こんにちは");
-}
-    </code></pre>
+}</code></pre>
         </div>
 
         <h3>setValues() の例</h3>
         <p>複数のセルに対して2次元配列で値を設定します。</p>
         <div class="code-container">
           <button class="copy-btn">Copy</button>
-          <pre><code class="language-javascript">
-function writeMultipleCells() {
+          <pre><code class="language-javascript">function writeMultipleCells() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("シート1");
   const values = [
     ["A1", "B1", "C1"],
@@ -263,17 +250,15 @@ function writeMultipleCells() {
     ["A3", "B3", "C3"]
   ];
   sheet.getRange("A1:C3").setValues(values);
-}
-    </code></pre>
+}</code></pre>
         </div>
 
         <h3>よくあるミス</h3>
-        <ul>
+        <ul class="list-area">
           <li><code>getValues()</code> の結果（2次元配列）を <code>setValue()</code> に渡してエラーになる</li>
           <li><code>setValues()</code> でセル範囲のサイズと配列のサイズが一致していない（例：3×3セルに2×2の配列）</li>
           <li>1セルを取得したいのに <code>getValues()</code> を使って、<code>[[値]]</code> の配列になってしまい扱いづらくなる</li>
         </ul>
-
         <p>
           特に初心者の頃は「getValueとgetValuesの違いって何？」とよくわからないまま使っていて、エラーが出てようやく気づくことも多かったです。<br>
           データ形式（単一値か配列か）を意識することがとても大事です。
@@ -282,13 +267,12 @@ function writeMultipleCells() {
 
       <section id="benefits" class="section">
         <h2>これが理解できると何ができる？</h2>
-
         <p>
           <code>getRange()</code> や <code>getValue()</code> / <code>setValues()</code>
           といった基本的な読み書きの仕組みが理解できると、GASで扱える範囲が一気に広がります。
         </p>
 
-        <ul>
+        <ul class="list-area">
           <li><strong>スプレッドシートの読み書きが自由自在にできるようになる</strong><br>
             値の取得、書き込み、範囲操作が自在になると、単純な記録から複雑な集計・加工まで自動化できます。</li>
           <li><strong>「とりあえず動いた」から「ちゃんと狙って処理する」へ</strong><br>
@@ -311,7 +295,7 @@ function writeMultipleCells() {
           基本の書き方が理解できるようになってから、以下のようなツールを作れるようになりました。どれも最初は小さなスクリプトから始まりましたが、業務の中で十分使えるレベルまで育ちました。
         </p>
 
-        <ul>
+        <ul class="list-area">
           <li><strong>日次で他のスプレッドシートからデータを引っ張って一覧化するツール</strong><br>
             各担当者が入力した別ファイルのデータを、1つのファイルに自動集計。朝一で「最新の一覧」ができていて便利でした。</li>
 
@@ -336,7 +320,7 @@ function writeMultipleCells() {
           エラーになって初めて「そういう仕様だったのか」と気づくことも多く、今でも気をつけるようにしています。
         </p>
 
-        <ul>
+        <ul class="list-area">
           <li><strong><code>getValue()</code> したのに 2次元配列扱いして <code>undefined</code></strong><br>
             1セルだけ取得したつもりなのに、配列としてループしようとして失敗。<br>
             <code>getValue()</code>は単一値、<code>getValues()</code>は2次元配列という区別が大事。
@@ -349,7 +333,6 @@ function writeMultipleCells() {
             <code>[[1,2],[3,4]]</code> のような配列を <code>1行1列</code> に書き込もうとしてエラー。<br>
             セル範囲と配列サイズが一致しているか、いつも確認が必要。
           </li>
-
           <li><strong><code>.getSheetByName()</code> のシート名が微妙に違っていて <code>null</code> が返る</strong><br>
             全角スペースや大文字・小文字の違いで一致しないことも。<br>
             <code>sheet == null</code> のチェックを必ず入れるようになった。
@@ -364,18 +347,15 @@ function writeMultipleCells() {
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
       <section id="summary" class="section">
-        <h2>まとめ：動くコードより、「なぜそう書いてあるか」を考えてみると面白くなる</h2>
-
+        <h2>まとめ</h2>
         <p>
           最初のうちは、「コピペで動いたからOK」と思って満足していました。<br>
           でも、処理の意味や構造を理解するようになってからは、ただ動くだけでなく、<strong>「なぜそう書いてあるのか」「何をしているのか」</strong>を考えるようになりました。
         </p>
-
         <p>
           書き方がわかると、今度は応用がきくようになり、自分なりの改善やカスタマイズができるようになります。<br>
           GASはシンプルだからこそ、自分の業務やアイディアに合わせてどんどん展開できるのが魅力です。
         </p>
-
         <p>
           この記事が、同じように「動くけど、意味がわからない」で止まっていた誰かの助けになればうれしいです。<br>
           自分の過去のつまずきが、これからの誰かのヒントになりますように。

@@ -60,9 +60,6 @@
 
       <section class="section summary">
         <p>GASを独学で始めたときに最初につまずいた「let」「var」「const」の違いや、変数と定数の基本を、実際の例とともに分かりやすく解説します。</p>
-      </section>
-
-      <section class="section intro">
         <p>
           このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
           丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。
@@ -90,93 +87,161 @@
 
       <section id="about-variable" class="section">
         <h2>変数って何？</h2>
-        <p>変数とは、データに名前をつけて保存する「箱」のようなものです。</p>
+        <p>
+          変数とは、データに名前をつけて保存する「箱」のようなものです。
+        </p>
         <pre><code class="language-javascript">let name = "たろう";</code></pre>
-        <p>これで、<code>name</code> という変数に「たろう」という文字列が入ります。</p>
-
-        <p>同じように、数字を入れることもできます</p>
+        <p>
+          これで、<code>name</code> という変数に「たろう」という文字列が入ります。
+        </p>
+        <p>
+          同じように、変数には数字を入れることもできます
+        </p>
         <pre><code class="language-javascript">let count = 5;</code></pre>
-        <p>このあとで<code>count</code>を使えば、「5」として処理してくれるわけです。<br>
-          この「名前をつけて値をしまう」という仕組みが、プログラムの基本です。</p>
+        <p>
+          このあとでこの<code>count</code>を使えば、「5」として処理してくれるわけです。<br>
+          この「名前をつけて、値をしまう」という仕組みが、プログラムの基本です。
+        </p>
 
       </section>
 
       <section id="difference" class="section">
         <h2>let / var / const の違い</h2>
-        <p>GAS（JavaScript）には、変数を宣言する方法が3つあります。</p>
+        <p>
+          JavaScript（GASを書いている言語）には、変数を宣言する方法が3つあります。
+        </p>
         <pre><code class="language-javascript">var name = "たろう";
 let name = "たろう";
 const name = "たろう";</code></pre>
-        <p>どれも「変数宣言」に使いますが、挙動や使いどころに違いがあります。</p>
-        <table class="compare-table compare-table4">
-          <thead>
-            <tr>
-              <th>宣言方法</th>
-              <th>再代入</th>
-              <th>再宣言</th>
-              <th>スコープ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>var</td>
-              <td>OK</td>
-              <td>OK</td>
-              <td>関数単位</td>
-            </tr>
-            <tr>
-              <td>let</td>
-              <td>OK</td>
-              <td>NG</td>
-              <td>ブロック単位</td>
-            </tr>
-            <tr>
-              <td>const</td>
-              <td>NG</td>
-              <td>NG</td>
-              <td>ブロック単位</td>
-            </tr>
-          </tbody>
-        </table>
-        <p>初心者の頃は「表見てもよく分からん」ってなりましたが、次の実例を見れば納得できます。</p>
+        <p>
+          「<code>var</code>」「<code>let</code>」「<code>const</code>」のどれも「変数宣言」に使いますが、それぞれ挙動や使いどころに違いがあります。
+        </p>
+        
+        <div class="table-scroll">
+          <table class="compare-table compare-table4">
+            <thead>
+              <tr>
+                <th>宣言方法</th>
+                <th>再代入</th>
+                <th>再宣言</th>
+                <th>スコープ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>var</td>
+                <td>OK</td>
+                <td>OK</td>
+                <td>関数単位</td>
+              </tr>
+              <tr>
+                <td>let</td>
+                <td>OK</td>
+                <td>NG</td>
+                <td>ブロック単位</td>
+              </tr>
+              <tr>
+                <td>const</td>
+                <td>NG</td>
+                <td>NG</td>
+                <td>ブロック単位</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          初心者の頃は「表見てもよく分からん」ってなりましたが、次の実例を見れば納得できます。
+        </p>
       </section>
 
       <section id="bug" class="section">
         <h2>varでハマった実例</h2>
-        <p>ループ内で宣言した<code>var</code>が外でも使えてしまう例：</p>
+        <p>
+          JavaScriptでは、varで宣言した変数は「関数スコープ」を持つため、ループ内で定義してもそのブロック（ループ）を抜けた後も有効です。<br>
+          そのため、思わぬバグの原因になることがあります。
+        </p>
+
+        <p>例：varを使った場合</p>
         <pre><code class="language-javascript">for (var i = 0; i < 5; i++) {
   Logger.log(i);
 }
 Logger.log(i); // → 5 と出る</code></pre>
-        <p><code>let</code>にすればブロックスコープで防げます。</p>
+        <p>
+          このコードでは、forループの中でvarを使ってiを宣言していますが、ループが終わったあとにもiという変数が生き残っており、値は5になっています。<br>
+          これは、意図しない挙動やバグにつながる恐れがあります。
+        </p>
+
+        <h3>解決策：letでブロックスコープを使う</h3>
+        <p>
+          一方で、letで宣言した変数は「ブロックスコープ」を持つため、ループの中でのみ有効です。<br>
+          ループ外でアクセスしようとするとエラーになります。
+        </p>
+
+        <p>例：letを使った場合</p>
         <pre><code class="language-javascript">for (let i = 0; i < 5; i++) {
   Logger.log(i);
 }
 Logger.log(i); // → エラー（iはループの外にいない）</code></pre>
+        <p>
+          このように、letを使うことでスコープを限定し、意図しない変数の再利用や上書きを防ぐことができます。
+        </p>
+        <h3>ポイント</h3>
+        <ul class="list-area">
+          <li>varは関数全体で有効になってしまうため、ループ外でも思わぬ影響が出る。</li>
+          <li>letはループの中だけで有効なので、安全で意図が明確。</li>
+          <li>ループ内のカウンタ変数や一時的な変数は、基本的にletで書くようにしましょう。</li>
+        </ul>
+        <p>
+          GASでのスクリプトもJavaScriptがベースのため、こうしたスコープの違いには十分注意が必要です。
+        </p>
 
       </section>
 
       <section id="const" class="section">
         <h2>constは固定値用</h2>
-        <p>変わらない前提の値には<code>const</code>を使います。</p>
+        <p>
+          JavaScriptでは変数の宣言に var、let、const の3種類がありますが、その中でも「変更されるべきでない値」には<code>const</code>を使うのが基本です。<br>
+          これは、プログラムの可読性や保守性、バグの予防において非常に重要なポイントです。
+        </p>
         <pre><code class="language-javascript">const TAX_RATE = 0.1;</code></pre>
         <p>
-          途中で値を変えてしまうミスを防げます。<br>
-          こういう「決めたら変わらない数字」は、const のほうが明らかに安全でした。
+          このように、消費税率など「一度決めたら途中で変更されることがない値」には<code>const</code>を使います。<br>
+          <code>const</code>によって変数の再代入が禁止されるため、後からうっかり値を変更してしまうミスを未然に防ぐことができます。
+        </p>
+
+        <pre><code class="language-javascript">const TAX_RATE = 0.1;
+TAX_RATE = 0.08; // エラー：constで定義された変数は再代入できません</code></pre>
+
+        <h3>なぜ const が安全なのか？</h3>
+        <p>
+          プログラムが複雑になってくると、変数の値がどこで変更されたのか追いにくくなり、思わぬバグを引き起こすことがあります。<br>
+          たとえば、グローバル変数や設定値などがどこかで変更されてしまうと、意図しない動作につながります。
+        </p>
+        <p>
+          const を使えば、「この値は絶対に変わらない」という前提がコード上で明確になるため、以下のようなメリットがあります。
+        </p>
+        <ul class="list-area">
+          <li>読み手にとって意図が明確になる（＝可読性の向上）</li>
+          <li>うっかり再代入するバグを防げる（＝安全性の向上）</li>
+          <li>コード全体の予測しやすさが高まる（＝保守性の向上）</li>
+        </ul>
+        <p>
+          値が変わらない前提なら、迷わず const を使いましょう。<br>
+          そうすることで、コードの意図が明確になり、保守性も向上します。
         </p>
       </section>
 
       <section id="cases" class="section">
         <h2>定数と変数の具体例</h2>
         <h3>定数にすべき例（const）</h3>
-        <ul>
+        <ul class="list-area">
           <li><code>const TAX_RATE = 0.1;</code> → 税率は固定値</li>
           <li><code>const API_KEY = "abc123";</code> → セキュリティ上、変更すべきでない</li>
           <li><code>const MAX_LENGTH = 100;</code> → 入力制限など、仕様上固定</li>
         </ul>
 
         <h3>変数にすべき例（let）</h3>
-        <ul>
+        <ul class="list-area">
           <li><code>let userName = "たろう";</code> → 入力内容は人によって変わる</li>
           <li><code>let count = 0;</code> → カウント処理などで値が増える</li>
           <li><code>let isValid = false;</code> → 処理の中で状態が変わる</li>
@@ -189,7 +254,7 @@ Logger.log(i); // → エラー（iはループの外にいない）</code></pre
         <p>変数には意味のある名前をつけるようにしています。<br>
           昔の自分は「a」とか「data1」とかで済ませていたけど、あとから見返すと超わかりにくいです</p>
         <p>以下のような名前付けがオススメです</p>
-        <ul>
+        <ul class="list-area">
           <li>意味が通じる名前 →<code>userName</code>,<code>totalPrice</code>,<code>isValid</code></li>
           <li>キャメルケース（2語目以降を大文字に） →<code>userAge</code>,<code>formData</code></li>
           <li>基本は英単語（慣れたら辞書引きながらでもOK）</li>
@@ -199,8 +264,18 @@ Logger.log(i); // → エラー（iはループの外にいない）</code></pre
 
       <section id="summary" class="section">
         <h2>まとめ</h2>
-        <p>GASを独学でやる中で、<code>let</code>と<code>const</code>の使い分けを覚えると、バグを減らせて、後から読みやすいコードになります。</p>
-        <p>「これは変わる？変わらない？」を基準に考えて、まずは <strong>const → let の順で検討</strong> するのがおすすめです。</p>
+        <p>
+          GASを独学で学ぶ中で、「let」と「const」の使い分けを意識することは、コードの品質を大きく向上させるポイントのひとつです。<br>
+          変数の扱い方に気を配るだけで、思わぬバグの発生を防ぎ、数週間後・数ヶ月後の「自分」がコードを見返したときにも理解しやすくなります。
+        </p>
+        <p>
+          特に、「この値は変わる可能性があるかどうか？」を基準にして考えるクセをつけることが重要です。<br>
+          変わるものには<code>let</code>、変わらない前提のものには<code>const</code>を使うようにすると、無駄な再代入のミスを防げるだけでなく、コード全体の意図が明確になります。
+        </p>
+        <p>
+          最初はすべて<code>let</code>で書いてみて、あとから「これは変わらないな」と判断した変数だけ<code>const</code>に変更するというやり方でもかまいません。<br>
+          こうした基本的なルールの積み重ねが、GASを使った効率的な自動化や、チーム開発における信頼性あるスクリプト作成につながります。
+        </p>
       </section>
 
       <p class="back-link">

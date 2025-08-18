@@ -310,7 +310,7 @@ img.guide-img {
   margin: 0, 0, 0, 20px;
 }
 
-.highlight h2{
+.highlight h2 {
   margin: 0;
 }
 
@@ -486,7 +486,7 @@ pre {
 
 dl.update-list {
   margin-left: 20px;
-  
+
   /* background: #d6d6d6; */
   border-left: 4px solid #666666;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -558,3 +558,21 @@ dl.update-list a {
 }
 
 /* ↑フッター */
+
+/* ↓広告 */
+.ad-top {
+  margin: 16px 0;
+  text-align: center;
+}
+
+.ad-content {
+  margin: 16px 0;
+  text-align: center;
+}
+
+.ad-bottom {
+  margin: 16px 0;
+  text-align: center;
+}
+
+/* ↑広告 */

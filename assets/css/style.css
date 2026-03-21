@@ -562,7 +562,12 @@ dl.update-list a {
 /* ↓広告 */
 .ad-top {
   margin: 16px 0;
-  text-align: center;
+}
+
+.ad-top > * {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .ad-content {
@@ -572,7 +577,12 @@ dl.update-list a {
 
 .ad-bottom {
   margin: 16px 0;
-  text-align: center;
+}
+
+.ad-bottom > * {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 /* ↑広告 */

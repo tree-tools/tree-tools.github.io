@@ -64,7 +64,7 @@
         <!-- admax -->
       </div>
 
-      <section class="section summary">
+      <section id="intro" class="section summary">
         <p>
           GASを触りはじめると最初に出てくる「getRange」「getValue」あたりのコードです。<br>
           コピペで動くけど、意味がわからずモヤモヤしていた当時の自分のために整理しました。
@@ -81,11 +81,12 @@
         <li><a href="#get-sheet">スプレッドシートの取得方法</a></li>
         <li><a href="#getrange">getRange() の書き方いろいろ</a></li>
         <li><a href="#getvalue">getValue() / getValues() / setValue() / setValues() の違いは？</a></li>
-        <li><a href="#what-you-can-do">これが理解できると何ができる？</a></li>
+        <li><a href="#benefits">これが理解できると何ができる？</a></li>
         <li><a href="#experience">実際に作って役立った場面（体験談）</a></li>
         <li><a href="#mistakes">よくやったミス＆気をつけてること</a></li>
         <li><a href="#summary">まとめ</a></li>
-      </ul>
+        <li><a href="#links">関連リンク</a></li>
+        </ul>
 
       <!-- admax -->
       <div class="ad-content">
@@ -95,6 +96,22 @@
 
       <section id="get-sheet" class="section">
         <h2>スプレッドシートの取得方法</h2>
+        <p>GASを初めて使う方は、コードを開く・実行する基本操作と、初回実行時の認証をご確認ください。</p>
+
+        <div class="page-links">
+          <a href="/beginner/try-first-gas.html">
+            <p>コードを開いて試すための基本操作</p>
+            <p class="p-link">▶ 最初の実行ガイド</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/beginner/auth-guide.html">
+            <p>初回実行時の認証画面・権限の確認</p>
+            <p class="p-link">▶ GASの認証ガイド</p>
+          </a>
+        </div>
+
 
         <h3>よく見るのがこれ：</h3>
         <div class="code-container">
@@ -373,6 +390,32 @@
           この記事が、同じように「動くけど、意味がわからない」で止まっていた誰かの助けになればうれしいです。<br>
           自分の過去のつまずきが、これからの誰かのヒントになりますように。
         </p>
+      </section>
+
+      <section id="links" class="section">
+        <h2>関連リンク</h2>
+        <p>次に学べる内容や、関連する実例はこちらをご覧ください。</p>
+
+        <div class="page-links">
+          <a href="/articles/blog/gas-foldercreate/">
+            <p>リストからフォルダを作成する実例を見る</p>
+            <p class="p-link">▶ Googleドライブフォルダを自動作成する方法</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/invoice-pdf-tool/">
+            <p>関数を組み合わせた書類作成・保存の実例を見る</p>
+            <p class="p-link">▶ 請求書PDFを自動作成するツール</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/ec-csv-to-spreadsheet/">
+            <p>シート間でデータを転記するコード例を見る</p>
+            <p class="p-link">▶ ECサイトのCSV転記の事例</p>
+          </a>
+        </div>
       </section>
 
       <p class="back-link">

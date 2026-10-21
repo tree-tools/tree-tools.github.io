@@ -38,7 +38,7 @@
   {
     "title": "let / var / const の違いとは？GAS初心者がつまずいた変数の基本",
     "url": "/articles/blog/let-var-const/",
-    "summary": "GASで確認ダイアログを表示するBrowser.msgBoxの使い方と注意点を、独学中の実体験をもとに紹介します。",
+    "summary": "GASの変数・定数の基本と、let・var・constの違い、スコープ、命名の工夫を実例とともに紹介します。",
     "date": "2025-07-21",
     "tags": [
       "GAS",

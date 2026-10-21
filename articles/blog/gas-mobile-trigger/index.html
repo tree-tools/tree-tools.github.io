@@ -81,6 +81,7 @@
           <li><a href="#code">コード例</a></li>
           <li><a href="#memo">メモ・反省・次回やりたいこと</a></li>
           <li><a href="#links">関連リンク</a></li>
+          <li><a href="#consultation">業務の自動化について相談する</a></li>
         </ul>
       </nav>
 
@@ -131,6 +132,24 @@
 
       <section id="code" class="section">
         <h2>コード例</h2>
+
+        <p>この記事は、シート上のチェック操作を起点にする処理の実例です。GASを開いて保存する基本操作と、初期設定時の権限をご確認ください。コード中の <code>onEdit(e)</code> は編集時の情報を使うため、エディタから直接実行する方法とは異なります。</p>
+
+        <div class="page-links">
+          <a href="/beginner/try-first-gas.html">
+            <p>GASを開いてコードを保存する基本操作を確認する</p>
+            <p class="p-link">▶ GASを使い始めるための操作ガイド</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/beginner/auth-guide.html">
+            <p>初期設定で認証が必要になったときに確認する</p>
+            <p class="p-link">▶ GASの認証ガイド</p>
+          </a>
+        </div>
+        <p>編集で動くトリガーには、利用できるサービスの制約があります。時間指定トリガーを作成する掲載例は、利用時にトリガーの種類・権限を確認する必要があります。<a href="https://developers.google.com/apps-script/guides/triggers" target="_blank" rel="noopener">Google公式のトリガーの説明</a>もご確認ください。</p>
+
         <p>以下は、チェックボックスと確認セルを使ってスマホから処理を安全に始めるためのコードです。</p>
 
         <div class="code-container">
@@ -181,6 +200,44 @@ function doSomething() {
           ただし、スマホでは表示が崩れやすいため、PCとスマホでUIを分けた方が使いやすくなるかもしれません。<br>
           今後は、スマホ専用のインターフェースや、通知連携（LINEなど）にも挑戦したいです。
         </p>
+      </section>
+
+      <section id="links" class="section">
+        <h2>関連リンク</h2>
+        <p>次に学べる内容や、関連する実例はこちらをご覧ください。</p>
+
+        <div class="page-links">
+          <a href="/articles/blog/browser-msgbox/">
+            <p>処理前の確認とスマホでの注意点を確認する</p>
+            <p class="p-link">▶ Browser.msgBoxの使い方</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/auto-update-timestamp/">
+            <p>編集した行へ更新日時を記録する実例を見る</p>
+            <p class="p-link">▶ 更新日時を自動記録するツール</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/sheet-range-value/">
+            <p>スプレッドシートの値の読み書きを確認する</p>
+            <p class="p-link">▶ スプレッドシート操作の実践入門</p>
+          </a>
+        </div>
+      </section>
+
+      <section id="consultation" class="section">
+        <h2>自分の業務に自動化機能を追加したい方へ</h2>
+        <p>スマホからの入力・操作をきっかけに、業務の処理を自動化する機能を追加したい方はご相談ください。今の作業と希望する自動化を伺い、対応できる範囲をご案内します。</p>
+
+        <div class="page-links">
+          <a href="/contact/#consultation">
+            <p>対応例・相談内容の書き方・相談から納品まで</p>
+            <p class="p-link">▶ 制作・カスタマイズ相談の案内を見る</p>
+          </a>
+        </div>
       </section>
 
       <p class="back-link">

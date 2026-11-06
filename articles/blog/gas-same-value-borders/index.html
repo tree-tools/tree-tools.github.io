@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GASでスプレッドシートの同じ値が続くセル間の横罫線を自動で消す | GASで作業をもっとラクに</title>
+    <meta name="description" content="シフト表で同じ名前が縦に続くセル間の横罫線を、GASで自動調整した記録です。getValues()とsetBorder()の使い方や、空白セルの罫線まで消してしまった失敗を紹介します。">
+    <meta property="og:title" content="GASでスプレッドシートの同じ値が続くセル間の横罫線を自動で消す">
+    <meta property="og:description" content="シフト表で同じ名前が縦に続くセル間の横罫線を、GASで自動調整した記録です。getValues()とsetBorder()の使い方や、空白セルの罫線まで消してしまった失敗を紹介します。">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://tree-tools-gas-guide.pages.dev/articles/blog/gas-same-value-borders/">
+    <meta property="og:image" content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png">
+    <link rel="canonical" href="https://tree-tools-gas-guide.pages.dev/articles/blog/gas-same-value-borders/">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/includes.js"></script>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/copy-code.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+    <link rel="icon" href="/assets/images/tree-toos-icon.png" type="image/png">
+  </head>
+  <body>
+    <div data-include="/includes/header.html"></div>
+    <main>
+      <nav class="breadcrumb" aria-label="パンくずリスト">
+        <ol>
+          <li>
+            <a href="/">トップ</a>
+          </li>
+          <li>
+            <a href="/articles/blog/">記事一覧</a>
+          </li>
+          <li>記事</li>
+        </ol>
+      </nav>
+      <article class="article-content">
+        <h1 class="page-title">GASでスプレッドシートの同じ値が続くセル間の横罫線を自動で消す</h1>
+        <div class="article-meta">
+          <span class="date">投稿日：2026-10-07</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+            <span>GAS</span>
+            <span>ツール</span>
+            <span>業務効率化</span>
+            <span>スプレッドシート</span>
+          </span>
+        </div>
+        <div class="ad-top">
+          <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+        </div>
+        <section class="section summary">
+          <p>シフト表で同じ人が連続して入っているとき、セルの間の横罫線を消すと、ひとまとまりとして見やすくなります。</p>
+          <p>これまでは手作業で消していましたが、シフトを変更するたびに罫線も直すのが面倒だったので、GASで整えるようにしました。</p>
+          <p>今回は、上下のセルを比べて、同じ値が続くところだけ横罫線を消すツールの記録です。</p>
+          <p>このブログは、Google Apps Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。<br>
+          丁寧な解説というより、<strong>「こんなこともGASでできるんだ」</strong>というアイディアのきっかけになれば幸いです。</p>
+        </section>
+        <nav class="section toc">
+          <h2>目次</h2>
+          <ul>
+            <li>
+              <a href="#purpose">やりたかったこと</a>
+            </li>
+            <li>
+              <a href="#behavior">どんな動きにしたか</a>
+            </li>
+            <li>
+              <a href="#logic">使ったロジック・ポイント</a>
+            </li>
+            <li>
+              <a href="#code">コード例</a>
+            </li>
+            <li>
+              <a href="#failure">実際に作って失敗したところ</a>
+            </li>
+            <li>
+              <a href="#result">使ってみてどう変わったか</a>
+            </li>
+            <li>
+              <a href="#next">次回やりたいこと</a>
+            </li>
+            <li>
+              <a href="#summary">まとめ</a>
+            </li>
+            <li>
+              <a href="#links">関連リンク</a>
+            </li>
+            <li>
+              <a href="#consultation">自分の業務に自動化機能を追加したい方へ</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="ad-content">
+          <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+        </div>
+        <section class="section" id="purpose">
+          <h2>やりたかったこと</h2>
+          <p>シフト表を作っていると、同じ人の名前が縦に続くことがあります。例えば、山田さんが3枠続き、そのあと佐藤さんが2枠続くような場合です。</p>
+          <p>すべてのセルに横罫線があるより、同じ名前の間だけ線を消した方が、「ここからここまでは同じ人」と見やすくなります。</p>
+          <p>これまでは、シフト表を作ったあとに該当する罫線を手作業で消していました。人数や行数が多いと地味に時間がかかりますし、途中でシフトを変更すると、消した線を戻したり、別の線を消したりする必要がありました。</p>
+          <p>名前を直すたびに見た目まで修正するのが面倒だったので、入力した内容に合わせて罫線を整えられるようにしたいと思いました。</p>
+        </section>
+        <section class="section" id="behavior">
+          <h2>どんな動きにしたか</h2>
+          <p>対象のシート名とセル範囲を指定し、その範囲内で上下のセルを比較します。</p>
+          <p>実行前と実行後を並べると、次のようになります。</p>
+          <h3>列ごとに判定・空白同士はそのまま</h3>
+          <img class="article-thumb" src="/assets/images/gas-same-value-borders-01.png" alt="左が実行前、右が実行後。同じ値が縦に続くセル間だけ横罫線を消し、空白同士の罫線は変更しない。">
+          <p>
+            <strong>同じ値が縦に続いている部分だけ、間の横罫線を消します。</strong>
+          </p>
+          <p>判定は各列で独立しています。例えば4行目と5行目の間では、A列は「B／C」なので線を引き、B列は「E／E」なので線を消します。</p>
+          <p>値が違う場合や、片方だけ空白の場合には、黒い通常の1本線を引きます。両方とも空白の場合は、罫線を変更しません。図ではもともと線があるので、そのまま残っています。</p>
+          <p>対象範囲の上端・下端や縦罫線は変更しません。セルを結合するわけではなく、値はそれぞれのセルに入ったままです。</p>
+          <p>シフトを変更したあとにGASを実行すると、その時点の名前の並びに合わせて罫線を整えられます。</p>
+        </section>
+        <section class="section" id="logic">
+          <h2>使ったロジック・ポイント</h2>
+          <h3>対象範囲を決め、値をまとめて取得する</h3>
+          <p>
+            <code>getRange()</code>は、処理するセルや範囲を取得するメソッドです。今回は<code>A2:B9</code>のように範囲を指定しています。</p>
+          <p>その範囲の値を<code>getValues()</code>でまとめて取得し、現在のセルと1つ下のセルを比較します。比較するたびに値を読み直すのではなく、最初に取得した値を使う形です。</p>
+          <h3>各列で上下のセルを比較する</h3>
+          <p>行と列を順番に確認する「2重ループ」を使っています。</p>
+          <p>考え方は、「各行の各列について、1つ下の値と比べる」というものです。行全体が一致するかではなく、列ごとに判定するので、隣の列に引っ張られずに罫線を整えられます。</p>
+          <h3>setBorder()で下側の罫線だけを変更する</h3>
+          <p>今回の中心になるのが、セルの罫線を設定する<code>setBorder()</code>です。</p>
+          <p>上下左右などを個別に変更できるので、今回は比較している上のセルの「下側の罫線」だけを操作しています。同じ値なら消し、違う値なら黒い通常線を引きます。</p>
+          <p>ほかの罫線には「変更しない」という指定の<code>null</code>を使っています。表全体の罫線を作り直さず、必要な境界だけを変更するのがポイントです。</p>
+        </section>
+        <div class="ad-content">
+          <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+        </div>
+        <section class="section" id="code">
+          <h2>コード例</h2>
+          <p>GASの操作が初めての方は、最初の実行ガイドをご覧ください。初回実行時の権限の確認については、認証ガイドで紹介しています。</p>
+          <div class="page-links">
+            <a href="/beginner/try-first-gas.html">
+              <p>GASを開いてコードを実行する手順</p>
+              <p class="p-link">▶ 最初の実行ガイド</p>
+            </a>
+          </div>
+          <div class="page-links">
+            <a href="/beginner/auth-guide.html">
+              <p>初回実行時の認証画面・権限の確認</p>
+              <p class="p-link">▶ GASの認証ガイド</p>
+            </a>
+          </div>
+          <p>対象のスプレッドシートから「拡張機能」→「Apps Script」を開き、以下のコードを貼り付けます。</p>
+          <p>
+            <code>SHEET_NAME</code>を対象のシート名、<code>RANGE_A1</code>を名前が入っている範囲に変更して保存し、<code>adjustBorders</code>を実行してください。初回に権限の確認が表示された場合は、内容を確認して許可します。</p>
+          <div class="code-container">
+            <button class="copy-btn" type="button">Copy</button>
+            <pre>
+              <code class="language-javascript">function adjustBorders() {
+  // ===== 設定 =====
+  const SHEET_NAME = '名前リスト'; // 対象シート名
+  const RANGE_A1 = 'A2:B9';       // 対象範囲
+  // ================
+
+  const sheet = SpreadsheetApp
+    .getActiveSpreadsheet()
+    .getSheetByName(SHEET_NAME);
+
+  if (!sheet) {
+    throw new Error(`シート「${SHEET_NAME}」が見つかりません。`);
+  }
+
+  const range = sheet.getRange(RANGE_A1);
+  const values = range.getValues();
+
+  const startRow = range.getRow();
+  const startCol = range.getColumn();
+  const numRows = range.getNumRows();
+  const numCols = range.getNumColumns();
+
+  // 各セルについて、1つ下のセルと比較
+  for (let row = 0; row &lt; numRows - 1; row++) {
+    for (let col = 0; col &lt; numCols; col++) {
+
+      const currentValue = values[row][col];
+      const nextValue = values[row + 1][col];
+
+      // 空白同士は何もしない
+      if (currentValue === '' &amp;&amp; nextValue === '') {
+        continue;
+      }
+
+      const cell = sheet.getRange(
+        startRow + row,
+        startCol + col
+      );
+
+      if (currentValue !== '' &amp;&amp; currentValue === nextValue) {
+        // 上下が同じ値 → 間の罫線を消す
+        cell.setBorder(
+          null, null, false, null, null, null
+        );
+
+      } else {
+        // 上下が異なる → 黒の通常線を引く
+        cell.setBorder(
+          null, null, true, null, null, null,
+          '#000000',
+          SpreadsheetApp.BorderStyle.SOLID
+        );
+      }
+    }
+  }
+}
+</code>
+            </pre>
+          </div>
+          <p>名前は完全一致で比べています。「山田」と「山田 」のように余分なスペースがあると、違う値として扱われます。</p>
+          <p>また、消す対象は設定した罫線です。罫線を消しても、スプレッドシートの薄いグリッド線が表示されている場合があります。</p>
+        </section>
+        <section class="section" id="failure">
+          <h2>実際に作って失敗したところ</h2>
+          <p>最初は、「上下が同じ値なら罫線を消す」という条件だけで作っていました。</p>
+          <p>ところが、実際に使ってみると、空白セルが続く場所まで罫線が消えてしまいました。空白同士も「同じ値」と判定されていたためです。</p>
+          <p>シフト表には未入力の部分も多いので、そこまで線が消えると、意図していた見た目になりません。</p>
+          <p>そこで、同じ値かを判定する前に、「現在のセルと次のセルが両方空白なら何もしない」という条件を追加しました。</p>
+          <p>同じ値をまとめたいからといって、空白もまとめてよいとは限らないんですね。実際の表で試してみて、入力済みの名前と未入力のセルを分けて考える必要があると気づきました。</p>
+          <p>この条件は、空白部分の罫線を引き直す処理ではありません。すでに線が消えている場所も、その状態のままです。</p>
+        </section>
+        <section class="section" id="result">
+          <h2>使ってみてどう変わったか</h2>
+          <p>シフトを変更したあと、上下の名前を見ながら罫線を1本ずつ直す代わりに、GASを実行して対象範囲を整えられるようになりました。</p>
+          <p>以前は同じ名前だった場所が別の名前に変われば、そこには横罫線を引き直します。消すだけでなく、変更後の内容に合わせて線を戻せるようにしたことで、修正時にも使える処理になりました。</p>
+          <p>大きな機能ではありませんが、データの変更に合わせて繰り返す小さな手作業を減らせるのが便利なところです。</p>
+        </section>
+        <section class="section" id="next">
+          <h2>次回やりたいこと</h2>
+          <p>名前ごとに色を決めて、セルの背景色も一緒に整えられると面白そうです。</p>
+          <p>例えば、山田さんは薄い青、佐藤さんは薄い緑、鈴木さんは薄い黄色、といった形です。</p>
+          <p>背景色の調整も追加できれば、シフトを変更したあとにGASを実行することで、同じ名前の間の罫線と、名前ごとの色をまとめて整えられそうです。</p>
+          <p>今回は罫線だけにしましたが、次の機会に色の設定も作ってみるのはいいかもしれません。</p>
+        </section>
+        <section class="section" id="summary">
+          <h2>まとめ</h2>
+          <p>今回は、シフト表で同じ名前が縦に続く部分の横罫線を、GASで整えるようにしました。</p>
+          <p>上下の値を比べて罫線を変更するだけですが、空白をどう扱うかも、実際の用途では大事なポイントでした。</p>
+          <p>シフト表に限らず、担当者一覧や予定表など、同じ値のまとまりを見やすくしたい表にも応用できそうです。「毎回ちょっと面倒だな」と感じる見た目の調整も、GASで減らせる作業のひとつでした。</p>
+        </section>
+        <section class="section" id="links">
+          <h2>関連リンク</h2>
+          <p>今回の処理に関連する操作や、ほかの活用例はこちらで紹介しています。</p>
+          <div class="page-links">
+            <a href="/articles/blog/gas-clear-range/">
+              <p>決まった範囲の値だけをクリアする活用例</p>
+              <p class="p-link">▶ 指定範囲だけをクリアにするGASツール</p>
+            </a>
+          </div>
+          <div class="page-links">
+            <a href="/articles/blog/sheet-range-value/">
+              <p>対象範囲の取得と値の読み取りを確認する</p>
+              <p class="p-link">▶ スプレッドシート操作の実践入門</p>
+            </a>
+          </div>
+          <div class="page-links">
+            <a href="/articles/blog/gas-for-loop/">
+              <p>行や列を順番に処理する繰り返しの基本を確認する</p>
+              <p class="p-link">▶ for文の使い方</p>
+            </a>
+          </div>
+          <div class="page-links">
+            <a href="/articles/blog/">
+              <p>ほかの自作ツールや開発の記録を見る</p>
+              <p class="p-link">▶ GAS活用の記事一覧</p>
+            </a>
+          </div>
+        </section>
+        <section id="consultation" class="section">
+          <h2>自分の業務に自動化機能を追加したい方へ</h2>
+          <p>シフト表の罫線調整など、繰り返し行う表の操作を自動化する機能を追加したい方はご相談ください。今の作業と希望する自動化を伺い、対応できる範囲をご案内します。</p>
+          <div class="page-links">
+            <a href="/contact/#consultation">
+              <p>対応例・相談内容の書き方・相談から納品まで</p>
+              <p class="p-link">▶ 制作・カスタマイズ相談の案内を見る</p>
+            </a>
+          </div>
+        </section>
+        <p class="back-link">
+          <a href="/articles/blog/">← 記事一覧に戻る</a>
+        </p>
+        <section class="section">
+          <p>
+            <a href="/">トップページへ戻る</a>
+          </p>
+        </section>
+        <div class="ad-bottom">
+          <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+        </div>
+      </article>
+    </main>
+    <div data-include="/includes/footer.html"></div>
+  </body>
+</html>

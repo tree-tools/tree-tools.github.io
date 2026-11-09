@@ -1,4 +1,16 @@
-[
+[ 
+  {
+    "title": "GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー",
+    "url": "/articles/blog/expense-form-1/",
+    "summary": "Googleフォームでの経費申請をGASのWebアプリに。スマホでのレシート撮影、複数経費のまとめ申請、入力チェック、画像保存・シート記録・確認メールをつなぐ仕組みを紹介します。",
+    "date": "2026-11-09",
+    "tags": [
+      "GAS",
+      "Webアプリ",
+      "スプレッドシート",
+      "Google Drive"
+    ]
+  },
   {
     "title": "GASでスプレッドシートの同じ値が続くセル間の横罫線を自動で消す",
     "url": "/articles/blog/gas-same-value-borders/",

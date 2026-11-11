@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー | GASで作業をもっとラクに</title>
+  <meta name="description" content="GASのWebアプリで経費申請の入力画面を自作しました。公開時の設定、複数経費の入力、金額チェック、スマホからのレシート撮影を、短いコード例とともに紹介します。">
+  <meta property="og:title" content="GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー">
+  <meta property="og:description"
+    content="GASのWebアプリで経費申請の入力画面を自作しました。公開時の設定、複数経費の入力、金額チェック、スマホからのレシート撮影を、短いコード例とともに紹介します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-2/">
+  <meta property="og:image" content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png">
+  <link rel="canonical" href="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-2/">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <link rel="icon" href="/assets/images/tree-toos-icon.png" type="image/png">
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+    <article class="article-content">
+      <h1 class="page-title">GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー</h1>
+      <div class="article-meta">
+        <span class="date">投稿日：2026-10-21</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags"><span>GAS</span><span>Webアプリ</span><span>HTML</span><span>スマホ対応</span></span>
+      </div>
+      <div class="ad-top">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+      <section class="section summary">
+        <p>このブログでは、Google Apps Script（GAS）で作ったツールや、作る途中で気づいたことを紹介しています。「こんな使い方もできるんだ」と、普段の作業を見直すヒントになればうれしいです。</p>
+        <p>前回は、GASで作った経費申請フォームの全体像を紹介しました。今回は、ブラウザから使う入力画面を作る機能についてです。</p>
+      </section>
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#purpose">やりたかったこと</a></li>
+          <li><a href="#logic">使ったロジック・ポイント</a></li>
+          <li><a href="#code">コード例</a></li>
+          <li><a href="#memo">メモ・反省・次回やりたいこと</a></li>
+          <li><a href="#related">関連記事</a></li>
+          <li><a href="#consultation">自分の業務に自動化機能を追加したい方へ</a></li>
+        </ul>
+      </nav>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+
+      <section class="section" id="purpose">
+        <h2>やりたかったこと</h2>
+        <p>以前のGoogleフォームは、レシート1枚につき1回回答する運用でした。複数枚あると、同じ操作を繰り返すことになります。<br>
+          また、金額などの入力ミスも多く、申請金額と内訳の合計や、消費税の整合性を入力時に確認できるようにしたいと考えていました。</p>
+        <p>そこで、必要な分だけ経費の入力欄を追加でき、スマホで撮影したレシートも一緒に申請できる画面を目指しました。</p>
+      </section>
+      <section class="section" id="logic">
+        <h2>使ったロジック・ポイント</h2>
+        <h3>① HTMLの画面をWebアプリとして公開する</h3>
+        <p>GASでは、HTMLで作った画面をWebアプリとして公開し、URLを開いてブラウザから利用できます。</p>
+        <p>画面の構成にはHTML、見た目にはCSS、入力欄の追加や表示の切り替えにはJavaScriptを使っています。スプレッドシートへの記録などは、画面からGAS側の処理を呼び出して実行します。</p>
+        <p>公開するには、まずGASのプロジェクト内に画面用のHTMLファイルを用意します。そして、URLへアクセスしたときに呼ばれる「doGet」という関数で、その画面を返すようにします。</p>
+        <p>画面を用意したあとは、GASの編集画面から次の順番で公開します。</p>
+        <ol>
+          <li>右上の「デプロイ」から「新しいデプロイ」を開きます。</li>
+          <li>デプロイの種類に「ウェブアプリ」を選びます。</li>
+          <li>処理を実行するユーザーと、アクセスできるユーザーの範囲を設定します。</li>
+          <li>「デプロイ」を実行し、必要に応じて権限を承認します。</li>
+          <li>発行されたWebアプリのURLを、利用者に共有します。</li>
+        </ol>
+        <p>このフォームでは、アクセスしているユーザーの権限で処理する設定にしています。そのため、公開範囲の設定に加えて、利用者が保存先のスプレッドシートやフォルダを使えるかも確認しました。</p>
+        <figure><img class="article-thumb" src="/assets/images/expense-form-2-01.png" alt="Webアプリのデプロイ設定イメージ"
+            loading="lazy" decoding="async">
+          <figcaption>※説明用のイメージです。実際の設定画面とは一部異なります。</figcaption>
+        </figure>
+        <h3>② 共通する情報と、経費ごとの情報を分ける</h3>
+        <p>最初に名前・メールアドレス・部署を入力し、そのあと経費の入力へ進む流れにしています。</p>
+        <p>経費は1件ごとにカードのようにまとめ、「経費を追加」で必要な分だけ増やせるようにしました。入力済みの内容を残したまま次の経費へ進め、不要なものは削除できます。</p>
+        <p>申請者情報を共通で使いながら、件数に合わせて入力欄を増減させる形です。</p>
+        <h3>③ 入力ミスを、該当する欄の下で知らせる</h3>
+        <p>入力内容に問題があるときは、どこを見直せばよいかを画面で伝えるようにしました。</p>
+        <p>例えば、送信操作をしたときは、次の流れで確認します。</p>
+        <ol>
+          <li>経費の入力欄から、入力されている内容を取り出します。</li>
+          <li>チェック処理で、空欄や金額の不整合などを確認します。</li>
+          <li>問題があれば、その項目に対応する指摘メッセージを用意します。</li>
+          <li>画面側の処理で、該当する入力欄の下にメッセージを表示します。</li>
+          <li>指摘が残っている場合は保存処理へ進まず、入力内容を修正してもらいます。</li>
+        </ol>
+        <p>「入力内容を確認してください」という全体への案内だけでなく、「どの項目を直すか」が入力欄の近くで分かる形にしています。</p>
+        <p>利用者が修正して再び送信すると、もう一度チェックします。問題が解消した項目ではメッセージを消し、すべてのチェックを通過してから保存処理へ進みます。</p>
+        <p>チェックする処理と、その結果を画面に表示する処理を分けることで、項目ごとの指摘をまとめて反映できるようにしています。</p>
+        <h3>④ スマホのカメラで撮影したレシートを添付する</h3>
+        <p>経費の入力欄には、レシート画像を添付する欄も置いています。スマホのカメラで撮影した画像を、そのまま申請につなげるためです。</p>
+        <p>この操作には、HTMLのファイル入力欄を使っています。画像を受け付ける指定と、カメラでの撮影を促す指定を組み合わせることで、対応するスマホでは入力画面から撮影へ進めます。</p>
+        <p>GASがカメラを直接操作するのではなく、スマホやブラウザが用意している撮影機能を利用する形です。カメラの起動やファイル選択の表示は、端末やブラウザによって異なります。</p>
+        <p>選んだ画像を確認する表示と、取り消す操作も用意しました。画像を選び直したいときも、入力画面の中で進められます。</p>
+        <p>撮影した画像を申請内容と一緒に送れるため、レシートを別の方法で送る手間を減らせるようにしています。画像をGoogleドライブへ保存する処理については、別の回で紹介します。</p>
+        <figure><img class="article-thumb" src="/assets/images/expense-form-2-02.png" alt="レシート撮影へ進む前のスマホ入力画面イメージ"
+            loading="lazy" decoding="async">
+          <figcaption>※説明用に項目名・配置を一部変更した画面イメージです。</figcaption>
+        </figure>
+      </section>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="code">
+        <h2>コード例</h2>
+        <p>GASでコード例を試す際の基本操作や認証は、次のガイドで確認できます。この記事のファイル名・設定などは、各コード例の説明に従ってください。</p>
+        <div class="page-links">
+          <a href="/beginner/try-first-gas.html">
+            <p>GASを開いてコードを保存・実行する基本操作を確認する</p>
+            <p class="p-link">▶ GASを使い始めるための操作ガイド</p>
+          </a>
+        </div>
+        <div class="page-links">
+          <a href="/beginner/auth-guide.html">
+            <p>初回実行やサービスの利用で認証が必要になったときに確認する</p>
+            <p class="p-link">▶ GASの認証ガイド</p>
+          </a>
+        </div>
+
+        <p>各回のコード例は独立しています。順番に追加して、経費申請フォーム全体を完成させるものではありません。</p>
+        <p>以下は、仕組みを紹介するために簡略化した例です。実際の経費申請フォームのコード一式ではありません。</p>
+        <h3>HTMLの画面を表示する</h3>
+        <p>GAS側の「Code.gs」には、画面を返す処理を記述します。</p>
+        <div class="code-container"><button class="copy-btn" type="button">Copy</button>
+          <pre><code class="language-javascript">function doGet() {
+  return HtmlService.createHtmlOutputFromFile(&#x27;Index&#x27;);
+}</code></pre>
+        </div>
+        <p>「Index.html」には、表示する内容を記述します。</p>
+        <div class="code-container"><button class="copy-btn" type="button">Copy</button>
+          <pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;ja&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;base target=&quot;_top&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;経費申請フォーム&lt;/h1&gt;
+    &lt;p&gt;ここに申請用の入力欄を作ります。&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+        <p>「createHtmlOutputFromFile」で、指定したHTMLファイルを画面として返しています。この組み合わせを用意してWebアプリとしてデプロイすると、URLから画面を開けます。</p>
+        <h3>チェック結果を、入力欄の下に表示する</h3>
+        <p>HTMLには、入力欄と、その項目への指摘を表示する場所を用意します。</p>
+        <div class="code-container"><button class="copy-btn" type="button">Copy</button>
+          <pre><code class="language-html">&lt;div class=&quot;expense-card&quot;&gt;
+  &lt;label&gt;申請金額 &lt;input class=&quot;amount&quot; type=&quot;number&quot;&gt;&lt;/label&gt;
+  &lt;p class=&quot;amount-error&quot; role=&quot;alert&quot;&gt;&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+        <p>JavaScript側では、チェック処理で用意したメッセージを、対応する表示場所へ入れます。</p>
+        <div class="code-container"><button class="copy-btn" type="button">Copy</button>
+          <pre><code class="language-javascript">function displayExpenseErrors(card, errors) {
+  card.querySelector(&#x27;.amount-error&#x27;).textContent = errors.amount || &#x27;&#x27;;
+}
+
+const card = document.querySelector(&#x27;.expense-card&#x27;);
+displayExpenseErrors(card, {
+  amount: &#x27;申請金額と内訳の合計を確認してください。&#x27;
+});</code></pre>
+        </div>
+        <p>「querySelector」でカード内の表示場所を選び、「textContent」で指摘メッセージを表示しています。</p>
+        <p>再チェックで問題がなくなった場合は、同じ処理へ空のメッセージを渡します。例えば「amount」を空文字にすると、表示していた指摘も消えます。</p>
+        <p>この例は、チェック結果を画面へ反映する部分に絞っています。実際のフォームでは、各経費カードの項目ごとにメッセージを反映し、問題があれば送信時の保存処理へ進まないようにしています。</p>
+        <h3>レシート撮影用の入力欄を用意する</h3>
+        <div class="code-container"><button class="copy-btn" type="button">Copy</button>
+          <pre><code class="language-html">&lt;label for=&quot;receipt&quot;&gt;レシート画像&lt;/label&gt;
+&lt;input id=&quot;receipt&quot; type=&quot;file&quot; accept=&quot;image/*&quot; capture=&quot;environment&quot;&gt;</code></pre>
+        </div>
+        <p>
+          「type=&quot;file&quot;」はファイルを受け取る入力欄、「accept=&quot;image/*&quot;」は画像を選択対象にする指定です。「capture=&quot;environment&quot;」は、対応する端末で外側のカメラを使った撮影を促す指定です。
+        </p>
+        <p>この指定だけで、すべての端末に同じ撮影画面を出せるわけではありません。また、画像の表示・取り消し・保存には、それぞれ別の処理を用意しています。</p>
+      </section>
+      <section class="section" id="memo">
+        <h2>メモ・反省・次回やりたいこと</h2>
+        <p>今回苦戦したのは、デプロイ時のアカウントや公開範囲の設定でした。</p>
+        <p>Webアプリには、誰のアカウントとして処理を実行するかという設定と、誰がアクセスできるかという設定があります。また、保存先のスプレッドシートやフォルダにもアクセス権があります。</p>
+        <p>画面を作って公開するところだけでなく、利用者のアカウントで開いたときに、必要なデータへアクセスできるかまで確認する必要がありました。</p>
+        <p>
+          動作確認では、自分の開発用アカウントだけでなく、別のGoogleアカウントでもWebアプリを開けるかを確認しました。さらに、権限があるアカウントとないアカウントで画面が適切に分かれるかを、PC・スマホのChromeで確認しました。
+        </p>
+        <p>Webアプリを作るときは、入力画面の使いやすさと合わせて、誰が使い、誰の権限で処理するのかも考えることが大切だと感じました。</p>
+        <p>今回のような入力欄の追加やチェックは、備品の購入申請や作業報告などにも使えそうです。次回は、画面から受け付けた内容をスプレッドシートへ記録する機能を紹介します。</p>
+      </section>
+      <section class="section" id="related">
+        <h2>関連記事</h2>
+        <!-- リンク切替対象: expense-form-1 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+
+        <div class="page-links"><a href="/articles/blog/expense-form-1/">
+            <p>GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a></div>
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー</p>
+          <p>この記事</p>
+        </div>
+
+        <!-- リンク切替対象: expense-form-3 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-3/"><p>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-3 -->
+
+        <!-- リンク切替対象: expense-form-4 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-4/"><p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-4 -->
+
+        <!-- リンク切替対象: expense-form-5 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-5/"><p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-5 -->
+
+        <!-- リンク切替対象: expense-form-6 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-6/"><p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-6 -->
+      </section>
+      <section class="section" id="consultation">
+        <h2>自分の業務に自動化機能を追加したい方へ</h2>
+        <p>経費申請や画像保存、申請後の連絡など、今の業務に自動化機能を追加したい方はご相談ください。現在の作業と希望する自動化を伺い、対応できる範囲をご案内します。</p>
+        <div class="page-links">
+          <a href="/contact/#consultation">
+            <p>対応例・相談内容の書き方・相談から納品まで</p>
+            <p class="p-link">▶ 制作・カスタマイズ相談の案内を見る</p>
+          </a>
+        </div>
+      </section>
+      <p class="back-link"><a href="/articles/blog/">← 記事一覧に戻る</a></p>
+      <section class="section">
+        <p><a href="/">トップページへ戻る</a></p>
+      </section>
+      <div class="ad-bottom">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+    </article>
+  </main>
+  <div data-include="/includes/footer.html"></div>
+</body>
+
+</html>

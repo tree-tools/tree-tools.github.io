@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー | GASで作業をもっとラクに</title>
-  <meta name="description" content="Googleフォームでの経費申請をGASのWebアプリに。スマホでのレシート撮影、複数経費のまとめ申請、入力チェック、画像保存・シート記録・確認メールをつなぐ仕組みを紹介します。">
+  <meta name="description"
+    content="Googleフォームでの経費申請をGASのWebアプリに。スマホでのレシート撮影、複数経費のまとめ申請、入力チェック、画像保存・シート記録・確認メールをつなぐ仕組みを紹介します。">
   <meta property="og:title" content="GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー">
-  <meta property="og:description" content="Googleフォームでの経費申請をGASのWebアプリに。スマホでのレシート撮影、複数経費のまとめ申請、入力チェック、画像保存・シート記録・確認メールをつなぐ仕組みを紹介します。">
+  <meta property="og:description"
+    content="Googleフォームでの経費申請をGASのWebアプリに。スマホでのレシート撮影、複数経費のまとめ申請、入力チェック、画像保存・シート記録・確認メールをつなぐ仕組みを紹介します。">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-1/">
   <meta property="og:image" content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png">
@@ -16,6 +19,7 @@
   <script src="/assets/js/common.js"></script>
   <link rel="icon" href="/assets/images/tree-toos-icon.png" type="image/png">
 </head>
+
 <body>
   <div data-include="/includes/header.html"></div>
   <main>
@@ -38,142 +42,163 @@
       </div>
       <section class="section summary">
         <p>このブログでは、Google Apps Script（GAS）で作ったツールや、作る途中で気づいたことを紹介しています。「こんな使い方もできるんだ」と、普段の作業を見直すヒントになればうれしいです。</p>
-<p>今回は、GASで作った経費申請フォームを紹介します。全6本に分けて、第1回は全体像、続く5本では使った機能をひとつずつ取り上げます。</p>
+        <p>今回は、GASで作った経費申請フォームを紹介します。全6本に分けて、第1回は全体像、続く5本では使った機能をひとつずつ取り上げます。</p>
 
-      
-<p>第2回以降には、各機能を紹介するための短いコード例を載せています。各回のコード例は独立しています。順番に追加して、経費申請フォーム全体を完成させるものではありません。</p>
-</section>
+
+        <p>第2回以降には、各機能を紹介するための短いコード例を載せています。各回のコード例は独立しています。順番に追加して、経費申請フォーム全体を完成させるものではありません。</p>
+      </section>
       <nav class="section toc">
         <h2>目次</h2>
-        <ul><li><a href="#purpose">経費申請フォームを自作した理由</a></li>
-<li><a href="#flow">申請の入力から、その後の処理までをつなぐ</a></li>
-<li><a href="#web-app">ブラウザから使える入力画面を作る</a></li>
-<li><a href="#spreadsheet">入力内容をスプレッドシートに記録する</a></li>
-<li><a href="#receipts">レシート画像をDriveに保存する</a></li>
-<li><a href="#monthly-folders">年月に合わせて保存先を用意する</a></li>
-<li><a href="#confirmation-mail">申請後に確認メールを送る</a></li>
-<li><a href="#services">Googleのサービスを、作業の流れに合わせて組み合わせる</a></li>
-<li><a href="#related">関連記事</a></li>  <li><a href="#consultation">自分の業務に自動化機能を追加したい方へ</a></li>
-</ul>
+        <ul>
+          <li><a href="#purpose">経費申請フォームを自作した理由</a></li>
+          <li><a href="#flow">申請の入力から、その後の処理までをつなぐ</a></li>
+          <li><a href="#web-app">ブラウザから使える入力画面を作る</a></li>
+          <li><a href="#spreadsheet">入力内容をスプレッドシートに記録する</a></li>
+          <li><a href="#receipts">レシート画像をDriveに保存する</a></li>
+          <li><a href="#monthly-folders">年月に合わせて保存先を用意する</a></li>
+          <li><a href="#confirmation-mail">申請後に確認メールを送る</a></li>
+          <li><a href="#services">Googleのサービスを、作業の流れに合わせて組み合わせる</a></li>
+          <li><a href="#related">関連記事</a></li>
+          <li><a href="#consultation">自分の業務に自動化機能を追加したい方へ</a></li>
+        </ul>
       </nav>
       <div class="ad-content">
         <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
       </div>
 
       <section class="section" id="purpose">
-<h2>経費申請フォームを自作した理由</h2>
-<p>もともとは、Googleフォームで経費申請を受け付けていました。ただ、使い方に合わせて改善したいことが増え、フォームの設定だけでは対応しきれなくなってきました。</p>
-<p>まず、利用者がスマートフォンのカメラでレシートを撮影し、そのまま申請できるようにしたいと考えました。撮影から入力、送信までをひとつの流れで進められる画面を目指しました。</p>
-<p>また、それまでのフォームは、レシート1枚につき1回回答する運用でした。複数枚あると同じ操作を繰り返すため、必要な分だけ入力欄を追加し、まとめて申請できるようにしたいと思いました。</p>
-<p>もうひとつの課題は、金額などの入力ミスです。申請金額と内訳の合計が合っているか、8％・10％の消費税が税抜金額と整合しているかなど、送信する前に確認できる仕組みが必要でした。こうした項目をまたぐ細かなチェックは、Googleフォームの標準設定だけでは今回必要な形にできませんでした。</p>
-<p>そこで、GASのWebアプリとして入力画面を作ることにしました。スマホでのレシート撮影、複数経費のまとめ申請、金額のチェックを、実際の申請の流れに合わせて組み込むためです。</p>
-</section>
-<section class="section" id="flow">
-<h2>申請の入力から、その後の処理までをつなぐ</h2>
-<p>経費申請では、購入日や金額を受け付けるだけでなく、レシート画像を保存したり、申請内容を一覧に残したりする必要があります。</p>
-<p>今回まとめたかったのは、こうした一連の処理です。</p>
-<p>申請者がフォームに入力して送信すると、レシート画像はGoogle Driveへ、申請内容はスプレッドシートへ保存します。申請後には、入力したメールアドレスへ確認メールを送ります。</p>
-<p>画面で受け付けた情報を、その後の保存や連絡につなげる。GASの機能を組み合わせて、こうした流れを作りました。</p>
-</section>
-<section class="section" id="web-app">
-<h2>ブラウザから使える入力画面を作る</h2>
-<p>申請画面は、GASのWebアプリとして用意しました。申請者情報と経費の入力欄を分け、複数の経費をまとめて申請できます。</p>
-<p>HTML・CSS・JavaScriptで画面を作り、保存処理をGASへつなげています。</p>
-<p>詳しくは第2回で紹介します。</p>
-<figure>
-<img class="article-thumb" src="/assets/images/expense-form-1-01.png" alt="複数経費の入力とレシート画像の添付を示す説明用画面" loading="lazy" decoding="async">
-<figcaption>経費の入力欄を追加し、申請内容とレシート画像をまとめて送信する画面例。<br>※説明用のイメージです。実際の画面から項目名・配置などを一部変更し、架空のデータを使用しています。</figcaption>
-</figure>
-</section>
-<section class="section" id="spreadsheet">
-<h2>入力内容をスプレッドシートに記録する</h2>
-<p>申請内容は、経費1件につき1行でスプレッドシートへ記録します。レシート画像のURLも同じ行に残し、内容と画像をたどれるようにしています。</p>
-<p>申請者は入力画面を使い、管理する側は一覧から確認する形です。</p>
-<p>詳しくは第3回で紹介します。</p>
+        <h2>経費申請フォームを自作した理由</h2>
+        <p>もともとは、Googleフォームで経費申請を受け付けていました。ただ、使い方に合わせて改善したいことが増え、フォームの設定だけでは対応しきれなくなってきました。</p>
+        <p>まず、利用者がスマートフォンのカメラでレシートを撮影し、そのまま申請できるようにしたいと考えました。撮影から入力、送信までをひとつの流れで進められる画面を目指しました。</p>
+        <p>また、それまでのフォームは、レシート1枚につき1回回答する運用でした。複数枚あると同じ操作を繰り返すため、必要な分だけ入力欄を追加し、まとめて申請できるようにしたいと思いました。</p>
+        <p>
+          もうひとつの課題は、金額などの入力ミスです。申請金額と内訳の合計が合っているか、8％・10％の消費税が税抜金額と整合しているかなど、送信する前に確認できる仕組みが必要でした。こうした項目をまたぐ細かなチェックは、Googleフォームの標準設定だけでは今回必要な形にできませんでした。
+        </p>
+        <p>そこで、GASのWebアプリとして入力画面を作ることにしました。スマホでのレシート撮影、複数経費のまとめ申請、金額のチェックを、実際の申請の流れに合わせて組み込むためです。</p>
+      </section>
+      <section class="section" id="flow">
+        <h2>申請の入力から、その後の処理までをつなぐ</h2>
+        <p>経費申請では、購入日や金額を受け付けるだけでなく、レシート画像を保存したり、申請内容を一覧に残したりする必要があります。</p>
+        <p>今回まとめたかったのは、こうした一連の処理です。</p>
+        <p>申請者がフォームに入力して送信すると、レシート画像はGoogle Driveへ、申請内容はスプレッドシートへ保存します。申請後には、入力したメールアドレスへ確認メールを送ります。</p>
+        <p>画面で受け付けた情報を、その後の保存や連絡につなげる。GASの機能を組み合わせて、こうした流れを作りました。</p>
+      </section>
+      <section class="section" id="web-app">
+        <h2>ブラウザから使える入力画面を作る</h2>
+        <p>申請画面は、GASのWebアプリとして用意しました。申請者情報と経費の入力欄を分け、複数の経費をまとめて申請できます。</p>
+        <p>HTML・CSS・JavaScriptで画面を作り、保存処理をGASへつなげています。</p>
+        <p>詳しくは第2回で紹介します。</p>
+        <figure>
+          <img class="article-thumb" src="/assets/images/expense-form-1-01.png" alt="複数経費の入力とレシート画像の添付を示す説明用画面"
+            loading="lazy" decoding="async">
+          <figcaption>経費の入力欄を追加し、申請内容とレシート画像をまとめて送信する画面例。<br>※説明用のイメージです。実際の画面から項目名・配置などを一部変更し、架空のデータを使用しています。
+          </figcaption>
+        </figure>
+      </section>
+      <section class="section" id="spreadsheet">
+        <h2>入力内容をスプレッドシートに記録する</h2>
+        <p>申請内容は、経費1件につき1行でスプレッドシートへ記録します。レシート画像のURLも同じ行に残し、内容と画像をたどれるようにしています。</p>
+        <p>申請者は入力画面を使い、管理する側は一覧から確認する形です。</p>
+        <p>詳しくは第3回で紹介します。</p>
 
-</section>
+      </section>
 
-<section class="section" id="receipts">
-<h2>レシート画像をDriveに保存する</h2>
-<p>添付されたレシート画像はGoogle Driveへ保存し、そのURLを経費の記録に残します。</p>
-<p>画像と申請内容を結び付け、確認する人が一覧から対応するレシートを開けるようにしています。</p>
-<p>詳しくは第4回で紹介します。</p>
+      <section class="section" id="receipts">
+        <h2>レシート画像をDriveに保存する</h2>
+        <p>添付されたレシート画像はGoogle Driveへ保存し、そのURLを経費の記録に残します。</p>
+        <p>画像と申請内容を結び付け、確認する人が一覧から対応するレシートを開けるようにしています。</p>
+        <p>詳しくは第4回で紹介します。</p>
 
-</section>
-<div class="ad-content"><script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script></div>
-<section class="section" id="monthly-folders">
-<h2>年月に合わせて保存先を用意する</h2>
-<p>レシートの保存先は、申請日ではなく購入した年月で分けています。対象年月の保存先が未登録なら、指定した親フォルダの中で保存先を探し、なければ「2026年08月」のようなフォルダを作成します。</p>
-<p>用意したフォルダのURLもシートへ記録し、次の申請で再利用できるようにしています。</p>
-<p>詳しくは第5回で紹介します。</p>
-<figure>
-<img class="article-thumb" src="/assets/images/expense-form-1-02.png" alt="申請一覧と購入年月別のレシート保存先を示す説明用画面" loading="lazy" decoding="async">
-<figcaption>申請内容と画像リンクを一覧に記録し、レシート画像を購入年月別のフォルダに保存する例。<br>※説明用のイメージです。実際の画面から項目名・配置などを一部変更し、架空のデータを使用しています。</figcaption>
-</figure>
-</section>
-<section class="section" id="confirmation-mail">
-<h2>申請後に確認メールを送る</h2>
-<p>申請後には、入力した内容を見返せるように、申請者へ確認メールを送ります。</p>
-<p>送信先にはフォームに入力されたメールアドレスを使い、画面に表示するGoogleアカウントの情報とは別に扱っています。</p>
-<p>詳しくは第6回で紹介します。</p>
+      </section>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="monthly-folders">
+        <h2>年月に合わせて保存先を用意する</h2>
+        <p>レシートの保存先は、申請日ではなく購入した年月で分けています。対象年月の保存先が未登録なら、指定した親フォルダの中で保存先を探し、なければ「2026年08月」のようなフォルダを作成します。</p>
+        <p>用意したフォルダのURLもシートへ記録し、次の申請で再利用できるようにしています。</p>
+        <p>詳しくは第5回で紹介します。</p>
+        <figure>
+          <img class="article-thumb" src="/assets/images/expense-form-1-02.png" alt="申請一覧と購入年月別のレシート保存先を示す説明用画面"
+            loading="lazy" decoding="async">
+          <figcaption>申請内容と画像リンクを一覧に記録し、レシート画像を購入年月別のフォルダに保存する例。<br>※説明用のイメージです。実際の画面から項目名・配置などを一部変更し、架空のデータを使用しています。
+          </figcaption>
+        </figure>
+      </section>
+      <section class="section" id="confirmation-mail">
+        <h2>申請後に確認メールを送る</h2>
+        <p>申請後には、入力した内容を見返せるように、申請者へ確認メールを送ります。</p>
+        <p>送信先にはフォームに入力されたメールアドレスを使い、画面に表示するGoogleアカウントの情報とは別に扱っています。</p>
+        <p>詳しくは第6回で紹介します。</p>
 
-</section>
-<section class="section" id="services">
-<h2>Googleのサービスを、作業の流れに合わせて組み合わせる</h2>
-<p>今回のフォームでは、Webアプリを入口にして、スプレッドシートへの記録、Driveへの画像保存、メールでの連絡をつなげました。</p>
-<p>利用時には、指定したスプレッドシートへアクセスできるかを確認する処理も入れています。画面を作ることに加えて、誰が使うか、どこへ保存するかも、運用に合わせて考える必要がありました。</p>
-<p>GASでは、こうしたGoogleのサービスを組み合わせて、作業に合う仕組みを作れます。</p>
-<p>入力するところから、その後の整理や連絡まで。普段は別々に行っている作業も、つなげられる部分がないか考えてみると、活用のアイデアが見つかるかもしれません。</p>
-</section>
+      </section>
+      <section class="section" id="services">
+        <h2>Googleのサービスを、作業の流れに合わせて組み合わせる</h2>
+        <p>今回のフォームでは、Webアプリを入口にして、スプレッドシートへの記録、Driveへの画像保存、メールでの連絡をつなげました。</p>
+        <p>利用時には、指定したスプレッドシートへアクセスできるかを確認する処理も入れています。画面を作ることに加えて、誰が使うか、どこへ保存するかも、運用に合わせて考える必要がありました。</p>
+        <p>GASでは、こうしたGoogleのサービスを組み合わせて、作業に合う仕組みを作れます。</p>
+        <p>入力するところから、その後の整理や連絡まで。普段は別々に行っている作業も、つなげられる部分がないか考えてみると、活用のアイデアが見つかるかもしれません。</p>
+      </section>
       <section class="section" id="related">
-<h2>関連記事</h2>
-<div class="muted-box"><p>GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー</p><p>この記事</p></div>
+        <h2>関連記事</h2>
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー</p>
+          <p>この記事</p>
+        </div>
+        <div class="page-links"><a href="/articles/blog/expense-form-2/">
+            <p>GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
 
-<!-- リンク切替対象: expense-form-2 -->
-<!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
-<div class="muted-box"><p>GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー</p><p>準備中</p></div>
-<!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
-<!--
-<div class="page-links"><a href="/articles/blog/expense-form-2/"><p>GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー</p><p class="p-link">▶ この記事を読む</p></a></div>
--->
-<!-- リンク切替ここまで: expense-form-2 -->
-
-<!-- リンク切替対象: expense-form-3 -->
-<!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
-<div class="muted-box"><p>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</p><p>準備中</p></div>
-<!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
-<!--
+        <!-- リンク切替対象: expense-form-3 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
 <div class="page-links"><a href="/articles/blog/expense-form-3/"><p>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</p><p class="p-link">▶ この記事を読む</p></a></div>
 -->
-<!-- リンク切替ここまで: expense-form-3 -->
+        <!-- リンク切替ここまで: expense-form-3 -->
 
-<!-- リンク切替対象: expense-form-4 -->
-<!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
-<div class="muted-box"><p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p><p>準備中</p></div>
-<!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
-<!--
+        <!-- リンク切替対象: expense-form-4 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
 <div class="page-links"><a href="/articles/blog/expense-form-4/"><p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p><p class="p-link">▶ この記事を読む</p></a></div>
 -->
-<!-- リンク切替ここまで: expense-form-4 -->
+        <!-- リンク切替ここまで: expense-form-4 -->
 
-<!-- リンク切替対象: expense-form-5 -->
-<!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
-<div class="muted-box"><p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p><p>準備中</p></div>
-<!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
-<!--
+        <!-- リンク切替対象: expense-form-5 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
 <div class="page-links"><a href="/articles/blog/expense-form-5/"><p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p><p class="p-link">▶ この記事を読む</p></a></div>
 -->
-<!-- リンク切替ここまで: expense-form-5 -->
+        <!-- リンク切替ここまで: expense-form-5 -->
 
-<!-- リンク切替対象: expense-form-6 -->
-<!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
-<div class="muted-box"><p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p><p>準備中</p></div>
-<!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
-<!--
+        <!-- リンク切替対象: expense-form-6 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
 <div class="page-links"><a href="/articles/blog/expense-form-6/"><p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p><p class="p-link">▶ この記事を読む</p></a></div>
 -->
-<!-- リンク切替ここまで: expense-form-6 -->
-</section>
+        <!-- リンク切替ここまで: expense-form-6 -->
+      </section>
       <section class="section" id="consultation">
         <h2>自分の業務に自動化機能を追加したい方へ</h2>
         <p>経費申請や画像保存、申請後の連絡など、今の業務に自動化機能を追加したい方はご相談ください。現在の作業と希望する自動化を伺い、対応できる範囲をご案内します。</p>
@@ -184,8 +209,10 @@
           </a>
         </div>
       </section>
-<p class="back-link"><a href="/articles/blog/">← 記事一覧に戻る</a></p>
-      <section class="section"><p><a href="/">トップページへ戻る</a></p></section>
+      <p class="back-link"><a href="/articles/blog/">← 記事一覧に戻る</a></p>
+      <section class="section">
+        <p><a href="/">トップページへ戻る</a></p>
+      </section>
       <div class="ad-bottom">
         <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
       </div>
@@ -193,4 +220,5 @@
   </main>
   <div data-include="/includes/footer.html"></div>
 </body>
+
 </html>

@@ -1,7 +1,5 @@
 // 共通パーツを読み込む関数
-document.addEventListener("DOMContentLoaded", () => {
-  includeHtml();
-});
+// 共通の初期化は common.js から一度だけ実行する。
 
 function includeHtml() {
   const includeTargets = document.querySelectorAll("[data-include]");

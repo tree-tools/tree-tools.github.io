@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー | GASで作業をもっとラクに</title>
+  <meta name="description"
+    content="GASの入力画面からデータを渡し、経費1件につき1行でスプレッドシートへ記録する仕組みを紹介します。画面側とGAS側のコード例で、受け渡しから結果表示までをまとめました。">
+  <meta property="og:title" content="GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー">
+  <meta property="og:description"
+    content="GASの入力画面からデータを渡し、経費1件につき1行でスプレッドシートへ記録する仕組みを紹介します。画面側とGAS側のコード例で、受け渡しから結果表示までをまとめました。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-3/">
+  <meta property="og:image" content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png">
+  <link rel="canonical" href="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-3/">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <link rel="icon" href="/assets/images/tree-toos-icon.png" type="image/png">
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+    <article class="article-content">
+      <h1 class="page-title">GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</h1>
+      <div class="article-meta">
+        <span class="date">投稿日：2026-11-13</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags"><span>GAS</span><span>Webアプリ</span><span>スプレッドシート</span></span>
+      </div>
+      <div class="ad-top">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+      <section class="section summary">
+        <p>このブログでは、Google Apps Script（GAS）で作ったツールや、作る途中で気づいたことを紹介しています。「こんな使い方もできるんだ」と、普段の作業を見直すヒントになればうれしいです。</p>
+        <p>前回は、Webアプリとして入力画面を公開し、入力の誤りを画面で知らせる仕組みを紹介しました。</p>
+        <p>今回は、フォームに入力した内容をGoogleスプレッドシートへ記録する部分です。まとめて申請された経費を、後から確認しやすい形で残すことを考えました。</p>
+      </section>
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#purpose">やりたかったこと</a></li>
+          <li><a href="#logic">使ったロジック・ポイント</a></li>
+          <li><a href="#code">コード例</a></li>
+          <li><a href="#memo">メモ・反省・次回やりたいこと</a></li>
+          <li><a href="#related">関連記事</a></li>
+          <li><a href="#consultation">自分の業務に自動化機能を追加したい方へ</a></li>
+        </ul>
+      </nav>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="purpose">
+        <h2>やりたかったこと</h2>
+        <p>1回の申請で複数の経費を入力できるようにしても、保存した内容が分かりにくければ、確認する人の手間が増えてしまいます。</p>
+        <p>そこで、申請者の名前や部署などの共通情報と、それぞれの経費の情報を組み合わせて、経費1件につき1行で記録する形にしました。</p>
+        <p>例えば、1回の申請に3件の経費があれば、スプレッドシートには3行追加されます。申請者情報を各行に入れることで、1行ずつ見ても誰の経費なのか分かるようにしています。</p>
+      </section>
+      <section class="section" id="logic">
+        <h2>使ったロジック・ポイント</h2>
+        <h3>入力画面からGASへデータを渡す</h3>
+        <p>入力画面のJavaScriptと、スプレッドシートへ記録するGASは、それぞれ別の場所で動きます。画面の入力欄に文字を入れただけでは、シートには保存されません。</p>
+        <p>
+          この橋渡しに使うのが、<code>google.script.run</code>です。HTMLで作った画面からGASの関数を呼び出し、入力内容を渡せます。スプレッドシート上のダイアログでも使える仕組みですが、今回の経費申請フォームではWebアプリの入力画面で使っています。
+        </p>
+        <p>流れは、次のようになります。</p>
+        <ol>
+          <li>画面側で、申請者情報と各経費の入力内容を取り出します。</li>
+          <li>入力チェックを通過した内容をまとめ、GAS側の関数へ渡します。</li>
+          <li>GAS側で、受け取った内容をシートの列順に並べます。</li>
+          <li>書き込む範囲を指定し、スプレッドシートへ記録します。</li>
+          <li>処理結果を画面へ返し、完了したことを表示します。</li>
+        </ol>
+        <p>
+          GASの処理は、呼び出した直後に結果が返るとは限りません。完了後の表示は<code>withSuccessHandler</code>、処理に失敗したときの表示は<code>withFailureHandler</code>で指定します。
+        </p>
+        <p>実際のシステムでは、申請内容の確認、レシート画像の保存、経費の記録、確認メールの送信を段階的に進めています。以下のコード例では、その中から「画面からデータを渡して、シートへ記録する」部分を取り出しています。</p>
+        <h3>共通情報と経費ごとの情報を組み合わせる</h3>
+        <p>フォームの情報には、名前・メールアドレス・部署など、申請全体で共通するものがあります。一方で、購入日・商品名・使用目的・金額などは、経費ごとに異なります。</p>
+        <p>保存するときには、この2種類の情報を組み合わせて、経費ごとの行データを作ります。なお、ここで記録するメールアドレスは、申請者がフォームに入力したものです。ログイン中のGoogleアカウントの表示とは分けています。
+        </p>
+        <h3>列の順番に合わせて、まとめて書き込む</h3>
+        <p>スプレッドシートでは、各列に何を入れるかを決めておく必要があります。金額を入れるはずの列に商品名が入るといったずれを防ぐため、見出しと同じ順番で行データを並べています。</p>
+        <p>主に記録する内容は、申請日時、申請者情報、購入日、商品名、使用目的、税込金額、税率ごとの金額・消費税、レシートURL、提出状況です。</p>
+        <p>複数の経費から作った行データは、書き込み先の範囲を指定して、まとめて追加します。実装では、既存シートの見出しが想定した並びかどうかも確認しています。</p>
+        <h3>レシート画像はURLでつなぐ</h3>
+        <p>画像そのものはGoogleドライブに保存し、スプレッドシートには、その画像を開くためのURLを記録します。</p>
+        <p>これにより、経費の内容と対応するレシートを、同じ行から確認できる形にしています。画像の保存とURLの受け渡しについては、次回の記事で紹介します。</p>
+        <h3>同じ経費を繰り返し登録しないための情報を持つ</h3>
+        <p>通信の途中で処理が止まった場合などに備えて、申請を識別するIDと、その申請内の経費番号も記録しています。</p>
+        <p>保存処理では、この組み合わせを使って登録済みの経費を確認し、まだ記録されていないものを追加します。普段確認する申請内容と区別するため、これらの管理用の列は非表示にしています。</p>
+        <p>これは重複登録を防ぐための工夫です。通信や保存がどのような状況でも必ず成功する、という意味ではありません。</p>
+      </section>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="code">
+        <h2>コード例</h2>
+        <p>GASでコード例を試す際の基本操作や認証は、次のガイドで確認できます。この記事のファイル名・設定などは、各コード例の説明に従ってください。</p>
+        <div class="page-links">
+          <a href="/beginner/try-first-gas.html">
+            <p>GASを開いてコードを保存・実行する基本操作を確認する</p>
+            <p class="p-link">▶ GASを使い始めるための操作ガイド</p>
+          </a>
+        </div>
+        <div class="page-links">
+          <a href="/beginner/auth-guide.html">
+            <p>初回実行やサービスの利用で認証が必要になったときに確認する</p>
+            <p class="p-link">▶ GASの認証ガイド</p>
+          </a>
+        </div>
+
+        <p>各回のコード例は独立しています。順番に追加して、経費申請フォーム全体を完成させるものではありません。</p>
+        <p>以下は、画面とGASのつながりを紹介するために簡略化した例です。実際の経費申請フォームへ差し替えるコードではありません。入力チェック、画像保存、権限確認、重複防止などの処理は省略しています。</p>
+        <h3>① 画面側：入力内容をまとめてGASへ渡す</h3>
+        <p>
+          名前の入力欄（<code>id=&quot;name&quot;</code>）と、複数の経費入力欄（<code>class=&quot;expense-card&quot;</code>）がある前提です。経費ごとの購入日・商品名・金額を取り出し、<code>expenses</code>という一覧にまとめます。
+        </p>
+        <p>下の関数は、入力チェックを通過したあとに呼び出す想定です。表示先には<code>id=&quot;status&quot;</code>の要素を使います。</p>
+        <div class="code-container"><button type="button" class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">function sendExpenseExample() {
+  const status = document.getElementById('status');
+  const cards = document.querySelectorAll('.expense-card');
+
+  // 入力チェックを通過した内容をまとめます。
+  const data = {
+    name: document.getElementById('name').value.trim(),
+    expenses: Array.from(cards).map(function(card) {
+      return {
+        purchaseDate: card.querySelector('.purchase-date').value,
+        productName: card.querySelector('.product-name').value.trim(),
+        amount: Number(card.querySelector('.amount').value)
+      };
+    })
+  };
+
+  status.textContent = '保存しています';
+
+  google.script.run
+    .withSuccessHandler(function(result) {
+      status.textContent = result.count + '件を記録しました';
+    })
+    .withFailureHandler(function() {
+      status.textContent = '保存できませんでした';
+    })
+    .saveExpenseExample(data);
+}</code></pre>
+        </div>
+        <p>最後の<code>saveExpenseExample(data)</code>は、GAS側に用意した同名の関数を呼び出しています。その戻り値を受け取り、記録した件数を画面に表示します。</p>
+        <h3>② GAS側：受け取った内容を行にして書き込む</h3>
+        <p>この例では、保存先に「保存例」というシートを作り、1行目に「申請日時・名前・購入日・商品名・金額」の5つの見出しを用意しておきます。スプレッドシートのIDは、説明用の仮の文字列です。</p>
+        <div class="code-container"><button type="button" class="copy-btn">Copy</button>
+          <pre><code class="language-javascript">function saveExpenseExample(data) {
+  const spreadsheet = SpreadsheetApp.openById(
+    '保存先スプレッドシートのID'
+  );
+  const sheet = spreadsheet.getSheetByName('保存例');
+  const now = new Date();
+
+  // シートの見出しと同じ順番で、1件分の行を作ります。
+  const rows = data.expenses.map(function(expense) {
+    return [
+      now,
+      data.name,
+      expense.purchaseDate,
+      expense.productName,
+      expense.amount
+    ];
+  });
+
+  if (!rows.length) {
+    return { count: 0 };
+  }
+
+  sheet.getRange(
+    sheet.getLastRow() + 1,
+    1,
+    rows.length,
+    rows[0].length
+  ).setValues(rows);
+
+  return { count: rows.length };
+}</code></pre>
+        </div>
+        <p><code>map</code>で、経費の一覧から「1件につき1行」のデータを作っています。申請者の名前は共通情報なので、すべての行に同じ値を入れています。</p>
+        <p>
+          <code>getLastRow() + 1</code>で既存データの次の行を求め、<code>getRange</code>で書き込み先を指定します。<code>setValues</code>に、行ごとのデータをまとめた配列を渡すことで、複数件を一度に記録できます。
+        </p>
+        <p>書き込み後には件数を返します。画面側はその結果を受け取ってから「○件を記録しました」と表示するため、ボタンを押した直後に保存完了と表示してしまうことを避けられます。</p>
+      </section>
+      <section class="section" id="memo">
+        <h2>メモ・反省・次回やりたいこと</h2>
+        <p>フォームを作るときは入力画面に目が向きますが、保存した後にどう確認するかも、合わせて考える必要があります。</p>
+        <p>今回は、複数の経費をまとめて申請する操作と、経費を1件ずつ確認する作業の両方に合わせて、保存する形を分けています。</p>
+        <p>また、列の並びや、途中で止まった処理を再開するときの扱いも、画面からは見えない大切な部分でした。</p>
+        <p>次回は、フォームで受け取ったレシート画像をGoogleドライブへ保存し、今回の記録とつなげる仕組みを紹介します。</p>
+      </section>
+      <section class="section" id="related">
+        <h2>関連記事</h2>
+
+        <div class="page-links"><a href="/articles/blog/expense-form-1/">
+            <p>GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+        <div class="page-links"><a href="/articles/blog/expense-form-2/">
+            <p>GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</p>
+          <p>この記事</p>
+        </div>
+
+        <!-- リンク切替対象: expense-form-4 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-4/"><p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-4 -->
+
+        <!-- リンク切替対象: expense-form-5 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-5/"><p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-5 -->
+
+        <!-- リンク切替対象: expense-form-6 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-6/"><p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-6 -->
+      </section>
+
+      <section class="section" id="consultation">
+        <h2>自分の業務に自動化機能を追加したい方へ</h2>
+        <p>経費申請や画像保存、申請後の連絡など、今の業務に自動化機能を追加したい方はご相談ください。現在の作業と希望する自動化を伺い、対応できる範囲をご案内します。</p>
+        <div class="page-links">
+          <a href="/contact/#consultation">
+            <p>対応例・相談内容の書き方・相談から納品まで</p>
+            <p class="p-link">▶ 制作・カスタマイズ相談の案内を見る</p>
+          </a>
+        </div>
+      </section>
+      <p class="back-link"><a href="/articles/blog/">← 記事一覧に戻る</a></p>
+      <section class="section">
+        <p><a href="/">トップページへ戻る</a></p>
+      </section>
+      <div class="ad-bottom">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+    </article>
+  </main>
+  <div data-include="/includes/footer.html"></div>
+</body>
+
+</html>

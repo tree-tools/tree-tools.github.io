@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー | GASで作業をもっとラクに</title>
+  <meta content="フォームで受け取ったレシート画像をDriveへ保存し、URLで経費の記録とつなぐ仕組みを紹介します。Base64での受け渡しと保存のコード例もまとめました。" name="description" />
+  <meta content="GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー" property="og:title" />
+  <meta content="フォームで受け取ったレシート画像をDriveへ保存し、URLで経費の記録とつなぐ仕組みを紹介します。Base64での受け渡しと保存のコード例もまとめました。"
+    property="og:description" />
+  <meta content="article" property="og:type" />
+  <meta content="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-4/" property="og:url" />
+  <meta content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png" property="og:image" />
+  <link href="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-4/" rel="canonical" />
+  <link href="/assets/css/style.css" rel="stylesheet" />
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <link href="/assets/images/tree-toos-icon.png" rel="icon" type="image/png" />
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+  <main>
+    <nav aria-label="パンくずリスト" class="breadcrumb">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+    <article class="article-content">
+      <h1 class="page-title">GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</h1>
+      <div class="article-meta">
+        <span class="date">投稿日：2026-11-15</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags"><span>GAS</span><span>Webアプリ</span><span>Google Drive</span></span>
+      </div>
+      <div class="ad-top">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+      <section class="section summary">
+        <p>このブログでは、Google Apps Script（GAS）で作ったツールや、作る途中で気づいたことを紹介しています。「こんな使い方もできるんだ」と、普段の作業を見直すヒントになればうれしいです。</p>
+        <p>前回は、入力された経費をスプレッドシートへ記録する仕組みを紹介しました。今回は、その経費に添付されたレシート画像をGoogleドライブへ保存する部分です。</p>
+        <p>スマホでレシートを撮影したあと、別の方法で画像を送り直さずに、申請内容と一緒に扱えるようにしました。</p>
+      </section>
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#purpose">やりたかったこと</a></li>
+          <li><a href="#logic">使ったロジック・ポイント</a></li>
+          <li><a href="#code">コード例</a></li>
+          <li><a href="#memo">メモ・反省・次回やりたいこと</a></li>
+          <li><a href="#related">関連記事</a></li>
+          <li><a href="#consultation">自分の業務に自動化機能を追加したい方へ</a></li>
+        </ul>
+      </nav>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="purpose">
+        <h2>やりたかったこと</h2>
+        <p>経費の内容だけでなく、その根拠になるレシートも、同じ申請の流れで受け付けたいと考えました。</p>
+        <p>利用者は入力画面で画像を添付し、申請を送信します。保存された画像のURLを経費の記録に残せば、確認する人はシートの行から対応するレシートを開けます。</p>
+        <p>また、複数の経費をまとめて申請する場合でも、それぞれの画像がどの経費に対応しているか分かるようにする必要がありました。</p>
+      </section>
+      <section class="section" id="logic">
+        <h2>使ったロジック・ポイント</h2>
+        <h3>① 選んだ画像を、GASへ渡せる形にする</h3>
+        <p>入力画面で画像を選んだ段階では、そのファイルを画面側で扱っている状態です。Googleドライブへの保存は、申請を送信するときに行います。</p>
+        <p>今回の実装では、画面側で画像を読み込み、Base64という文字列の形にしてGASへ渡しています。GAS側では、その文字列を画像のバイト列へ戻します。</p>
+        <p>「画面で選んだファイルを、保存処理へ受け渡すための変換」と捉えると、流れが分かりやすいと思います。</p>
+        <p>
+          撮影した画像が大きい場合に備え、現在は4MB以上の画像をブラウザ側で自動圧縮しています。圧縮した場合は、その画像をプレビューと送信の両方に使います。申請者が別のアプリで画像を小さくしてから添付し直す手間を減らすためです。
+        </p>
+        <h3>② GAS側で画像を確認し、Driveへ保存する</h3>
+        <p>GAS側では、受け取った画像の形式やサイズを確認してから保存します。画面側のチェックに加え、保存する側でもデータを確認する形です。</p>
+        <p>保存にはGoogle Drive APIを使っています。APIは、プログラムからサービスの機能を呼び出すための窓口です。GASからこの窓口へ、画像データと、ファイル名・保存先フォルダなどの情報を送ります。</p>
+        <p>保存時には、申請内容から用意したファイル名を使い、画像形式に合う拡張子を付けています。あとからフォルダを開いたときにも、ファイルを見分ける手がかりになります。</p>
+        <h3>③ 複数の画像を1枚ずつ送る</h3>
+        <p>経費をまとめて申請すると、添付画像も複数になることがあります。</p>
+        <p>今回は、すべての画像を一度に文字列へ変換してまとめて送る形にはせず、1枚ずつ変換して送信し、保存を確認してから次へ進む形にしました。</p>
+        <p>流れは、次のようになります。</p>
+        <ol>
+          <li>申請内容を確認し、画像保存の準備をします。</li>
+          <li>添付画像を1枚読み込み、GASへ送信します。</li>
+          <li>保存した画像の情報を記録します。</li>
+          <li>次の画像について、同じ処理を繰り返します。</li>
+          <li>添付画像の保存がそろったら、経費をスプレッドシートへ記録します。</li>
+        </ol>
+        <p>画面にも処理状況を表示し、利用者が画像の保存中なのか、経費の登録中なのかを確認できるようにしています。</p>
+        <h3>④ 保存した画像のURLを、経費の記録につなぐ</h3>
+        <p>保存処理では、作成したファイルのIDから、画像を開くためのURLを用意します。</p>
+        <p>このURLを対応する経費のデータへ組み込み、前回紹介したスプレッドシートへの記録につなげています。</p>
+        <p>画像はDriveに、購入日や金額などはシートに保存し、URLで結び付ける形です。経費を確認するときに、記録とレシートをたどれるようにしています。</p>
+        <h3>⑤ 再試行するときに、保存済みの画像を確認する</h3>
+        <p>通信が途中で止まった場合に備えて、画像ごとの保存状況も記録しています。</p>
+        <p>
+          画面を開いたまま同じ申請を再試行するときは、保存済みの画像を確認し、残っている処理を進めます。また、ファイルを作る前にIDを確保しておき、保存結果の応答が届かなかった場合も、同じIDのファイルを確認できるようにしています。
+        </p>
+        <p>画像を保存する処理だけでなく、どこまで終わったかを残すことも、申請の流れをつなぐために必要な部分でした。</p>
+      </section>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="code">
+        <h2>コード例</h2>
+        <p>GASでコード例を試す際の基本操作や認証は、次のガイドで確認できます。この記事のファイル名・設定などは、各コード例の説明に従ってください。</p>
+        <div class="page-links">
+          <a href="/beginner/try-first-gas.html">
+            <p>GASを開いてコードを保存・実行する基本操作を確認する</p>
+            <p class="p-link">▶ GASを使い始めるための操作ガイド</p>
+          </a>
+        </div>
+        <div class="page-links">
+          <a href="/beginner/auth-guide.html">
+            <p>初回実行やサービスの利用で認証が必要になったときに確認する</p>
+            <p class="p-link">▶ GASの認証ガイド</p>
+          </a>
+        </div>
+
+        <p>各回のコード例は独立しています。順番に追加して、経費申請フォーム全体を完成させるものではありません。</p>
+        <p>
+          以下は、画像1枚の受け渡しと保存に絞った記事用の簡略例です。運用コードの差し替え用ではありません。画像は処理済みのFileとして用意し、この例ではJPEGを使います。実装にある複数画像の順次送信、画像圧縮、申請ごとの権限確認、重複防止・再試行などは省略しています。
+        </p>
+        <p>この簡略例は、保存するJPEG画像を5MB以下に制限しています。画像圧縮の処理は含めていません。</p>
+        <h3>画面側：画像をBase64にして送る</h3>
+        <p><code>FileReader.readAsDataURL()</code>で画像を読み込み、先頭の形式情報を除いたBase64部分をGASへ渡します。保存が終わると、返された画像URLでPromiseが完了します。
+        </p>
+        <div class="code-container"><button class="copy-btn" type="button">コピー</button>
+          <pre><code class="language-javascript">// 選択済み・必要に応じて圧縮済みのFileを渡します。
+function sendReceiptExample(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onerror = function() {
+      reject(new Error('画像を読み込めませんでした。'));
+    };
+    reader.onload = function() {
+      const base64 = String(reader.result).split(',')[1];
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(reject)
+        .saveReceiptExample({ base64: base64 });
+    };
+    reader.readAsDataURL(file);
+  });
+}
+</code></pre>
+        </div>
+        <h3>GAS側：画像へ戻し、保存したURLを返す</h3>
+        <p><code>Utilities.base64Decode()</code>でバイト列へ戻し、<code>Utilities.newBlob()</code>で保存用データを作ります。最後にDrive
+          APIでファイルを作成し、そのIDからURLを用意します。</p>
+        <p>コードを短くするため、この例ではGASの拡張サービス「Drive API」を使います。サービスの有効化と保存先フォルダIDの設定、実行ユーザーの保存権限が必要です。運用実装は同じDrive
+          APIを<code>UrlFetchApp</code>から呼んでいます。</p>
+        <div class="code-container"><button class="copy-btn" type="button">コピー</button>
+          <pre><code class="language-javascript">// 記事用のJPEG保存例です。拡張サービスのDrive APIを有効にします。
+function saveReceiptExample(data) {
+  const bytes = Utilities.base64Decode(data.base64);
+  if (!bytes.length || bytes.length &gt; 5000000) {
+    throw new Error('画像は5MB以下にしてください。');
+  }
+  const header = bytes.slice(0, 3).map(function(b) { return b &amp; 255; });
+  if (header[0] !== 255 || header[1] !== 216 || header[2] !== 255) {
+    throw new Error('この例ではJPEG画像を使ってください。');
+  }
+
+  const blob = Utilities.newBlob(bytes, 'image/jpeg', 'レシート例.jpg');
+  const saved = Drive.Files.create({
+    name: blob.getName(),
+    parents: ['保存先フォルダID']
+  }, blob, { supportsAllDrives: true, fields: 'id' });
+
+  return 'https://drive.google.com/file/d/' + saved.id + '/view';
+}
+</code></pre>
+        </div>
+        <p>返されたURLを経費のデータに含めれば、前回のスプレッドシートへの記録につなげられます。URLを作るだけでは画像の共有権限は変わらないため、確認する人が画像を開ける権限も必要です。</p>
+      </section>
+      <section class="section" id="memo">
+        <h2>メモ・反省・次回やりたいこと</h2>
+        <p>画像を添付できる画面を作るだけでなく、その画像をどこへ保存し、どの経費と組み合わせるかまで考える必要がありました。</p>
+        <p>今回のフォームでは、画像の送信・Driveへの保存・シートへの記録を分け、保存結果を次の処理へ渡しています。ひとつの長い処理として見るより、それぞれの役割を分けると流れを整理しやすくなります。</p>
+        <p>保存先は、購入した年月に対応するフォルダです。次回は、保存先のフォルダがまだ用意されていない場合に、新しいフォルダを作って管理表へ登録する仕組みを紹介します。</p>
+      </section>
+      <section class="section" id="related">
+        <h2>関連記事</h2>
+        <div class="page-links">
+          <a href="/articles/blog/expense-form-1/">
+            <p>GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/expense-form-2/">
+            <p>GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/expense-form-3/">
+            <p>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p>
+          <p>この記事</p>
+        </div>
+
+        <!-- リンク切替対象: expense-form-5 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-5/"><p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-5 -->
+
+        <!-- リンク切替対象: expense-form-6 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-form-6/"><p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-form-6 -->
+      </section>
+      <section class="section" id="consultation">
+        <h2>自分の業務に自動化機能を追加したい方へ</h2>
+        <p>経費申請や画像保存、申請後の連絡など、今の業務に自動化機能を追加したい方はご相談ください。現在の作業と希望する自動化を伺い、対応できる範囲をご案内します。</p>
+        <div class="page-links">
+          <a href="/contact/#consultation">
+            <p>対応例・相談内容の書き方・相談から納品まで</p>
+            <p class="p-link">▶ 制作・カスタマイズ相談の案内を見る</p>
+          </a>
+        </div>
+      </section>
+      <p class="back-link"><a href="/articles/blog/">← 記事一覧に戻る</a></p>
+      <section class="section">
+        <p><a href="/">トップページへ戻る</a></p>
+      </section>
+      <div class="ad-bottom">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+    </article>
+  </main>
+  <div data-include="/includes/footer.html"></div>
+</body>
+
+</html>

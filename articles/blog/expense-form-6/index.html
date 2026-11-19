@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー | GASで作業をもっとラクに</title>
+  <meta content="申請内容をひな形に差し込み、確認メールを自動で送る仕組みを紹介します。複数経費の明細・合計の作成と、登録と通知を分けて扱う工夫をまとめました。" name="description" />
+  <meta content="GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー" property="og:title" />
+  <meta content="申請内容をひな形に差し込み、確認メールを自動で送る仕組みを紹介します。複数経費の明細・合計の作成と、登録と通知を分けて扱う工夫をまとめました。" property="og:description" />
+  <meta content="article" property="og:type" />
+  <meta content="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-6/" property="og:url" />
+  <meta content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png" property="og:image" />
+  <link href="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-form-6/" rel="canonical" />
+  <link href="/assets/css/style.css" rel="stylesheet" />
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <link href="/assets/images/tree-toos-icon.png" rel="icon" type="image/png" />
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+  <main>
+    <nav aria-label="パンくずリスト" class="breadcrumb">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+    <article class="article-content">
+      <h1 class="page-title">GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</h1>
+      <div class="article-meta">
+        <span class="date">投稿日：2026-11-19</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags"><span>GAS</span><span>Webアプリ</span><span>メール</span></span>
+      </div>
+      <div class="ad-top">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+      <section class="section summary">
+        <p>このブログでは、Google Apps Script（GAS）で作ったツールや、作る途中で気づいたことを紹介しています。「こんな使い方もできるんだ」と、普段の作業を見直すヒントになればうれしいです。</p>
+        <p>前回は、購入した年月に合わせてレシート画像の保存先を用意する仕組みを紹介しました。最終回は、申請後に確認メールを送る部分です。</p>
+      </section>
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#purpose">やりたかったこと</a></li>
+          <li><a href="#logic">使ったロジック・ポイント</a></li>
+          <li><a href="#code">コード例</a></li>
+          <li><a href="#memo">メモ・反省・次回やりたいこと</a></li>
+          <li><a href="#related">関連記事</a></li>
+          <li><a href="#consultation">自分の業務に自動化機能を追加したい方へ</a></li>
+        </ul>
+      </nav>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="purpose">
+        <h2>やりたかったこと</h2>
+        <p>申請したあとに、入力した内容を手元で見返せるようにしたいと考えました。</p>
+        <p>そこで、フォームに入力されたメールアドレスへ、申請内容の控えを自動で送るようにしました。複数の経費をまとめて申請した場合も、件数・合計金額・経費ごとの明細を一つのメールで確認できます。</p>
+        <p>このメールは、申請内容を受け付けたあとの控えです。管理者による内容確認や、経費の承認を知らせるメールとは分けて考えています。</p>
+      </section>
+      <section class="section" id="logic">
+        <h2>使ったロジック・ポイント</h2>
+        <h3>① 件名と本文のひな形をシートで管理する</h3>
+        <p>メールの件名と本文は、スプレッドシートにひな形として置いています。GASは送信するときに、その内容を読み込みます。</p>
+        <p>文章の中には「{{名前}}」「{{経費件数}}」のような置き換え用の目印を入れておき、実際の申請内容を当てはめます。</p>
+        <p>定型文と申請ごとに変わる情報を分けることで、案内文を見直す際に、送信処理のコードまで書き換えずに済むようにしました。</p>
+        <h3>② 複数の経費を、明細として組み立てる</h3>
+        <p>申請された経費を一件ずつ取り出し、購入日・商品名・使用目的・金額などを文章にまとめます。税率ごとの金額や、レシート画像のリンク、提出状況も明細に含めています。</p>
+        <p>それぞれの明細を改行でつなげ、件数と合計金額も用意します。これらをひな形へ差し込むことで、まとめて申請した内容を一つのメールに載せています。</p>
+        <h3>③ 画像保存とシートへの記録が終わってから送る</h3>
+        <p>メールは、申請ボタンを押した直後に送るわけではありません。</p>
+        <p>添付画像の保存を確認し、経費をスプレッドシートへ記録してから、確認メールを送信します。GAS側では、GmailApp.sendEmail()を使っています。</p>
+        <p>宛先には、申請者がフォームに入力したメールアドレスを使います。画面に表示するGoogleアカウントの情報とは、別の情報として扱っています。</p>
+        <h3>④ 経費の登録と、メールの送信結果を分ける</h3>
+        <p>シートへの登録が終わったあとに、メール送信でエラーになる可能性もあります。そのため、申請の登録状況とメールの送信状況は、別々に記録しています。</p>
+        <p>メール送信に失敗しても、すでに登録した経費を取り消す処理にはしていません。申請データの保存と、メールによる通知を分けて扱う形です。</p>
+        <p>また、同じ申請の処理を再試行したときにメールが重複しないよう、送信前に処理状況を記録します。送信済みの場合や、送信結果が不明になった場合には、同じ処理から自動で再送しないようにしています。</p>
+        <p>一方で、これだけでメールの到着まで保証できるわけではありません。送信処理の結果と、受信側で実際にメールを確認できたかは区別する必要があります。</p>
+      </section>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="code">
+        <h2>コード例</h2>
+        <p>GASの基本操作や認証は、次のガイドで確認できます。このコード例は関数の抜粋なので、必要な引数・設定などは本文の説明に従って用意してください。</p>
+        <div class="page-links">
+          <a href="/beginner/try-first-gas.html">
+            <p>GASを開いてコードを保存・実行する基本操作を確認する</p>
+            <p class="p-link">▶ GASを使い始めるための操作ガイド</p>
+          </a>
+        </div>
+        <div class="page-links">
+          <a href="/beginner/auth-guide.html">
+            <p>初回実行やサービスの利用で認証が必要になったときに確認する</p>
+            <p class="p-link">▶ GASの認証ガイド</p>
+          </a>
+        </div>
+
+        <p>各回のコード例は独立しています。順番に追加して、経費申請フォーム全体を完成させるものではありません。</p>
+        <p>以下は、ひな形の置換から送信までを紹介する記事用の簡略例です。運用コードの差し替え用ではありません。入力チェック・権限確認・送信状況の記録・重複防止は省略しています。</p>
+        <h3>ひな形の目印を申請内容へ置き換える</h3>
+        <p>「{{名前}}」などの目印を探し、対応する値に置き換えます。同じ目印が複数あっても、まとめて置換する形です。</p>
+        <div class="code-container"><button class="copy-btn" type="button">コピー</button>
+          <pre><code class="language-javascript">function replaceMailExample(template, values) {
+  let text = template;
+  Object.keys(values).forEach(function(key) {
+    const value = values[key];
+    text = text.split(&#x27;{{&#x27; + key + &#x27;}}&#x27;).join(
+      value === null || value === undefined ? &#x27;&#x27; : String(value)
+    );
+  });
+  return text;
+}
+</code></pre>
+        </div>
+        <h3>明細と合計をまとめてメールを送る</h3>
+        <p>
+          シートから取得済みの件名・本文をtemplateとして渡します。例えば件名を「{{名前}}さんの経費申請控え」、本文に「{{経費件数}}」「{{申請金額合計}}」「{{経費明細}}」を入れておけば、申請ごとの内容を差し込めます。
+        </p>
+        <div class="code-container"><button class="copy-btn" type="button">コピー</button>
+          <pre><code class="language-javascript">// 画像保存・経費登録の完了後に呼ぶ、記事用の簡略例です。
+// templateにはシートから取得済みのsubject・bodyを渡します。
+function sendConfirmationExample(data, template) {
+  const detail = data.expenses.map(function(expense, index) {
+    return [
+      &#x27;【経費&#x27; + (index + 1) + &#x27;】&#x27;,
+      &#x27;購入日：&#x27; + expense.purchaseDate,
+      &#x27;商品名：&#x27; + expense.productName,
+      &#x27;金額：&#x27; + Number(expense.amount).toLocaleString(&#x27;ja-JP&#x27;) + &#x27;円&#x27;,
+      &#x27;レシート：&#x27; + (expense.receiptUrl || &#x27;画像なし&#x27;)
+    ].join(&#x27;\n&#x27;);
+  }).join(&#x27;\n\n&#x27;);
+
+  const total = data.expenses.reduce(function(sum, expense) {
+    return sum + Number(expense.amount);
+  }, 0);
+  const values = {
+    名前: data.name,
+    経費件数: data.expenses.length,
+    申請金額合計: total.toLocaleString(&#x27;ja-JP&#x27;) + &#x27;円&#x27;,
+    経費明細: detail
+  };
+  const subject = replaceMailExample(template.subject, values);
+  const body = replaceMailExample(template.body, values);
+  GmailApp.sendEmail(data.email, subject, body);
+}
+</code></pre>
+        </div>
+        <p>
+          <code>map()</code>で明細を作り、<code>reduce()</code>で金額を合計しています。記事では明細項目を一部に絞っていますが、運用実装では使用目的・税率ごとの金額・提出状況なども含めています。
+        </p>
+        <p>
+          この関数は経費の登録完了後に呼ぶ前提です。例だけでは登録の完了確認や重複送信の防止は行わないため、運用コードへそのまま追加するものではありません。実行すると指定した宛先へ送信するため、試す場合は自分のテスト用アドレスを使います。
+        </p>
+      </section>
+      <section class="section" id="memo">
+        <h2>メモ・反省・次回やりたいこと</h2>
+        <p>全6回を通して、入力画面・スプレッドシート・Googleドライブ・メールをつなぐ経費申請フォームを紹介しました。</p>
+        <p>画面から入力できるようにするだけでなく、入力の誤りを知らせること、画像と経費を対応させること、保存先を用意すること、申請後の控えを残すことまで、一連の流れとして考えました。</p>
+        <p>今回の仕組みでも、レシートと申請内容が本当に一致しているかは、人が確認する必要があります。自動化する部分と、確認する人に残す部分を分けておくことも大切だと感じました。</p>
+        <p>今後も、実際の作業で手間になっている部分を見ながら、必要な処理を少しずつつなげていきたいと思います。</p>
+      </section>
+      <section class="section" id="related">
+        <h2>関連記事</h2>
+        <div class="page-links">
+          <a href="/articles/blog/expense-form-1/">
+            <p>GASで経費申請フォームを作ってみた（1/6）ー入力・画像保存・記録・メールをつなぐー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/expense-form-2/">
+            <p>GASで経費申請フォームを作ってみた（2/6）ーWebアプリで、自分の作業に合う入力画面を作るー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/expense-form-3/">
+            <p>GASで経費申請フォームを作ってみた（3/6）ー入力された内容をスプレッドシートに記録するー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/expense-form-4/">
+            <p>GASで経費申請フォームを作ってみた（4/6）ーフォームから受け取った画像をDriveに保存するー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+
+        <div class="page-links">
+          <a href="/articles/blog/expense-form-5/">
+            <p>GASで経費申請フォームを作ってみた（5/6）ー年月に合わせて保存先フォルダを用意するー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a>
+        </div>
+
+        <div class="muted-box">
+          <p>GASで経費申請フォームを作ってみた（6/6）ー申請後の確認メールを自動で送るー</p>
+          <p>この記事</p>
+        </div>
+      </section>
+      <section class="section" id="consultation">
+        <h2>自分の業務に自動化機能を追加したい方へ</h2>
+        <p>経費申請や画像保存、申請後の連絡など、今の業務に自動化機能を追加したい方はご相談ください。現在の作業と希望する自動化を伺い、対応できる範囲をご案内します。</p>
+        <div class="page-links">
+          <a href="/contact/#consultation">
+            <p>対応例・相談内容の書き方・相談から納品まで</p>
+            <p class="p-link">▶ 制作・カスタマイズ相談の案内を見る</p>
+          </a>
+        </div>
+      </section>
+      <p class="back-link"><a href="/articles/blog/">← 記事一覧に戻る</a></p>
+      <section class="section">
+        <p><a href="/">トップページへ戻る</a></p>
+      </section>
+      <div class="ad-bottom">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+    </article>
+  </main>
+  <div data-include="/includes/footer.html"></div>
+</body>
+
+</html>

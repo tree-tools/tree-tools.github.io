@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GASで経費の確認画面を作ってみた（1/6）ー画像と申請内容をまとめて確認ー | GASで作業をもっとラクに</title>
+  <meta name="description"
+    content="レシート画像と申請内容をまとめて確認する画面をGASで作りました。メニュー、ダイアログ、シートへの保存、色による確認補助、GAS内のファイル分けを全6回で紹介します。">
+  <meta property="og:title" content="GASで経費の確認画面を作ってみた（1/6）ー画像と申請内容をまとめて確認ー">
+  <meta property="og:description"
+    content="レシート画像と申請内容をまとめて確認する画面をGASで作りました。メニュー、ダイアログ、シートへの保存、色による確認補助、GAS内のファイル分けを全6回で紹介します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-review-1/">
+  <meta property="og:image" content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png">
+  <link rel="canonical" href="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-review-1/">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <link rel="icon" href="/assets/images/tree-toos-icon.png" type="image/png">
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li><a href="/">トップ</a></li>
+        <li><a href="/articles/blog/">記事一覧</a></li>
+        <li>記事</li>
+      </ol>
+    </nav>
+    <article class="article-content">
+      <h1 class="page-title">GASで経費の確認画面を作ってみた（1/6）ー画像と申請内容をまとめて確認ー</h1>
+      <div class="article-meta">
+        <span class="date">投稿日：2026-11-25</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags"><span>GAS</span> <span>スプレッドシート</span> <span>ダイアログ</span></span>
+      </div>
+      <div class="ad-top">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+      <section class="section summary">
+        <p>このブログでは、Google Apps Script（GAS）で作ったツールや、作る途中で気づいたことを紹介しています。「こんな使い方もできるんだ」と、普段の作業を見直すヒントになればうれしいです。</p>
+        <p>いつもは1つの記事で完結していますが、今回は、作った確認画面の概要と使った機能を、全6本の記事に分けて紹介します。第1回は画面の全体像、続く5本では機能や工夫をひとつずつ取り上げます。</p>
+        <p>第2回以降には、それぞれの仕組みを試すための短いコード例を載せています。各回の例は独立しており、順番に追加して経費確認画面全体を完成させるものではありません。</p>
+        <p>経費申請リストには、フォームから申請者や購入品、金額、消費税などの申請内容と、レシート画像の保存先リンクが送られてきます。確認担当者は、レシート画像と申請内容を見比べ、不備がないかを確認します。</p>
+        <p>確認作業では、画像へのリンクが間違っていたり、申請金額がレシートと異なっていたりすることがありました。また、リンク先の画像と一覧を何度も行き来しながら見比べる作業にも、手間がかかっていました。</p>
+        <p>そこで、レシート画像と申請内容をひとつの画面に並べ、確認や修正を進められる画面をGASで作りました。今回は、その概要と、組み合わせた機能を紹介します。</p>
+      </section>
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li><a href="#purpose">やりたかったこと</a></li>
+          <li><a href="#menu">メニューから、確認画面を開く</a></li>
+          <li><a href="#dialog">ダイアログに、画像と申請内容を並べる</a></li>
+          <li><a href="#save">画面で修正した内容を、元のリストに保存する</a></li>
+          <li><a href="#validation">数字の確認が必要そうな箇所を、色で知らせる</a></li>
+          <li><a href="#files">GAS内のファイルを分けて整理する</a></li>
+          <li><a href="#ideas">ほかの確認作業にも使えそう</a></li>
+          <li><a href="#related-articles">関連記事</a></li>
+          <li><a href="#consultation">自分の業務に自動化機能を追加したい方へ</a></li>
+        </ul>
+      </nav>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="purpose">
+        <h2>やりたかったこと</h2>
+        <p>確認作業は、レシートと申請内容の照合や、合計金額、8％・10％の金額と消費税の確認などです。</p>
+        <p>修正したセルは黄色にして「修正あり」にチェックを付け、確認が終わった申請には「確認完了」のチェックを付けていました。</p>
+        <p>この運用を残しながら、画像を見るところから修正するところまでを、ひとつの画面で進められるようにしました。</p>
+      </section>
+      <section class="section" id="menu">
+        <h2>メニューから、確認画面を開く</h2>
+        <p>スプレッドシートに「経費確認」メニューを追加しました。作業したい月のシートを開き、「現在のシートを確認」を選ぶと、そのシートを対象に確認を始められます。</p>
+
+        <p>詳しくは第2回で紹介します。</p>
+      </section>
+      <section class="section" id="dialog">
+        <h2>ダイアログに、画像と申請内容を並べる</h2>
+        <p>スプレッドシート上に開くダイアログへ、レシート画像と申請内容を並べました。元の一覧の列順を変えずに、確認しやすい配置を用意しています。</p>
+        <figure>
+          <img class="article-thumb" src="/assets/images/expense-review-1-01.png" alt="スプレッドシート上に開いた経費確認ダイアログ"
+            loading="lazy">
+          <figcaption>スプレッドシートの上に確認用のダイアログを表示。レシート画像と申請内容を並べ、その場で確認・修正できます。<br>※画面はイメージです。架空のデータを使用しています。</figcaption>
+        </figure>
+        <p>詳しくは第3回で紹介します。</p>
+      </section>
+      <section class="section" id="save">
+        <h2>画面で修正した内容を、元のリストに保存する</h2>
+        <p>入力欄で修正して保存すると、元のシートへ反映されます。修正セルを黄色にして「修正あり」を記録し、内容の確認が終わったかどうかは「確認完了」で別に管理しています。</p>
+
+        <p>詳しくは第4回で紹介します。</p>
+      </section>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="validation">
+        <h2>数字の確認が必要そうな箇所を、色で知らせる</h2>
+        <p>合計や消費税が確認条件に合わない場合は、入力欄の色とメッセージで知らせます。数字は自動で書き換えず、利用者がレシートを見て修正します。</p>
+        <figure>
+          <img class="article-thumb" src="/assets/images/expense-review-1-02.png" alt="要確認の入力欄と修正保存後のセルの色の違い"
+            loading="lazy">
+          <figcaption>オレンジは確認が必要な入力欄、黄色は修正を保存したセル。修正保存で「修正あり」にチェックが付き、「確認完了」は確認を終えた後に別の操作で記録します。</figcaption>
+        </figure>
+        <p>詳しくは第5回で紹介します。</p>
+      </section>
+      <section class="section" id="files">
+        <h2>GAS内のファイルを分けて整理する</h2>
+        <p>設定、シートを操作する処理、画面の構成や見た目を、役割ごとにファイルへ分けました。選択肢や表示を変えたいときに、修正する場所を探しやすくしています。</p>
+
+        <p>詳しくは第6回で紹介します。</p>
+      </section>
+      <section class="section" id="ideas">
+        <h2>ほかの確認作業にも使えそう</h2>
+        <p>今回の画面では、メニューから開き、画像と情報を見比べ、必要なら修正してリストに保存する流れを作りました。数字の確認は、色で手助けしています。</p>
+        <p>商品の写真と商品情報を確認したり、備品の写真と管理台帳を照合したりする場面でも、同じ考え方を使えそうです。</p>
+        <p>普段の作業で何度も行き来している情報を、ひとつの画面にまとめる。GASの機能を組み合わせると、こうした確認作業に合わせた画面も作れます。</p>
+      </section>
+      <section class="section" id="related-articles">
+        <h2>関連記事</h2>
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（1/6）ー画像と申請内容をまとめて確認ー</p>
+          <p>この記事</p>
+        </div>
+
+        <!-- リンク切替対象: expense-review-2 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（2/6）ーメニューから処理を呼び出すー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-2/"><p>GASで経費の確認画面を作ってみた（2/6）ーメニューから処理を呼び出すー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-2 -->
+
+        <!-- リンク切替対象: expense-review-3 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（3/6）ーダイアログに画像と情報を並べるー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-3/"><p>GASで経費の確認画面を作ってみた（3/6）ーダイアログに画像と情報を並べるー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-3 -->
+
+        <!-- リンク切替対象: expense-review-4 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（4/6）ーダイアログでの修正をシートに反映するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-4/"><p>GASで経費の確認画面を作ってみた（4/6）ーダイアログでの修正をシートに反映するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-4 -->
+
+        <!-- リンク切替対象: expense-review-5 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（5/6）ー色で数字の確認を手助けするー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-5/"><p>GASで経費の確認画面を作ってみた（5/6）ー色で数字の確認を手助けするー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-5 -->
+
+        <!-- リンク切替対象: expense-review-6 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（6/6）ーGAS内のファイルを分けて整理するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-6/"><p>GASで経費の確認画面を作ってみた（6/6）ーGAS内のファイルを分けて整理するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-6 -->
+      </section>
+      <section class="section" id="consultation">
+        <h2>自分の業務に自動化機能を追加したい方へ</h2>
+        <p>申請内容の確認やシートへの保存など、今の業務に合わせた確認画面・自動化機能の追加をご相談いただけます。現在の作業と希望する変更を伺い、対応できる範囲をご案内します。</p>
+        <div class="page-links">
+          <a href="/contact/#consultation">
+            <p>対応例・相談内容の書き方・相談から納品まで</p>
+            <p class="p-link">▶ 制作・カスタマイズ相談の案内を見る</p>
+          </a>
+        </div>
+      </section>
+      <p class="back-link"><a href="/articles/blog/">← 記事一覧に戻る</a></p>
+      <section class="section">
+        <p><a href="/">トップページへ戻る</a></p>
+      </section>
+      <div class="ad-bottom">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+    </article>
+  </main>
+  <div data-include="/includes/footer.html"></div>
+</body>
+
+</html>

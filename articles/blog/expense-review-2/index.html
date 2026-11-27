@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GASで経費の確認画面を作ってみた（2/6）ーメニューから処理を呼び出すー | GASで作業をもっとラクに</title>
+  <meta name="description" content="スプレッドシートに独自のメニューを追加し、GASの関数を呼び出す使い方を紹介します。経費確認画面の実例と短いコード例から、メニュー作成のポイントをまとめました。">
+  <meta property="og:title" content="GASで経費の確認画面を作ってみた（2/6）ーメニューから処理を呼び出すー">
+  <meta property="og:description"
+    content="スプレッドシートに独自のメニューを追加し、GASの関数を呼び出す使い方を紹介します。経費確認画面の実例と短いコード例から、メニュー作成のポイントをまとめました。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-review-2/">
+  <meta property="og:image" content="https://tree-tools-gas-guide.pages.dev/assets/images/tree-toos-icon.png">
+  <link rel="canonical" href="https://tree-tools-gas-guide.pages.dev/articles/blog/expense-review-2/">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="/assets/js/includes.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/copy-code.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-tomorrow.css">
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-javascript.min.js"></script>
+  <link rel="icon" href="/assets/images/tree-toos-icon.png" type="image/png">
+</head>
+
+<body>
+  <div data-include="/includes/header.html"></div>
+  <main>
+    <nav class="breadcrumb" aria-label="パンくずリスト">
+      <ol>
+        <li>
+          <a href="/">トップ</a>
+        </li>
+        <li>
+          <a href="/articles/blog/">記事一覧</a>
+        </li>
+        <li>記事</li>
+      </ol>
+    </nav>
+    <article class="article-content">
+      <h1 class="page-title">GASで経費の確認画面を作ってみた（2/6）ーメニューから処理を呼び出すー</h1>
+      <div class="article-meta">
+        <span class="date">投稿日：2026-11-27</span> |
+        <span class="category">カテゴリ：技術</span> |
+        <span class="tags">
+          <span>GAS</span>
+          <span>スプレッドシート</span>
+          <span>カスタムメニュー</span>
+        </span>
+      </div>
+      <div class="ad-top">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+      <section class="section summary">
+        <p>スプレッドシートに「経費確認」というメニューを追加し、そこから確認画面を開けるようにしました。今回は、メニューからGASの関数を呼び出す使い方と、操作する人に伝わる項目名の工夫を紹介します。</p>
+        <p>このブログは、Google Apps
+          Script（GAS）を使った自作ツールの記録や、開発の過程での気づきをまとめたものです。丁寧な解説というより、「こんなこともGASでできるんだ」というアイディアのきっかけになれば幸いです。</p>
+        <p>経費の確認画面を紹介する全6回の記事の第2回です。今回は、メニューからGASの処理を呼び出す方法を紹介します。</p>
+      </section>
+      <nav class="section toc">
+        <h2>目次</h2>
+        <ul>
+          <li>
+            <a href="#purpose">やりたかったこと</a>
+          </li>
+          <li>
+            <a href="#logic">使ったロジック・ポイント</a>
+          </li>
+          <li>
+            <a href="#code">コード例</a>
+          </li>
+          <li>
+            <a href="#memo">メモ・ほかにも使えそうなこと</a>
+          </li>
+          <li><a href="#related-articles">関連記事</a></li>
+          <li><a href="#consultation">自分の業務に自動化機能を追加したい方へ</a></li>
+        </ul>
+      </nav>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="purpose">
+        <h2>やりたかったこと</h2>
+        <p>前回は、レシート画像と申請内容をまとめて表示する確認画面の概要を紹介しました。</p>
+        <p>確認作業は、スプレッドシートのリストを見ているところから始まります。その流れで確認画面を開けるように、シートに処理の入口を用意したいと考えました。</p>
+        <p>そこで追加したのが、「経費確認」メニューの「現在のシートを確認」という項目です。作業したい月のシートを開いてから選ぶと、そのシートを対象に確認を始められます。</p>
+        <figure>
+          <img class="article-thumb" src="/assets/images/expense-review-2-01.png" alt="経費確認メニューから「現在のシートを確認」を選ぶ画面例"
+            loading="lazy">
+          <figcaption>※画面はイメージです。架空のデータを使用し、説明用に列構成を簡略化しています。</figcaption>
+        </figure>
+      </section>
+      <section class="section" id="logic">
+        <h2>使ったロジック・ポイント</h2>
+        <h3>① カスタムメニューから、GASの関数を呼び出す</h3>
+        <p>GASでは、スプレッドシートのメニューバーに独自のメニューを追加できます。これを「カスタムメニュー」と呼びます。</p>
+        <p>項目には実行する関数を結び付けられるので、使う人は関数名を覚えたり、スクリプトエディタを開いて実行する関数を選んだりせずに操作できます。</p>
+        <p>今回は、「現在のシートを確認」という項目から、確認画面を開く関数を呼び出す形にしました。メニューは作業を選ぶ入口で、画像の表示や修正内容の保存は、呼び出した先の処理が担当します。</p>
+        <h3>② ファイルを開いたときに、メニューを用意する</h3>
+        <p>
+          メニュー作成では、<code>createMenu()</code>でメニュー名を決め、<code>addItem()</code>で項目名と呼び出す関数名を指定し、<code>addToUi()</code>で画面に追加します。
+        </p>
+        <p>ファイルを開いたときにメニューを表示するには、<code>onOpen()</code>という関数にメニューを作る処理を書きます。</p>
+        <p>ここで用意するのは、作業を始めるための入口です。経費の確認は、利用者がメニューの項目を選んだところから始める形にしています。</p>
+        <p>なお、ここで紹介するのは、対象のスプレッドシートに紐付いたGASで作るメニューです。PCのブラウザでシートを操作する使い方を想定しています。</p>
+        <h3>③ 項目名で、対象と作業が伝わるようにする</h3>
+        <p>今回は月ごとにシートを作るので、項目名を「現在のシートを確認」としました。どのシートが対象なのか、何をする操作なのかが名前から分かるようにするためです。</p>
+        <p>ただし、項目名を付けるだけで対象が決まるわけではありません。開いているシートを使う、選択した範囲を使うなど、実際の処理も項目名に合うように用意します。</p>
+      </section>
+      <div class="ad-content">
+        <script src="https://adm.shinobi.jp/o/98662ea3644e9850702d9a74c27b535b"></script>
+      </div>
+      <section class="section" id="code">
+        <h2>コード例</h2>
+        <p>GASでコード例を試す際の基本操作や認証は、次のガイドで確認できます。この記事のファイル名・設定などは、各コード例の説明に従ってください。</p>
+        <div class="page-links">
+          <a href="/beginner/try-first-gas.html">
+            <p>GASを開いてコードを保存・実行する基本操作を確認する</p>
+            <p class="p-link">▶ GASを使い始めるための操作ガイド</p>
+          </a>
+        </div>
+        <div class="page-links">
+          <a href="/beginner/auth-guide.html">
+            <p>初回実行やサービスの利用で認証が必要になったときに確認する</p>
+            <p class="p-link">▶ GASの認証ガイド</p>
+          </a>
+        </div>
+
+        <p>以下は、「経費確認」メニューを追加し、項目を選ぶと現在開いているシート名をメッセージで表示する最小例です。経費確認画面そのものを再現するコードではなく、メニューと関数のつながりを試すためのものです。</p>
+        <p></p>
+        <div class="code-container">
+          <button class="copy-btn" type="button">Copy</button>
+          <pre>
+              <code class="language-javascript">function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu('経費確認')
+    .addItem('現在のシートを確認', 'showReviewTarget')
+    .addToUi();
+}
+
+function showReviewTarget() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  SpreadsheetApp.getUi().alert('確認対象：' + sheet.getName());
+}</code>
+            </pre>
+        </div>
+        <p></p>
+        <p>対象のスプレッドシートから「拡張機能 → Apps Script」を開き、コードを保存したあと、スプレッドシートを開き直すとメニューが追加されます。初回実行時に権限の承認を求められた場合は、内容を確認して進めます。
+        </p>
+        <p>
+          <code>addItem()</code>の1つ目は画面に表示する項目名、2つ目は呼び出す関数名です。ここでは「現在のシートを確認」を選ぶと、<code>showReviewTarget()</code>が実行されます。
+        </p>
+        <p>実際の経費確認画面では、呼び出した関数からダイアログを開く処理につなげています。メニューの入口を保ったまま、その先の処理を用途に合わせて変えられます。</p>
+        <p>すでに<code>onOpen()</code>がある場合は、同じ名前の関数を増やさず、既存の関数へメニュー作成部分を組み込みます。</p>
+      </section>
+      <section class="section" id="memo">
+        <h2>メモ・ほかにも使えそうなこと</h2>
+        <p>作った処理をメニューから呼び出せるようにすると、いつも使っているシートを、そのまま作業の入口にできます。</p>
+        <p>例えば、月のデータを集計する、選択した内容から帳票を作る、入力内容をまとめてチェックする、といった処理にも使えそうです。これらは今回追加した機能ではなく、応用のアイデアです。</p>
+        <p>GASで何かを自動化できたら、「どこから呼び出すと使いやすいか」も考えてみると、操作する人に合わせた使い方が見つかりそうです。</p>
+        <p>次回は、メニューから開いたダイアログに、レシート画像と申請内容を並べる使い方を紹介します。</p>
+      </section>
+      <section class="section" id="related-articles">
+        <h2>関連記事</h2>
+        <!-- リンク切替対象: expense-review-1 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <!--
+<div class="muted-box"><p>GASで経費の確認画面を作ってみた（1/6）ー画像と申請内容をまとめて確認ー</p><p>準備中</p></div>
+-->
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <div class="page-links"><a href="/articles/blog/expense-review-1/">
+            <p>GASで経費の確認画面を作ってみた（1/6）ー画像と申請内容をまとめて確認ー</p>
+            <p class="p-link">▶ この記事を読む</p>
+          </a></div>
+        <!-- リンク切替ここまで: expense-review-1 -->
+
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（2/6）ーメニューから処理を呼び出すー</p>
+          <p>この記事</p>
+        </div>
+
+        <!-- リンク切替対象: expense-review-3 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（3/6）ーダイアログに画像と情報を並べるー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-3/"><p>GASで経費の確認画面を作ってみた（3/6）ーダイアログに画像と情報を並べるー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-3 -->
+
+        <!-- リンク切替対象: expense-review-4 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（4/6）ーダイアログでの修正をシートに反映するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-4/"><p>GASで経費の確認画面を作ってみた（4/6）ーダイアログでの修正をシートに反映するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-4 -->
+
+        <!-- リンク切替対象: expense-review-5 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（5/6）ー色で数字の確認を手助けするー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-5/"><p>GASで経費の確認画面を作ってみた（5/6）ー色で数字の確認を手助けするー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-5 -->
+
+        <!-- リンク切替対象: expense-review-6 -->
+        <!-- 準備中用：未公開時はこちらを表示。公開後はこのdiv全体をコメントアウト -->
+        <div class="muted-box">
+          <p>GASで経費の確認画面を作ってみた（6/6）ーGAS内のファイルを分けて整理するー</p>
+          <p>準備中</p>
+        </div>
+        <!-- 公開済み用：公開後はこちらのdivを表示。未公開時はコメントアウト -->
+        <!--
+<div class="page-links"><a href="/articles/blog/expense-review-6/"><p>GASで経費の確認画面を作ってみた（6/6）ーGAS内のファイルを分けて整理するー</p><p class="p-link">▶ この記事を読む</p></a></div>
+-->
+        <!-- リンク切替ここまで: expense-review-6 -->
+      </section>
+      <section class="section" id="consultation">
+        <h2>自分の業務に自動化機能を追加したい方へ</h2>
+        <p>申請内容の確認やシートへの保存など、今の業務に合わせた確認画面・自動化機能の追加をご相談いただけます。現在の作業と希望する変更を伺い、対応できる範囲をご案内します。</p>
+        <div class="page-links">
+          <a href="/contact/#consultation">
+            <p>対応例・相談内容の書き方・相談から納品まで</p>
+            <p class="p-link">▶ 制作・カスタマイズ相談の案内を見る</p>
+          </a>
+        </div>
+      </section>
+      <p class="back-link">
+        <a href="/articles/blog/">← 記事一覧に戻る</a>
+      </p>
+      <section class="section">
+        <p>
+          <a href="/">トップページへ戻る</a>
+        </p>
+      </section>
+      <div class="ad-bottom">
+        <script src="https://adm.shinobi.jp/o/c076ac9032ddef7041a7cdb278971965"></script>
+      </div>
+    </article>
+  </main>
+  <div data-include="/includes/footer.html"></div>
+</body>
+
+</html>
